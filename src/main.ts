@@ -2,12 +2,15 @@ import * as THREE from 'three';
 import { World } from './core/world';
 import { vehicleDef } from './core/data';
 import { CG } from './core/types';
+import type { Controller, PickupKind } from './core/types';
 import { Keyboard } from './input/keyboard';
 import { Gamepad } from './input/gamepad';
-import { PlayerController } from './input/playerController';
+import { PlayerController, emptyInput } from './input/playerController';
 import { ChaseCamera } from './render/chaseCamera';
 import { spawnVehicle } from './vehicles/vehicle';
 import { DamageSystem } from './vehicles/damage';
+import { WeaponSystem } from './weapons/weaponSystem';
+import { PickupSystem, type PickupSpawn } from './weapons/pickups';
 
 const WORLD_GROUPS = (CG.WORLD << 16) | 0xffff;
 
@@ -59,6 +62,15 @@ function buildScene(world: World): void {
   addBlock(world, [1.2, 1.5, 14], [-14, 0.75, 4], 0, '#a05a3a');
 }
 
+/** Sinov: 10 ta sandiq joyi (5 qurol, 2 health, 1 special, 2 qo'shimcha qurol). */
+const TEST_PICKUPS: Array<[number, number, PickupKind]> = [
+  [4, 0, 'rocket'], [-4, 8, 'missile'], [6, 14, 'cannon'], [-6, 22, 'mortar'], [0, 30, 'mine'],
+  [-12, 34, 'health'], [14, 38, 'health'], [8, -8, 'special'], [-10, -8, 'rocket'], [18, 10, 'missile'],
+];
+
+/** Harakatsiz nishon mashinalar uchun controller. */
+const idleController = (id: string): Controller => ({ id, sample: () => emptyInput() });
+
 async function boot(): Promise<void> {
   const canvas = document.getElementById('game') as HTMLCanvasElement;
   const keyboard = new Keyboard();
@@ -68,6 +80,12 @@ async function boot(): Promise<void> {
   buildScene(world);
   world.addSystem(new DamageSystem(world));
   const handle = spawnVehicle(world, vehicleDef('rattler'), player, { x: 0, y: 1, z: 0 }, 0);
+  handle.inventory.slots.push({ weapon: 'rocket', ammo: 12 }, { weapon: 'missile', ammo: 8 });
+  spawnVehicle(world, vehicleDef('jefferson'), idleController('dummy1'), { x: 3, y: 1, z: 22 }, Math.PI);
+  spawnVehicle(world, vehicleDef('van'), idleController('dummy2'), { x: -4, y: 1, z: 34 }, Math.PI);
+  const spawns: PickupSpawn[] = TEST_PICKUPS.map(([x, z, kind]) => ({ pos: [x, 0, z], kind }));
+  world.addSystem(new WeaponSystem(world));
+  world.addSystem(new PickupSystem(world, spawns));
   world.addSystem(new ChaseCamera(world.camera, { object: handle.object, rearView: () => handle.input.rearView }));
   world.start();
 }
