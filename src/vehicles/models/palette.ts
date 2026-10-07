@@ -36,8 +36,8 @@ const std = (o: THREE.MeshStandardMaterialParameters): THREE.MeshStandardMateria
 export const chrome = (): THREE.Material => get('chrome', () => std({ color: '#e4e8ee', metalness: 1, roughness: 0.12 }));
 export const steel = (): THREE.Material => get('steel', () => std({ color: '#8d939c', metalness: 0.85, roughness: 0.4 }));
 export const gunmetal = (): THREE.Material => get('gunmetal', () => std({ color: '#2a2d33', metalness: 0.9, roughness: 0.35 }));
-export const trim = (): THREE.Material => get('trim', () => std({ color: '#141417', metalness: 0.1, roughness: 0.65 }));
-export const rubber = (): THREE.Material => get('rubber', () => std({ color: '#0d0d0f', metalness: 0, roughness: 0.92 }));
+export const trim = (): THREE.Material => get('trim', () => std({ color: '#111114', metalness: 0.05, roughness: 0.8 }));
+export const rubber = trim; // shina va qora plastik bitta material (draw call kam)
 export const interior = (): THREE.Material => get('interior', () => std({ color: '#2a2220', metalness: 0, roughness: 0.9 }));
 export const glass = (): THREE.Material =>
   get('glass', () =>

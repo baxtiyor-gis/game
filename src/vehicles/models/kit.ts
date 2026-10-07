@@ -70,6 +70,16 @@ export class Kit {
     return s.y - s.restLength;
   }
 
+  /** Yer sathi (dam olish holatida g'ildirak tagi). */
+  get ground(): number {
+    return this.wheelY - this.wheels[0]!.radius;
+  }
+
+  /** Kuzov tubi: yerdan `clearance` m yuqorida. */
+  sill(clearance: number): number {
+    return this.ground + clearance;
+  }
+
   parts(): Part[] {
     const out: Part[] = [];
     for (const [mat, list] of this.groups) {

@@ -37,6 +37,7 @@ export function polyShape(pts: Pt[]): THREE.Shape {
 export interface ExtrudeOpts {
   bevel?: number; // qirra yumaloqligi (m)
   segments?: number; // egri chiziq bo'laklari
+  bs?: number; // bevel segmentlari (default 2)
   /** Eni bo'yicha deformatsiya: (x, y, z) -> x ko'paytuvchisi. */
   taper?: (y: number, z: number) => number;
 }
@@ -50,8 +51,8 @@ export function sideExtrude(pts: Pt[], width: number, o: ExtrudeOpts = {}): THRE
     bevelSize: b,
     bevelThickness: b,
     bevelOffset: -b,
-    bevelSegments: 2,
-    curveSegments: o.segments ?? 3,
+    bevelSegments: o.bs ?? 2,
+    curveSegments: o.segments ?? 2,
     steps: 1,
   });
   geo.translate(0, 0, -(width - 2 * b) / 2);
@@ -110,7 +111,7 @@ export function archedBottom(yBottom: number, arches: Array<{ z: number; yc: num
     const d = Math.sqrt(a.r * a.r - dy * dy);
     const a0 = Math.atan2(dy, -d);
     const a1 = Math.atan2(dy, d);
-    const steps = 7;
+    const steps = 5;
     for (let i = 0; i <= steps; i++) {
       const t = a0 + ((a1 - a0 + (a1 < a0 ? 0 : -2 * Math.PI)) * i) / steps;
       pts.push([a.z + a.r * Math.cos(t), a.yc + a.r * Math.sin(t)]);
@@ -118,4 +119,14 @@ export function archedBottom(yBottom: number, arches: Array<{ z: number; yc: num
   }
   pts.push([zMax, yBottom]);
   return pts;
+}
+
+/** Oddiy quti (12 uchburchak) — ko'p takrorlanadigan ingichka detallar uchun. */
+export function box(w: number, h: number, d: number): THREE.BufferGeometry {
+  return new THREE.BoxGeometry(w, h, d);
+}
+
+/** Y o'qi bo'ylab silindr (disk, plita). */
+export function cylY(r: number, len: number, seg = 12): THREE.BufferGeometry {
+  return new THREE.CylinderGeometry(r, r, len, seg, 1);
 }

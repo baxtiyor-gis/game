@@ -2,6 +2,12 @@ import * as THREE from 'three';
 import type { VehicleDef } from '../core/types';
 import { wheelLayout } from './layout';
 import type { WheelSpec } from './layout';
+import { Kit } from './models/kit';
+import type { Part } from './models/kit';
+import { MODELS } from './models/registry';
+import { wheelParts } from './models/wheels';
+import { paint } from './models/palette';
+import { roundBox } from './models/shapes';
 
 export interface WheelVisual {
   spec: WheelSpec;
@@ -14,72 +20,61 @@ export interface VehicleModel {
   wheels: WheelVisual[];
 }
 
-const lambert = (color: THREE.ColorRepresentation, emissive?: string): THREE.MeshLambertMaterial =>
-  new THREE.MeshLambertMaterial({ color, flatShading: true, emissive: emissive ?? '#000000' });
-
-function box(w: number, h: number, l: number, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), mat);
-  m.position.set(x, y, z);
-  return m;
+interface Template {
+  body: Part[];
+  wheel: Part[];
 }
 
-/** Kabinaning tepa qismini toraytirib, "trapetsiya" shakl beradi. */
-function taper(mesh: THREE.Mesh, topScaleX: number, topScaleZ: number): void {
-  const pos = mesh.geometry.getAttribute('position');
-  for (let i = 0; i < pos.count; i++) {
-    if (pos.getY(i) > 0) {
-      pos.setX(i, pos.getX(i) * topScaleX);
-      pos.setZ(i, pos.getZ(i) * topScaleZ);
+const templates = new Map<string, Template>();
+
+/** Mashina turi bo'yicha geometriya va shablon materiallarni bir marta quradi (keshlanadi). */
+function template(def: VehicleDef): Template {
+  const hit = templates.get(def.id);
+  if (hit) return hit;
+  const k = new Kit(def);
+  const builder = MODELS[def.id];
+  if (builder) builder.build(k);
+  else k.add(roundBox(k.w, k.h * 0.8, k.l, 0.1), paint(def.color));
+  const s = k.wheels[0]!;
+  const t: Template = { body: k.parts(), wheel: wheelParts(s.radius, s.width, builder?.wheel ?? 'street') };
+  templates.set(def.id, t);
+  return t;
+}
+
+/** Shablon geometriyasi umumiy, materiallar har nusxada clone (shikast/qoldiq rangi uchun). */
+function instantiate(parts: Part[], into: THREE.Object3D, mats: Map<THREE.Material, THREE.Material>): void {
+  for (const p of parts) {
+    let m = mats.get(p.mat);
+    if (!m) {
+      m = p.mat.clone();
+      mats.set(p.mat, m);
     }
+    const mesh = new THREE.Mesh(p.geo, m);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    into.add(mesh);
   }
-  mesh.geometry.computeVertexNormals();
 }
 
-function buildWheel(spec: WheelSpec, tire: THREE.Material, hub: THREE.Material): WheelVisual {
+function buildWheel(spec: WheelSpec, t: Template, mats: Map<THREE.Material, THREE.Material>): WheelVisual {
   const pivot = new THREE.Group();
   const spin = new THREE.Group();
-  const tireMesh = new THREE.Mesh(new THREE.CylinderGeometry(spec.radius, spec.radius, spec.width, 10), tire);
-  tireMesh.rotation.z = Math.PI / 2;
-  const side = Math.sign(spec.x);
-  const hubMesh = new THREE.Mesh(new THREE.CylinderGeometry(spec.radius * 0.55, spec.radius * 0.55, spec.width * 1.06, 6), hub);
-  hubMesh.rotation.z = Math.PI / 2;
-  hubMesh.position.x = side * spec.width * 0.02;
-  spin.add(tireMesh, hubMesh);
+  const flip = new THREE.Group();
+  if (spec.x < 0) flip.rotation.y = Math.PI; // disk doim tashqariga qaraydi
+  instantiate(t.wheel, flip, mats);
+  spin.add(flip);
   pivot.add(spin);
   pivot.position.set(spec.x, spec.y - spec.restLength, spec.z);
   return { spec, pivot, spin };
 }
 
-/** Procedural low-poly mashina: korpus + kabina + spoyler + chiroqlar + 4 g'ildirak. Lokal +Z = old. */
+/** Mid-poly procedural mashina (kuzov + g'ildiraklar). Lokal +Z = old. */
 export function createVehicleModel(def: VehicleDef): VehicleModel {
-  const [w, h, l] = def.size;
+  const t = template(def);
   const root = new THREE.Group();
-  const paint = lambert(def.color);
-  const dark = lambert(new THREE.Color(def.color).multiplyScalar(0.55));
-  const glass = lambert('#1d2a38');
-  const trim = lambert('#1b1b1f');
-  const lamp = lambert('#fff2b0', '#ffe27a');
-  const tail = lambert('#ff3b30', '#aa1a14');
-
-  root.add(box(w, h * 0.4, l, paint, 0, -h * 0.18, 0)); // pastki korpus
-  root.add(box(w * 1.02, h * 0.1, l * 1.02, trim, 0, -h * 0.34, 0)); // bamper chizig'i
-  const hood = box(w * 0.94, h * 0.1, l * 0.34, dark, 0, h * 0.06, l * 0.3); // kapot
-  root.add(hood);
-  const cabin = box(w * 0.86, h * 0.44, l * 0.42, dark, 0, h * 0.26, -l * 0.1);
-  taper(cabin, 0.82, 0.7);
-  root.add(cabin);
-  const win = box(w * 0.9, h * 0.22, l * 0.36, glass, 0, h * 0.27, -l * 0.1);
-  taper(win, 0.82, 0.74);
-  root.add(win);
-  root.add(box(w * 0.96, h * 0.05, l * 0.1, trim, 0, h * 0.24, -l * 0.46)); // spoyler
-  for (const sx of [-1, 1]) {
-    root.add(box(w * 0.2, h * 0.1, l * 0.02, lamp, sx * w * 0.3, -h * 0.12, l * 0.5));
-    root.add(box(w * 0.2, h * 0.1, l * 0.02, tail, sx * w * 0.3, -h * 0.12, -l * 0.5));
-  }
-
-  const tire = lambert('#121214');
-  const hub = lambert('#9aa0a8');
-  const wheels = wheelLayout(def).map((spec) => buildWheel(spec, tire, hub));
+  const mats = new Map<THREE.Material, THREE.Material>();
+  instantiate(t.body, root, mats);
+  const wheels = wheelLayout(def).map((spec) => buildWheel(spec, t, mats));
   for (const wv of wheels) root.add(wv.pivot);
   return { root, wheels };
 }
