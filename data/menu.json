@@ -1,0 +1,79 @@
+{
+  "storageKey": "outlaw75.settings.v1",
+  "playHash": "play",
+  "defaults": { "volume": 0.8, "retro": false, "unlockAll": false, "difficulty": "normal", "rivals": 3, "vehicle": "rattler", "arena": "oil_fields" },
+  "home": [
+    { "id": "arcade", "label": "menu.arcade", "enabled": true },
+    { "id": "quest", "label": "menu.quest", "enabled": false },
+    { "id": "versus", "label": "menu.versus", "enabled": false },
+    { "id": "settings", "label": "menu.options", "enabled": true },
+    { "id": "controls", "label": "menu.controls", "enabled": true }
+  ],
+  "arenas": [
+    { "id": "oil_fields", "name": "arena.oil_fields", "enabled": true },
+    { "id": "canyonlands", "name": "arena.canyonlands", "enabled": false },
+    { "id": "ghost_town", "name": "arena.ghost_town", "enabled": false }
+  ],
+  "difficulties": [
+    { "id": "easy", "label": "menu.diff.easy" },
+    { "id": "normal", "label": "menu.diff.normal" },
+    { "id": "hard", "label": "menu.diff.hard" }
+  ],
+  "rivals": { "min": 1, "max": 6 },
+  "volume": { "step": 0.1 },
+  "factions": [
+    { "id": "vigilante", "label": "faction.vigilante", "color": "#4fc3ff" },
+    { "id": "coyote", "label": "faction.coyote", "color": "#ff3b2f" },
+    { "id": "secret", "label": "faction.secret", "color": "#c77dff" }
+  ],
+  "bars": [
+    { "stat": "accel", "label": "stat.accel" },
+    { "stat": "topSpeed", "label": "stat.topSpeed" },
+    { "stat": "armor", "label": "stat.armor" },
+    { "stat": "avoidance", "label": "stat.avoidance" }
+  ],
+  "statMax": 5,
+  "accel": { "targetKmh": 100, "step": 0.02, "maxTime": 60 },
+  "endDelay": 2,
+  "pad": { "ok": 0, "back": 1, "start": 9, "up": 12, "down": 13, "left": 14, "right": 15, "axisX": 0, "axisY": 1, "axisThreshold": 0.6 },
+  "repeat": { "delay": 0.4, "rate": 0.12 },
+  "keys": {
+    "up": ["ArrowUp", "KeyW"],
+    "down": ["ArrowDown", "KeyS"],
+    "left": ["ArrowLeft", "KeyA"],
+    "right": ["ArrowRight", "KeyD"],
+    "ok": ["Enter", "NumpadEnter", "Space"],
+    "back": ["Escape", "Backspace"],
+    "pause": ["KeyP"]
+  },
+  "backdrop": { "radius": 95, "height": 26, "lookHeight": 5, "speed": 0.06, "fov": 55 },
+  "preview": {
+    "fov": 28, "pitch": 0.32, "spin": 0.7, "fitMargin": 0.95, "pixelRatioMax": 2,
+    "envIntensity": 0.8, "sun": 2.4, "hemi": 0.7, "padRadiusFactor": 0.8, "padColor": "#1a0a00", "padRing": "#ff8a1f"
+  },
+  "loadout": {
+    "player": [{ "weapon": "rocket", "ammo": 12 }, { "weapon": "missile", "ammo": 8 }],
+    "bot": [{ "weapon": "rocket", "ammo": 12 }]
+  },
+  "quickPlay": { "vehicle": "rattler", "rivals": ["sidburn", "van", "leprechaun"], "difficulty": "normal" },
+  "arrows": { "U": "↑", "D": "↓", "L": "←", "R": "→" },
+  "keyLabels": {
+    "KeyW": "W", "KeyA": "A", "KeyS": "S", "KeyD": "D", "KeyJ": "J", "KeyK": "K", "KeyQ": "Q", "KeyE": "E", "KeyR": "R",
+    "KeyM": "M", "KeyP": "P", "ArrowUp": "↑", "ArrowDown": "↓", "ArrowLeft": "←", "ArrowRight": "→", "Space": "Space",
+    "ShiftLeft": "Shift", "ControlLeft": "Ctrl", "Escape": "Esc", "Enter": "Enter"
+  },
+  "padLabels": { "0": "A", "1": "B", "2": "X", "3": "Y", "4": "LB", "5": "RB", "6": "LT", "7": "RT", "9": "Start", "12": "D-pad ↑", "15": "D-pad →" },
+  "controlRows": [
+    { "label": "controls.throttle", "kb": ["throttle"], "pad": [7] },
+    { "label": "controls.brake", "kb": ["brake"], "pad": [6] },
+    { "label": "controls.steer", "kb": ["left", "right"], "padText": "controls.stick" },
+    { "label": "controls.handbrake", "kb": ["handbrake"], "pad": [] },
+    { "label": "controls.mg", "kb": ["mg"], "pad": [0] },
+    { "label": "controls.weapon", "kb": ["weapon"], "pad": [2] },
+    { "label": "controls.special", "kb": ["special"], "pad": [3] },
+    { "label": "controls.cycle", "kb": ["prev", "next"], "pad": [4, 5] },
+    { "label": "controls.rear", "kb": ["rear"], "pad": [1] },
+    { "label": "controls.pause", "codes": ["Escape", "KeyP"], "pad": [9] },
+    { "label": "controls.mute", "codes": ["KeyM"], "pad": [] }
+  ]
+}

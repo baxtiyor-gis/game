@@ -49,6 +49,12 @@ export class AudioSystem implements System {
     });
   }
 
+  /** Umumiy balandlik 0..1 (sozlamalardan). AudioContext ochilmagan bo'lsa ham saqlanadi. */
+  setVolume(v: number): void {
+    this.masterGainValue = audioConfig.master.gain * Math.max(0, Math.min(1, v));
+    if (this.masterGain && !this.muted) this.masterGain.gain.value = this.masterGainValue;
+  }
+
   private toggleMute(): void {
     if (!this.masterGain) return;
     this.muted = !this.muted;

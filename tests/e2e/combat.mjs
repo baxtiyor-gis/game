@@ -11,8 +11,8 @@ const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 const fires = [];
-await page.goto('http://localhost:5198/');
-await page.waitForFunction(() => window.__game);
+await page.goto('http://localhost:5198/#play'); // menyuni o'tkazib yuborish (faqat testlar uchun)
+await page.waitForFunction(() => window.__game && window.__flow.state === 'playing', null, { timeout: 60000 });
 await page.evaluate(() => {
   window.__fires = {};
   window.__game.world.events.on('fire', (e) => (window.__fires[e.sourceId + ':' + e.weapon] = (window.__fires[e.sourceId + ':' + e.weapon] ?? 0) + 1));

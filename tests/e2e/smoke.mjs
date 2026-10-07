@@ -14,6 +14,19 @@ const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 await page.goto('http://localhost:5199/');
+await page.waitForFunction(() => window.__flow?.state === 'menu', null, { timeout: 60000 });
+await page.waitForTimeout(2500); // orqa fon sahnasi yuklansin
+await page.screenshot({ path: 'test-results/menu-home.png' });
+await page.keyboard.press('Enter'); // ARCADE
+await page.waitForTimeout(1200);
+await page.screenshot({ path: 'test-results/menu-select.png' });
+await page.keyboard.press('ArrowRight'); // mashinani almashtirish
+await page.keyboard.press('ArrowLeft');
+await page.keyboard.press('Enter'); // mashina tanlandi -> sozlash
+await page.waitForTimeout(500);
+await page.screenshot({ path: 'test-results/menu-setup.png' });
+await page.keyboard.press('Enter'); // BOSHLASH
+await page.waitForFunction(() => window.__game && window.__flow.state === 'playing', null, { timeout: 60000 });
 await page.waitForTimeout(1500);
 await page.keyboard.down('Space'); // pulemyot
 await page.keyboard.press('KeyJ'); // tanlangan qurol

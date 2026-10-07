@@ -1,0 +1,67 @@
+{
+ "rattler": {
+  "bio": "bio.rattler",
+  "specialName": "special.gridlock.name",
+  "specialDesc": "special.gridlock.desc"
+ },
+ "jefferson": {
+  "bio": "bio.jefferson",
+  "specialName": "special.bass_quake.name",
+  "specialDesc": "special.bass_quake.desc"
+ },
+ "clydesdale": {
+  "bio": "bio.clydesdale",
+  "specialName": "special.white_lightning.name",
+  "specialDesc": "special.white_lightning.desc"
+ },
+ "strider": {
+  "bio": "bio.strider",
+  "specialName": "special.tantrum_gun.name",
+  "specialDesc": "special.tantrum_gun.desc"
+ },
+ "moth": {
+  "bio": "bio.moth",
+  "specialName": "special.special_convoy.name",
+  "specialDesc": "special.special_convoy.desc"
+ },
+ "stag": {
+  "bio": "bio.stag",
+  "specialName": "special.special_dave.name",
+  "specialDesc": "special.special_dave.desc"
+ },
+ "glenn": {
+  "bio": "bio.glenn",
+  "specialName": "special.special_loki.name",
+  "specialDesc": "special.special_loki.desc"
+ },
+ "palamino": {
+  "bio": "bio.palamino",
+  "specialName": "special.special_houston.name",
+  "specialDesc": "special.special_houston.desc"
+ },
+ "leprechaun": {
+  "bio": "bio.leprechaun",
+  "specialName": "special.special_boogie.name",
+  "specialDesc": "special.special_boogie.desc"
+ },
+ "van": {
+  "bio": "bio.van",
+  "specialName": "special.special_beezwax.name",
+  "specialDesc": "special.special_beezwax.desc"
+ },
+ "sidburn": {
+  "bio": "bio.sidburn",
+  "specialName": "special.special_sid.name",
+  "specialDesc": "special.special_sid.desc"
+ },
+ "bus": {
+  "bio": "bio.bus",
+  "specialName": "special.special_molo.name",
+  "specialDesc": "special.special_molo.desc"
+ },
+ "ufo": {
+  "bio": "bio.ufo",
+  "specialName": "special.special_y.name",
+  "specialDesc": "special.special_y.desc"
+ }
+}
