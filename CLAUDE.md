@@ -18,3 +18,6 @@ Stek: TypeScript, Vite, Three.js, Rapier3D (WASM), Vitest, Playwright.
 - Kam o'qing: avval Grep/Glob, keyin Read (offset/limit bilan).
 - Agent hisoboti: ≤10 qator (nima o'zgardi, qaysi fayllar, test natijasi). Diff yubormang.
 - Task tugagach `docs/PROGRESS.md` ga bitta qator qo'shing: `T#.# — bajarildi — izoh`.
+
+## Orkestrator tartibi (foydalanuvchi talabi)
+Har task tugashi bilan darhol: main.ts ga ulash → `npm run check` + `npm run e2e` (+ `npm run e2e:combat`) → commit → push → claude.ai artifact ni yangilash → foydalanuvchiga qisqa xabar. Yarim tayyor (qizil) kod push qilinmaydi — har push GitHub Pages ga deploy qiladi.
