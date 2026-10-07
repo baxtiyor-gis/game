@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 import { EventBus } from './events';
+import { handling } from './data';
 import { FixedLoop } from './loop';
 import type { GameEvents, GameWorld, System, VehicleHandle } from './types';
 
@@ -19,6 +20,8 @@ export class World implements GameWorld {
   readonly renderer: THREE.WebGLRenderer;
   readonly events = new EventBus<GameEvents>();
   readonly vehicles: VehicleHandle[] = [];
+  /** Kontakt kuchi eventlari (to'qnashuv shikasti). vehicles/damage.ts shundan o'qiydi. */
+  readonly eventQueue = new RAPIER.EventQueue(true);
   time = 0;
   /** Ixtiyoriy render almashtirgich (PS1 post-FX shu orqali ulanadi) */
   renderHook?: (r: THREE.WebGLRenderer, scene: THREE.Scene, cam: THREE.Camera) => void;
@@ -29,7 +32,7 @@ export class World implements GameWorld {
   private raf = 0;
 
   private constructor(private readonly opts: WorldOptions) {
-    this.physics = new RAPIER.World({ x: 0, y: -9.81 * 1.6, z: 0 }); // arkada: og'irroq gravitatsiya
+    this.physics = new RAPIER.World({ x: 0, y: -handling.world.gravity, z: 0 });
     this.physics.timestep = 1 / 60;
     this.renderer = new THREE.WebGLRenderer({ canvas: opts.canvas, antialias: false });
     this.renderer.setPixelRatio(1);
@@ -71,7 +74,7 @@ export class World implements GameWorld {
 
   private fixed(dt: number): void {
     for (const s of this.systems) s.fixedUpdate?.(dt);
-    this.physics.step();
+    this.physics.step(this.eventQueue);
     this.time += dt;
     this.opts.afterFixed?.();
   }

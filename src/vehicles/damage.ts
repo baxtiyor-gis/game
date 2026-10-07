@@ -23,6 +23,30 @@ export class DamageSystem implements System {
     ];
   }
 
+  /** Kontakt kuchi eventlari: impuls saqlanishi (J = F*dt) -> har mashinaga o'z dv = J/m bo'yicha shikast. */
+  fixedUpdate(dt: number): void {
+    const queue = this.world.eventQueue;
+    if (!queue) return;
+    const c = handling.collision;
+    queue.drainContactForceEvents((ev) => {
+      // Qo'nish (vertikal kontakt) sakrashni jazolamasligi uchun kuchli kamaytiriladi.
+      const vertical = Math.abs(ev.maxForceDirection().y) > c.verticalThreshold ? c.verticalFactor : 1;
+      const impulse = ev.totalForceMagnitude() * dt * vertical;
+      const a = this.byCollider(ev.collider1());
+      const b = this.byCollider(ev.collider2());
+      for (const [v, other] of [[a, b], [b, a]] as const) {
+        if (!v || !v.alive) continue;
+        const dv = impulse / v.def.mass - c.minDeltaV;
+        if (dv <= 0) continue;
+        this.world.events.emit('damage', { targetId: v.id, sourceId: other?.id ?? null, amount: dv * c.damagePerMps, weapon: 'collision' });
+      }
+    });
+  }
+
+  private byCollider(handle: number): VehicleHandle | undefined {
+    return this.world.vehicles.find((v) => v.body.collider(0).handle === handle);
+  }
+
   dispose(): void {
     for (const off of this.off) off();
     this.off.length = 0;
@@ -50,7 +74,8 @@ export class DamageSystem implements System {
       const falloff = 1 - d / e.radius;
       tmp.sub(e.pos);
       tmp.y += Math.max(d, 1e-3) * handling.damage.explosionLift + 1e-3;
-      tmp.normalize().multiplyScalar(v.def.mass * handling.damage.explosionImpulse * falloff);
+      // Impuls N*s (massaga bog'liq emas): og'ir mashina kamroq siljiydi (dv = J/m).
+      tmp.normalize().multiplyScalar(e.damage * handling.damage.explosionImpulsePerDamage * falloff);
       v.body.applyImpulse({ x: tmp.x, y: tmp.y, z: tmp.z }, true);
       if (v.alive) {
         this.world.events.emit('damage', { targetId: v.id, sourceId: e.sourceId, amount: e.damage * falloff, weapon: 'explosion' });

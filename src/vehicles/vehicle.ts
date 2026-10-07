@@ -5,7 +5,7 @@ import { CG } from '../core/types';
 import type { Controller, GameWorld, InputState, Inventory, System, VehicleDef, VehicleHandle } from '../core/types';
 import { createVehicleModel, poseWheel } from './model';
 import type { VehicleModel } from './model';
-import { applyAirControl, bodyAxes, limitYawRate, SelfRighter } from './motion';
+import { applyAirControl, bodyAxes, SelfRighter } from './motion';
 import { tuningFor } from './tuning';
 import type { Tuning } from './tuning';
 
@@ -37,8 +37,8 @@ class Vehicle implements VehicleHandle, System {
   private readonly curPos = new THREE.Vector3();
   private readonly curQuat = new THREE.Quaternion();
   private steer = 0;
-  private readonly wheelbase: number;
   private grounded = 0;
+  private readonly gravity: number;
 
   constructor(
     private readonly world: GameWorld,
@@ -56,7 +56,7 @@ class Vehicle implements VehicleHandle, System {
     this.rc = world.physics.createVehicleController(body);
     this.rc.indexUpAxis = 1;
     this.rc.setIndexForwardAxis = 2;
-    this.wheelbase = 2 * Math.abs(this.model.wheels[0].spec.z);
+    this.gravity = -world.physics.gravity.y;
     this.setupWheels();
     this.sync(this.prevPos, this.prevQuat);
   }
@@ -114,7 +114,8 @@ class Vehicle implements VehicleHandle, System {
     this.rc.updateVehicle(dt, undefined, (CG.VEHICLE << 16) | CG.WORLD, (c) => c.handle !== this.collider.handle);
     this.grounded = 0;
     for (let i = 0; i < WHEELS; i++) if (this.rc.wheelIsInContact(i)) this.grounded++;
-    if (this.alive) this.assist(dt, fv);
+    this.resist(dt);
+    if (this.alive) this.assist(dt);
     else this.body.setLinearDamping(handling.damage.wreckLinearDamping);
   }
 
@@ -124,52 +125,60 @@ class Vehicle implements VehicleHandle, System {
   }
 
   private drive(inp: InputState, fv: number, dt: number): void {
-    const d = handling.drive;
+    const pt = handling.powertrain;
+    const br = handling.brakes;
     const t = this.tuning;
-    const perWheel = this.def.mass / WHEELS;
-    let engine = 0;
-    let brake = d.idleBrake;
+    const weight = this.def.mass * this.gravity;
+    let engine = 0; // N, + = oldinga
+    let brake = 0; // N, umumiy
     if (inp.throttle > 0) {
-      if (fv < -d.reverseThreshold) brake = inp.throttle * d.brakeAccel;
-      else (engine = inp.throttle * t.engineAccel * this.taper(fv / t.maxSpeed)), (brake = 0);
+      if (fv < -pt.reverseThreshold) brake = inp.throttle * br.weightFactor * weight;
+      else engine = inp.throttle * this.tractiveForce(fv);
     } else if (inp.throttle < 0) {
-      if (fv > d.reverseThreshold) brake = -inp.throttle * d.brakeAccel;
-      else (engine = inp.throttle * t.engineAccel * this.taper(-fv / (t.maxSpeed * d.reverseSpeedFactor))), (brake = 0);
-    }
+      if (fv > pt.reverseThreshold) brake = -inp.throttle * br.weightFactor * weight;
+      else engine = inp.throttle * pt.reverseFactor * this.tractiveForce(-fv) * Math.max(0, 1 - -fv / pt.reverseMaxSpeed);
+    } else if (Math.abs(fv) < br.parkSpeed) brake = br.parkWeightFactor * weight;
     const drift = inp.handbrake;
-    // Rul burchagi yon tezlanish chegarasi (a = v^2 * tan(d) / baza) bilan cheklanadi: tezlikda kamayadi.
-    const limit = (this.wheelbase * handling.steer.lateralAccel) / Math.max(1, fv * fv);
-    const angle = Math.min(t.steerMax, Math.max(t.steerMax * handling.steer.minFactor, limit));
-    const target = -inp.steer * angle * (drift ? handling.steer.handbrakeBoost : 1);
+    // Tezlikka sezgir rul: v kattalashganda burchak kamayadi (haqiqiy mashinalardagi kabi).
+    const ratio = fv / handling.steer.speedScale;
+    const target = (-inp.steer * t.steerMax) / (1 + ratio * ratio);
     const maxStep = t.steerRate * dt;
     this.steer += Math.max(-maxStep, Math.min(maxStep, target - this.steer));
-    const w = handling.wheels;
+    const driven = drift ? 2 : WHEELS; // handbrake: orqa g'ildiraklar qulflanadi, dvigatel faqat oldinga
     for (let i = 0; i < WHEELS; i++) {
       const front = this.model.wheels[i].spec.front;
-      const rearDrift = drift && !front;
+      const rearLock = drift && !front;
       this.rc.setWheelSteering(i, front ? this.steer : 0);
-      this.rc.setWheelEngineForce(i, rearDrift ? 0 : engine * perWheel * (WHEELS / (drift ? 2 : WHEELS)));
-      this.rc.setWheelBrake(i, (rearDrift ? handling.drift.handbrakeBrakeAccel : brake) * perWheel);
-      this.rc.setWheelFrictionSlip(i, w.frictionSlip * (rearDrift ? handling.drift.rearFrictionFactor : 1));
-      this.rc.setWheelSideFrictionStiffness(i, w.sideFriction * (rearDrift ? handling.drift.rearSideFactor : 1));
+      this.rc.setWheelEngineForce(i, rearLock ? 0 : engine / driven);
+      this.rc.setWheelFrictionSlip(i, handling.wheels.frictionSlip * (rearLock ? br.handbrakeRearGrip : 1));
+      this.rc.setWheelBrake(i, (rearLock ? (br.handbrakeWeightFactor * weight) / 2 : brake / WHEELS) * dt); // Rapier: tormoz = impuls (N*s)
     }
   }
 
-  /** Maks. tezlikka yaqinlashganda dvigatel kuchi silliq nolga tushadi. */
-  private taper(ratio: number): number {
-    return Math.max(0, 1 - Math.pow(Math.max(0, ratio), handling.drive.falloffPower));
+  /** Tortish kuchi: P = F*v chegarasi (v >= launchSpeed da F = P/v), pastda launchForce. */
+  private tractiveForce(speed: number): number {
+    return this.tuning.wheelPower / Math.max(speed, handling.powertrain.launchSpeed);
   }
 
-  private assist(dt: number, fv: number): void {
-    const c = handling.chassis;
+  /** Havo qarshiligi 0.5*rho*CdA*v^2 va g'ildirak (dumalash) qarshiligi Crr*m*g. */
+  private resist(dt: number): void {
+    const pt = handling.powertrain;
+    const lv = this.body.linvel();
+    const speed = Math.hypot(lv.x, lv.y, lv.z);
+    if (speed < 1e-3) return;
+    const drag = 0.5 * pt.airDensity * this.tuning.dragArea * speed * speed;
+    const rolling = pt.rollingResistance * this.def.mass * this.gravity * (this.grounded / WHEELS);
+    const impulse = Math.min((drag + rolling) * dt, this.def.mass * speed);
+    const k = -impulse / speed;
+    this.body.applyImpulse({ x: lv.x * k, y: lv.y * k, z: lv.z * k }, true);
+  }
+
+  private assist(dt: number): void {
     if (this.grounded === 0) {
       applyAirControl(this.body, this.input, dt);
       this.body.setAngularDamping(handling.air.angularDamping);
     } else {
-      const down = c.downforce * fv * fv * this.def.mass * dt;
-      this.body.applyImpulse({ x: 0, y: -down, z: 0 }, true);
-      this.body.setAngularDamping(c.angularDamping);
-      limitYawRate(this.body, c.maxYawRate);
+      this.body.setAngularDamping(handling.chassis.angularDamping);
     }
     this.righter.update(this.body, dt);
   }
@@ -211,21 +220,22 @@ export function spawnVehicle(
   const bodyDesc = rapier.RigidBodyDesc.dynamic()
     .setTranslation(pos.x, pos.y, pos.z)
     .setRotation({ x: half.x, y: half.y, z: half.z, w: half.w })
-    .setLinearDamping(c.linearDamping)
     .setAngularDamping(c.angularDamping)
     .setCanSleep(false)
     .setCcdEnabled(true);
   const body = physics.createRigidBody(bodyDesc);
   const inertia = {
-    x: (m / 12) * (h * h + l * l) * c.pitchInertia,
-    y: (m / 12) * (w * w + l * l) * c.yawInertia,
-    z: (m / 12) * (w * w + h * h) * c.rollInertia,
+    x: (m / 12) * (h * h + l * l) * c.inertiaScale,
+    y: (m / 12) * (w * w + l * l) * c.inertiaScale,
+    z: (m / 12) * (w * w + h * h) * c.inertiaScale,
   };
   const colDesc = rapier.ColliderDesc.cuboid(w / 2, h / 2, l / 2)
     .setMassProperties(m, { x: 0, y: -c.comDrop * h, z: 0 }, inertia, { x: 0, y: 0, z: 0, w: 1 })
     .setFriction(c.friction)
     .setRestitution(c.restitution)
-    .setCollisionGroups((CG.VEHICLE << 16) | ALL_GROUPS);
+    .setCollisionGroups((CG.VEHICLE << 16) | ALL_GROUPS)
+    .setActiveEvents(rapier.ActiveEvents.CONTACT_FORCE_EVENTS)
+    .setContactForceEventThreshold(m * handling.collision.forceThresholdAccel);
   const collider = physics.createCollider(colDesc, body);
   const v = new Vehicle(world, def, controller, body, collider);
   world.vehicles.push(v);

@@ -122,6 +122,8 @@ export interface System {
 export interface GameWorld {
   readonly rapier: Rapier;
   readonly physics: RAPIER.World;
+  /** Kontakt-kuch eventlari (to'qnashuv shikasti). Test world larda bo'lmasligi mumkin. */
+  readonly eventQueue?: RAPIER.EventQueue;
   readonly scene: THREE.Scene;
   readonly camera: THREE.PerspectiveCamera;
   readonly renderer: THREE.WebGLRenderer;
