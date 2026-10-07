@@ -19,6 +19,7 @@ import { PickupSystem, type PickupSpawn } from './weapons/pickups';
 import { WhammySystem } from './weapons/whammy';
 import { BotController } from './ai/botController';
 import { Hud } from './ui/hud';
+import { AudioSystem } from './audio/audioSystem';
 
 const WORLD_GROUPS = (CG.WORLD << 16) | 0xffff;
 
@@ -110,6 +111,7 @@ async function boot(): Promise<void> {
   env.follow(handle.object);
   installRenderMode(world);
   world.addSystem(new ShakeSystem(world));
+  world.addSystem(new AudioSystem(world, () => handle.object));
   world.addSystem(new Hud(world, document.getElementById('ui')!, () => handle, (id) => whammy.score(id)));
   // Testlar uchun (Playwright): holatni o'qish
   (window as unknown as { __game: unknown }).__game = { world, player: handle, whammy };
