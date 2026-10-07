@@ -2,7 +2,7 @@
 
 > Maqsad: **Vigilante 8 (1998, Luxoflux / Activision, PS1/N64/GBC)** o'yinini brauzerda o'ynaladigan
 > 3D avtomobil-jang o'yini sifatida mexanikasi bo'yicha 1:1 qayta yaratish.
-> Texnik spetsifikatsiya (agentlar uchun, ingliz tilida, qisqa): [`docs/GDD.md`](GDD.md).
+> Texnik spetsifikatsiya (agentlar uchun, qisqa): [`docs/GDD.md`](GDD.md).
 
 ---
 
@@ -254,12 +254,12 @@ Fayllar: `.claude/agents/*.md`. Har biri **faqat o'z papkasini** o'qiydi/yozadi.
 
 **Agent brief shabloni:**
 ```
-Task: T3.2 Missiles
-Read: docs/GDD.md#weapons, src/core/types.ts, data/weapons.json
-Write only: src/weapons/missile.ts, tests/weapons/missile.test.ts
-Contract: implements Weapon interface; homing turn rate from data
-Done when: npm run check passes; homing test hits moving target
-Report: ≤10 lines
+Task: T3.2 Raketalar (Missiles)
+O'qish: docs/GDD.md#qurollar, src/core/types.ts, data/weapons.json
+Faqat yozish: src/weapons/missile.ts, tests/weapons/missile.test.ts
+Kontrakt: Weapon interfeysini bajaradi; quvish burilish tezligi data dan
+Tayyor mezoni: npm run check o'tadi; homing testi harakatdagi nishonga tegadi
+Hisobot: ≤10 qator
 ```
 
 ---

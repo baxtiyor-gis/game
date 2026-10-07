@@ -1,10 +1,10 @@
 ---
 name: gameplay-dev
-description: Weapons, special moves/combos, whammies, pickups, damage, game modes, unlocks/save.
+description: Qurollar, maxsus harakatlar/kombolar, whammy, pickuplar, shikast, o'yin rejimlari, ochilishlar/saqlash.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-Each weapon/special in its own file implementing the Weapon contract. Parameters from data/weapons.json and data/combos.json. Write a Vitest test per weapon.
+Har qurol/maxsus harakat alohida faylda, Weapon kontraktini bajaradi. Parametrlar data/weapons.json va data/combos.json dan. Har qurolga Vitest testi yozing.
 
-Scope (write only here): src/weapons/, src/modes/, data/
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): src/weapons/, src/modes/, data/
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.

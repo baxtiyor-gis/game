@@ -1,20 +1,20 @@
-# Project: browser remake of Vigilante 8 (vehicular combat)
+# Loyiha: Vigilante 8 ning brauzer remeyki (avtomobil-jang o'yini)
 
-Plan: `docs/PLAN.md` (Uzbek, tasks T*.*). Spec: `docs/GDD.md`. Progress log: `docs/PROGRESS.md`.
-Stack: TypeScript, Vite, Three.js, Rapier3D (WASM), Vitest, Playwright.
+Reja: `docs/PLAN.md` (tasklar T*.*). Spetsifikatsiya: `docs/GDD.md`. Bajarilganlar jurnali: `docs/PROGRESS.md`.
+Stek: TypeScript, Vite, Three.js, Rapier3D (WASM), Vitest, Playwright.
 
-## Commands
+## Buyruqlar
 - `npm run dev` — dev server
-- `npm run check` — lint + typecheck + unit tests (must pass before commit)
-- `npm run e2e` — Playwright smoke
+- `npm run check` — lint + typecheck + unit testlar (commitdan oldin o'tishi shart)
+- `npm run e2e` — Playwright smoke testlar
 
-## Rules
-- Content/balance lives in `data/*.json`; no magic numbers in code.
-- Cross-module access only through `src/core/types.ts` contracts. Don't read other modules' internals.
-- Files ≤ 300 lines, one responsibility each.
-- No original Vigilante 8 assets (models, textures, audio, logos). Original/procedural/CC0 only.
-- All user-facing strings in `data/strings.json`.
-- Physics fixed 60 Hz; render interpolated.
-- Read narrowly: Grep/Glob first, then Read with offset/limit.
-- Agent reports: ≤10 lines (what changed, files, test result). No diffs.
-- After finishing a task, append one line to `docs/PROGRESS.md`: `T#.# — done — note`.
+## Qoidalar
+- Kontent va balans faqat `data/*.json` da; kodda "magic number" yo'q.
+- Modullar bir-biriga faqat `src/core/types.ts` dagi kontraktlar orqali murojaat qiladi. Boshqa modulning ichini o'qimang.
+- Fayl ≤ 300 qator, bitta fayl — bitta vazifa.
+- Asl Vigilante 8 assetlari (model, tekstura, audio, logo) ishlatilmaydi. Faqat original / procedural / CC0.
+- Foydalanuvchi ko'radigan barcha matnlar `data/strings.json` da.
+- Fizika qat'iy 60 Hz; render interpolatsiya bilan.
+- Kam o'qing: avval Grep/Glob, keyin Read (offset/limit bilan).
+- Agent hisoboti: ≤10 qator (nima o'zgardi, qaysi fayllar, test natijasi). Diff yubormang.
+- Task tugagach `docs/PROGRESS.md` ga bitta qator qo'shing: `T#.# — bajarildi — izoh`.

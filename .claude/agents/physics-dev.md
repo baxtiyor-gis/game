@@ -1,10 +1,10 @@
 ---
 name: physics-dev
-description: Rapier raycast-vehicle handling, suspension, stats→physics mapping, flip recovery, damage hooks.
+description: Rapier raycast-vehicle boshqaruvi, suspenziya, statlar→fizika, ag'darilgandan tiklanish, shikast hooklari.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-Target arcade feel of the 1998 PS1 original: grippy, weighty, big air, quick self-righting. All tuning values from data/vehicles.json.
+Maqsad — 1998 PS1 originalidagi arkada his-tuyg'usi: yo'lni yaxshi ushlaydi, og'ir, baland sakraydi, tez o'nglanadi. Barcha sozlama qiymatlari data/vehicles.json dan.
 
-Scope (write only here): src/physics/, src/vehicles/
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): src/physics/, src/vehicles/
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.

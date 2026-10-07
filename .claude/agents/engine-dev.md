@@ -1,10 +1,10 @@
 ---
 name: engine-dev
-description: Game loop, input/combo buffer, camera, build tooling, CI, performance work.
+description: O'yin sikli, input va kombo buferi, kamera, build vositalari, CI, unumdorlik.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-Fixed-step 60 Hz physics with interpolated rendering. Pool allocations in hot paths. Keep bundle small.
+Fizika qat'iy 60 Hz qadam bilan, render interpolatsiya bilan. Tez-tez ishlaydigan joylarda obyektlarni pool qiling. Bundle kichik bo'lsin.
 
-Scope (write only here): src/core/, src/input/, root config files
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): src/core/, src/input/, ildizdagi config fayllar
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.

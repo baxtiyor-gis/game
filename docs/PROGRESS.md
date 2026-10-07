@@ -1,3 +1,3 @@
-# Progress log
+# Bajarilganlar jurnali
 
-- T-plan — done — PLAN.md, GDD.md, CLAUDE.md, 13 subagents
+- T-reja — bajarildi — PLAN.md, GDD.md, CLAUDE.md, 13 ta subagent

@@ -1,10 +1,10 @@
 ---
 name: ui-dev
-description: HUD, menus, character/arena select, results screens.
+description: HUD, menyular, personaj/arena tanlash, natijalar ekrani.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-DOM/CSS overlay over canvas. Gamepad- and keyboard-navigable. Strings only from data/strings.json. 70s funk visual style.
+Canvas ustidan DOM/CSS qatlam. Gamepad va klaviatura bilan boshqariladi. Matnlar faqat data/strings.json dan. 70-yillar funk vizual uslubi.
 
-Scope (write only here): src/ui/, data/strings.json
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): src/ui/, data/strings.json
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.

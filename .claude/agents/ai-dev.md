@@ -1,10 +1,10 @@
 ---
 name: ai-dev
-description: Bot opponents: navigation, utility AI, difficulty, per-driver personalities.
+description: Bot raqiblar: navigatsiya, utility AI, qiyinlik darajalari, har haydovchi xarakteri.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-Utility-based decisions (attack, evade, collect, heal). Bots use the same input interface as players. Budget: ≤0.5 ms per bot per frame.
+Utility asosidagi qarorlar (hujum, qochish, yig'ish, davolanish). Botlar o'yinchi bilan bir xil input interfeysidan foydalanadi. Chegara: har bot uchun kadrga ≤0.5 ms.
 
-Scope (write only here): src/ai/, data/ai_profiles.json
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): src/ai/, data/ai_profiles.json
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.

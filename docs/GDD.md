@@ -1,76 +1,76 @@
-# GDD — compact spec (source of truth for agents)
+# GDD — qisqa spetsifikatsiya (agentlar uchun asosiy manba)
 
-Reference: Vigilante 8 (1998, PS1). Recreate mechanics 1:1; all assets/names original (see PLAN.md §0).
-Items marked `?` are unverified — do not invent; leave TODO in data files.
+Namuna: Vigilante 8 (1998, PS1). Mexanika 1:1 takrorlanadi; barcha assetlar va nomlar original bo'ladi (PLAN.md §0).
+`?` bilan belgilanganlar tasdiqlanmagan — o'ylab topmang, data fayllarida TODO qoldiring.
 
-## Core loop
-Pick driver → arena → destroy all opponents. Unlimited machine gun + up to 3 pickup weapons + 1 vehicle special.
-Health pickups (wrench). Destructible scenery hides crates. Score via kills + Whammies.
+## Asosiy sikl
+Haydovchini tanlash → arena → barcha raqiblarni yo'q qilish. Cheksiz pulemyot + 3 tagacha topilgan qurol + mashinaning 1 ta maxsus quroli.
+Sog'liq tiklash (kalit/wrench). Buziladigan binolar ichida qurol sandiqlari bor. Ochko: o'ldirishlar + Whammy.
 
-## Controls (default)
-| Action | Keyboard | Gamepad |
+## Boshqaruv (standart)
+| Harakat | Klaviatura | Gamepad |
 |---|---|---|
-| Accelerate / Brake-Reverse | W / S | RT / LT |
-| Steer | A / D | L-stick |
-| Machine gun | Space | A |
-| Fire selected weapon | J | X |
-| Cycle weapon | Q / E | LB / RB |
-| Rear view | R | Y |
-| Combo input | Arrow keys sequence (3 dirs) + Machine gun within 400 ms | D-pad + A |
+| Gaz / Tormoz-orqaga | W / S | RT / LT |
+| Burilish | A / D | Chap stik |
+| Pulemyot | Space | A |
+| Tanlangan qurolni otish | J | X |
+| Qurolni almashtirish | Q / E | LB / RB |
+| Orqaga qarash | R | Y |
+| Kombo | Strelkalar ketma-ketligi (3 yo'nalish) + 400 ms ichida pulemyot | D-pad + A |
 
-## Vehicle stats (1–5 scale) → physics
-accel → engine force; topSpeed → max velocity; armor → maxHP & mass; avoidance → homing-lock difficulty + steering response.
-Damage states: 100–60% clean, 60–30% white smoke, 30–10% black smoke, <10% fire. 0 → explosion + wreck.
+## Mashina statlari (1–5 shkala) → fizika
+Tezlanish → dvigatel kuchi; Maks. tezlik → tezlik chegarasi; Zirh → maks. HP va massa; Chetlab o'tish → raketa nishonga olishi qiyinligi + rul sezgirligi.
+Shikast bosqichlari: 100–60% toza, 60–30% oq tutun, 30–10% qora tutun, <10% olov. 0 → portlash + mashina qoldig'i.
 
-## Standard weapons (ammo per pickup `?`)
-| Weapon | Behaviour |
+## Standart qurollar (bir sandiqdagi o'q soni `?`)
+| Qurol | Xatti-harakati |
 |---|---|
-| Interceptor Missiles | homing, medium dmg |
-| Bull's Eye Rockets | straight, fast, salvo |
-| Sky Hammer Mortar | ballistic arc, splash, flips cars |
-| Bruiser Cannon | heavy direct shot, knockback |
-| Roadkill Mines | dropped behind, proximity |
+| Interceptor Missiles | nishonni quvadi, o'rtacha zarar |
+| Bull's Eye Rockets | to'g'ri, tez, ketma-ket |
+| Sky Hammer Mortar | ballistik yoy, sachratib zarar, mashinani ag'daradi |
+| Bruiser Cannon | og'ir to'g'ri o'q, orqaga itaradi |
+| Roadkill Mines | orqaga tashlanadi, yaqinlashganda portlaydi |
 
-## Special moves (sequence + MG). Names from series; exact V8 inputs `?` — verify T0.3
-| Weapon | ↑↑↓ / etc. |
+## Maxsus harakatlar (ketma-ketlik + pulemyot). Nomlar seriyadan; V8 dagi aniq tugmalar `?` — T0.3 da tekshiriladi
+| Qurol | Harakatlar |
 |---|---|
-| Missiles | Halo Decoy (↑↑↓), Afterburner (↑↑↑), Missile Swarm (↑↑→) |
+| Raketalar (Missiles) | Halo Decoy (↑↑↓), Afterburner (↑↑↑), Missile Swarm (↑↑→) |
 | Rockets | Road Runner (↑↓↓), Stampede (↑↓↑), Bastion Rockets (↑↓→) |
-| Mortar | Turtle Turnover (↓↓↓), Crater Maker (↓↓↑), Tire Buster (↓↓→) |
-| Cannon | Cow Puncher (↓↑↓), Buckshot (↓↑↑), Ricochet (↓↑→) |
-| Mines | Bear Hug (←→↓), Cactus Patch (←→↑), Hovering Mines (←→→) |
-Specials cost extra ammo.
+| Mortira | Turtle Turnover (↓↓↓), Crater Maker (↓↓↑), Tire Buster (↓↓→) |
+| To'p (Cannon) | Cow Puncher (↓↑↓), Buckshot (↓↑↑), Ricochet (↓↑→) |
+| Minalar | Bear Hug (←→↓), Cactus Patch (←→↑), Hovering Mines (←→→) |
+Maxsus harakatlar ko'proq o'q sarflaydi.
 
 ## Whammy
-Hits from ≥2 different weapons on same target within 500 ms → Whammy x2..x6; bonus score.
+Bitta nishonga 500 ms ichida ≥2 xil quroldan tegsa → Whammy x2..x6; qo'shimcha ochko.
 
-## Roster
-| Faction | Driver | Vehicle | Special |
+## Personajlar
+| Fraksiya | Haydovchi | Mashina | Maxsus qurol |
 |---|---|---|---|
-| Vigilante | Chassey Blue | '67 Rattler | Gridlock: expanding flare grid, stalls engines |
-| Vigilante | John Torque | '69 Jefferson | Bass Quake: radial shockwave |
-| Vigilante | Slick Clyde | '70 Clydesdale | White Lightning: bolt, stalls engine |
-| Vigilante | Sheila | '74 Strider? | 24mm Tantrum Gun: auto-turret |
-| Vigilante (locked) | Convoy | '72 Moth Truck? | ? |
-| Vigilante (locked) | Dave | '70 Stag Pickup? | ? |
+| Vigilante | Chassey Blue | '67 Rattler | Gridlock: kengayuvchi flare to'ri, dvigatellarni o'chiradi |
+| Vigilante | John Torque | '69 Jefferson | Bass Quake: atrofga zilzila to'lqini |
+| Vigilante | Slick Clyde | '70 Clydesdale | White Lightning: chaqmoq, dvigatelni o'chiradi |
+| Vigilante | Sheila | '74 Strider? | 24mm Tantrum Gun: avtomatik turret |
+| Vigilante (yopiq) | Convoy | '72 Moth Truck? | ? |
+| Vigilante (yopiq) | Dave | '70 Stag Pickup? | ? |
 | Coyote | Loki | '73 Glenn 4x4 | ? |
 | Coyote | Houston 3 | '75 Palamino? | ? |
 | Coyote | Boogie | '76 Leprechaun? | ? |
 | Coyote | Beezwax | '70 Van? | ? |
-| Coyote (locked) | Sid Burn | ? | ? |
-| Coyote (locked) | Molo | '66 School Bus | ? |
-| Secret | Y the Alien | UFO | ? |
+| Coyote (yopiq) | Sid Burn | ? | ? |
+| Coyote (yopiq) | Molo | '66 School Bus | ? |
+| Yashirin | Y the Alien | NUJ (UFO) | ? |
 
-## Arenas
-Oil Fields (explosive tanks), Valley Farms (train — shoot cars for weapons), Aircraft Graveyard (planes, cranes w/ weights, hangars),
-Secret Base / Area 51 (launchable aircraft), Hoover Dam, Ski Resort (low grip), Casino City, Canyonlands, Ghost Town, Super Dreamland 64 (bonus).
-Each: ~300×300 m, walls/edges, 15–30 crate spawns, 1–3 interactive set pieces. Layouts in `docs/levels/*.md`.
+## Arenalar
+Oil Fields (portlovchi rezervuarlar), Valley Farms (poyezd — vagonni otsang qurol tushadi), Aircraft Graveyard (samolyotlar, yuk osilgan kranlar, angarlar),
+Secret Base / Area 51 (uchiriladigan samolyotlar), Hoover Dam, Ski Resort (sirpanchiq), Casino City, Canyonlands, Ghost Town, Super Dreamland 64 (bonus).
+Har biri: ~300×300 m, chegaralar, 15–30 sandiq joyi, 1–3 interaktiv obyekt. Xarita sxemalari `docs/levels/*.md` da.
 
-## Modes
-Quest (per-driver mission chain with objectives: destroy / protect / collect; opponents 1→N; unlocks), Arcade, Survival, 2P Versus, 2P Co-op (split-screen).
+## Rejimlar
+Quest (har haydovchiga missiyalar zanjiri: yo'q qilish / himoya qilish / yig'ish; raqiblar 1→N; personaj ochiladi), Arcade, Survival, 2 o'yinchi Versus, 2 o'yinchi Co-op (ekran ikkiga bo'linadi).
 
-## Visual / audio
-PS1 look: 320×240 internal RT, vertex snapping, affine UVs, 64–128px textures, distance fog, dithering. 1970s funk music, positional SFX, engine pitch ∝ RPM.
+## Vizual / audio
+PS1 ko'rinishi: 320×240 ichki render, vertex snapping, affine UV, 64–128px teksturalar, uzoqlikda tuman, dithering. 1970-yillar funk musiqasi, pozitsion ovoz effektlari, dvigatel ovozi aylanishlarga bog'liq.
 
-## Perf budget
-60 FPS mid laptop; ≤ 8 vehicles; ≤ 300 projectiles pooled; draw calls < 300; initial download < 30 MB.
+## Unumdorlik chegaralari
+O'rta noutbukda 60 FPS; ≤ 8 mashina; ≤ 300 snaryad (pool); draw call < 300; birinchi yuklanish < 30 MB.

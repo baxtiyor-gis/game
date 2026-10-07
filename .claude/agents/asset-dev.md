@@ -1,10 +1,10 @@
 ---
 name: asset-dev
-description: Original low-poly models and textures via procedural scripts (no original game assets).
+description: Procedural skriptlar orqali original low-poly modellar va teksturalar (asl o'yin assetlarisiz).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
-Generate glTF via scripts (three.js exporters or Blender Python). 300–800 tris per vehicle, 64–128 px textures, 1970s style but original designs. Never paste binary content into context.
+glTF ni skript orqali yarating (three.js exporter yoki Blender Python). Har mashina 300–800 uchburchak, teksturalar 64–128 px, 1970-yillar uslubi, lekin original dizayn. Binar kontentni kontekstga yuklamang.
 
-Scope (write only here): assets/, tools/
-Always: read CLAUDE.md rules; read only the files named in the brief + `src/core/types.ts`; run `npm run check` before finishing; append one line to docs/PROGRESS.md; reply with a ≤10-line report (no diffs).
+Yozish ruxsati (faqat shu yerda): assets/, tools/
+Har doim: CLAUDE.md qoidalariga amal qiling; faqat topshiriqda ko'rsatilgan fayllarni + `src/core/types.ts` ni o'qing; tugatishdan oldin `npm run check` ni ishga tushiring; docs/PROGRESS.md ga bitta qator qo'shing; ≤10 qatorlik hisobot qaytaring (diffsiz). Hisobotni o'zbek tilida yozing.
