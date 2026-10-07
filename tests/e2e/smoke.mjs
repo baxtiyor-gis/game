@@ -6,7 +6,7 @@ import { existsSync } from 'node:fs';
 
 const out = process.argv[2] ?? 'test-results/smoke.png';
 const exe = existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
-const server = await createServer({ server: { port: 5199 }, logLevel: 'error' });
+const server = await createServer({ server: { port: 5199, hmr: false, watch: null }, logLevel: 'error' });
 await server.listen();
 const browser = await chromium.launch({ executablePath: exe, args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: 960, height: 540 } });

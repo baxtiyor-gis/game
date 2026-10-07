@@ -1,6 +1,7 @@
 // Arena JSON sxemasi (data/levels/<arena>.json) va runtime tiplari.
 import type * as THREE from 'three';
 import type { PickupKind } from '../core/types';
+import type { DestructibleSystem } from './destructible';
 
 export type Vec2 = [number, number];
 
@@ -124,5 +125,7 @@ export interface Arena {
   spawns: { pos: THREE.Vector3; yaw: number }[];
   pickupSpawns: PickupSpawnDef[];
   heightAt(x: number, z: number): number;
+  /** Destructible tizimi (holat so'rash: alive, isDestroyed) */
+  destructibles: DestructibleSystem;
   dispose(): void;
 }

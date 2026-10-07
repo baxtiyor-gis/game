@@ -1,0 +1,970 @@
+{
+ "id": "oil_fields",
+ "size": 400,
+ "spawnLift": 1,
+ "terrain": {
+  "resolution": 128,
+  "seed": 7,
+  "noise": {
+   "amplitude": 0.8,
+   "frequency": 0.02,
+   "octaves": 3
+  },
+  "hills": [
+   {
+    "pos": [
+     -120,
+     -110
+    ],
+    "radius": 70,
+    "height": 8
+   },
+   {
+    "pos": [
+     115,
+     -125
+    ],
+    "radius": 60,
+    "height": 6.5
+   },
+   {
+    "pos": [
+     130,
+     105
+    ],
+    "radius": 75,
+    "height": 9
+   },
+   {
+    "pos": [
+     -130,
+     125
+    ],
+    "radius": 60,
+    "height": 7
+   },
+   {
+    "pos": [
+     -5,
+     -5
+    ],
+    "radius": 30,
+    "height": 2.5
+   }
+  ],
+  "flats": [
+   {
+    "pos": [
+     -12,
+     -30
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     0,
+     -36
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     12,
+     -30
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     70,
+     60
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     80,
+     64
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     -90,
+     20
+    ],
+    "radius": 7,
+    "blend": 8
+   },
+   {
+    "pos": [
+     -80,
+     -70
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     -50,
+     -88
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     40,
+     -92
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     78,
+     -70
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     -105,
+     62
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     -70,
+     100
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     58,
+     112
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     104,
+     28
+    ],
+    "radius": 5,
+    "blend": 6
+   },
+   {
+    "pos": [
+     -52,
+     42
+    ],
+    "radius": 12.0,
+    "blend": 8
+   },
+   {
+    "pos": [
+     52,
+     -30
+    ],
+    "radius": 16.5,
+    "blend": 8
+   },
+   {
+    "pos": [
+     20,
+     84
+    ],
+    "radius": 7.5,
+    "blend": 8
+   },
+   {
+    "pos": [
+     -12,
+     115
+    ],
+    "radius": 14,
+    "blend": 10
+   }
+  ]
+ },
+ "boundary": {
+  "wallHeight": 12,
+  "wallThickness": 6,
+  "rockCount": 64,
+  "rockScale": [
+   5,
+   10
+  ]
+ },
+ "props": [
+  {
+   "type": "building",
+   "pos": [
+    -52,
+    42
+   ],
+   "size": [
+    12,
+    5,
+    16
+   ],
+   "yaw": 0.0
+  },
+  {
+   "type": "building",
+   "pos": [
+    52,
+    -30
+   ],
+   "size": [
+    10,
+    6,
+    22
+   ],
+   "yaw": 0.4
+  },
+  {
+   "type": "building",
+   "pos": [
+    20,
+    84
+   ],
+   "size": [
+    8,
+    4.5,
+    10
+   ],
+   "yaw": -0.3
+  },
+  {
+   "type": "station",
+   "pos": [
+    -12,
+    118
+   ],
+   "yaw": 0.0
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    -60,
+    -80
+   ],
+   "length": 44,
+   "yaw": 1.571
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    0,
+    -8
+   ],
+   "length": 32,
+   "yaw": 1.571,
+   "lift": 3.6
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    26,
+    -48
+   ],
+   "length": 50,
+   "yaw": 0
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    -36,
+    -10
+   ],
+   "length": 34,
+   "yaw": 0.0
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    96,
+    52
+   ],
+   "length": 30,
+   "yaw": 1.9
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    -82,
+    70
+   ],
+   "length": 30,
+   "yaw": 0.1
+  },
+  {
+   "type": "pipe",
+   "pos": [
+    -30,
+    70
+   ],
+   "length": 28,
+   "yaw": 0,
+   "lift": 3.6
+  },
+  {
+   "type": "rock",
+   "pos": [
+    -30,
+    -120
+   ],
+   "scale": 3,
+   "yaw": -3.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    30,
+    -130
+   ],
+   "scale": 2.6,
+   "yaw": 3.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    115,
+    -40
+   ],
+   "scale": 3.2,
+   "yaw": 11.5
+  },
+  {
+   "type": "rock",
+   "pos": [
+    -118,
+    -20
+   ],
+   "scale": 2.8,
+   "yaw": -11.8
+  },
+  {
+   "type": "rock",
+   "pos": [
+    130,
+    10
+   ],
+   "scale": 2.4,
+   "yaw": 13.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    -80,
+    152
+   ],
+   "scale": 3,
+   "yaw": -8.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    88,
+    150
+   ],
+   "scale": 3.4,
+   "yaw": 8.8
+  },
+  {
+   "type": "rock",
+   "pos": [
+    -140,
+    95
+   ],
+   "scale": 2.8,
+   "yaw": -14.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    10,
+    -155
+   ],
+   "scale": 3,
+   "yaw": 1.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    150,
+    -90
+   ],
+   "scale": 3.5,
+   "yaw": 15.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    -20,
+    20
+   ],
+   "scale": 1.8,
+   "yaw": -2.0
+  },
+  {
+   "type": "rock",
+   "pos": [
+    25,
+    35
+   ],
+   "scale": 2.0,
+   "yaw": 2.5
+  }
+ ],
+ "destructibles": [
+  {
+   "type": "tank",
+   "pos": [
+    -12,
+    -30
+   ],
+   "drop": "missile"
+  },
+  {
+   "type": "tank",
+   "pos": [
+    0,
+    -36
+   ],
+   "drop": "special"
+  },
+  {
+   "type": "tank",
+   "pos": [
+    12,
+    -30
+   ],
+   "drop": "mortar"
+  },
+  {
+   "type": "tank",
+   "pos": [
+    70,
+    60
+   ],
+   "drop": "health"
+  },
+  {
+   "type": "tank",
+   "pos": [
+    80,
+    64
+   ],
+   "drop": "cannon"
+  },
+  {
+   "type": "tank",
+   "pos": [
+    -90,
+    20
+   ],
+   "drop": "rocket"
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -19.7,
+    98.2
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -24.7,
+    100.0
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -21.2,
+    93.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -20.6,
+    100.2
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -25.6,
+    97.0
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    38.2,
+    -13.3
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    33.1,
+    -12.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    36.6,
+    -15.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    36.9,
+    -11.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    32.9,
+    -15.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -35.8,
+    25.2
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -41.1,
+    24.8
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -36.9,
+    22.4
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -37.6,
+    26.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -3.8,
+    -50.2
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -7.5,
+    -51.9
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -4.4,
+    -53.6
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -6.1,
+    -48.9
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    67.8,
+    76.4
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    63.8,
+    77.3
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    67.0,
+    72.8
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    66.9,
+    77.8
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -90.2,
+    42.2
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -93.7,
+    39.7
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    -90.0,
+    38.7
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    11.8,
+    66.7
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    7.6,
+    66.9
+   ]
+  },
+  {
+   "type": "barrel",
+   "pos": [
+    10.7,
+    64.7
+   ]
+  }
+ ],
+ "interactives": [
+  {
+   "type": "pumpjack",
+   "pos": [
+    -80,
+    -70
+   ],
+   "yaw": 0.3
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    -50,
+    -88
+   ],
+   "yaw": -0.2
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    40,
+    -92
+   ],
+   "yaw": 0.1
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    78,
+    -70
+   ],
+   "yaw": 1.2
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    -105,
+    62
+   ],
+   "yaw": 1.6
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    -70,
+    100
+   ],
+   "yaw": 3.0
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    58,
+    112
+   ],
+   "yaw": 3.3
+  },
+  {
+   "type": "pumpjack",
+   "pos": [
+    104,
+    28
+   ],
+   "yaw": 2.0
+  }
+ ],
+ "playerSpawns": [
+  {
+   "pos": [
+    139,
+    57
+   ],
+   "yaw": -1.96
+  },
+  {
+   "pos": [
+    57,
+    139
+   ],
+   "yaw": -2.752
+  },
+  {
+   "pos": [
+    -57,
+    139
+   ],
+   "yaw": 2.752
+  },
+  {
+   "pos": [
+    -139,
+    57
+   ],
+   "yaw": 1.96
+  },
+  {
+   "pos": [
+    -139,
+    -57
+   ],
+   "yaw": 1.182
+  },
+  {
+   "pos": [
+    -57,
+    -139
+   ],
+   "yaw": 0.389
+  },
+  {
+   "pos": [
+    57,
+    -139
+   ],
+   "yaw": -0.389
+  },
+  {
+   "pos": [
+    139,
+    -57
+   ],
+   "yaw": -1.182
+  }
+ ],
+ "pickupSpawns": [
+  {
+   "pos": [
+    0,
+    0,
+    10
+   ],
+   "kind": "rocket"
+  },
+  {
+   "pos": [
+    -40,
+    0,
+    -20
+   ],
+   "kind": "missile"
+  },
+  {
+   "pos": [
+    40,
+    0,
+    10
+   ],
+   "kind": "cannon"
+  },
+  {
+   "pos": [
+    -70,
+    0,
+    -40
+   ],
+   "kind": "mortar"
+  },
+  {
+   "pos": [
+    90,
+    0,
+    -10
+   ],
+   "kind": "mine"
+  },
+  {
+   "pos": [
+    0,
+    0,
+    60
+   ],
+   "kind": "health"
+  },
+  {
+   "pos": [
+    -110,
+    0,
+    0
+   ],
+   "kind": "health"
+  },
+  {
+   "pos": [
+    120,
+    0,
+    -60
+   ],
+   "kind": "health"
+  },
+  {
+   "pos": [
+    -55,
+    0,
+    -130
+   ],
+   "kind": "special"
+  },
+  {
+   "pos": [
+    75,
+    0,
+    125
+   ],
+   "kind": "special"
+  },
+  {
+   "pos": [
+    -20,
+    0,
+    -90
+   ],
+   "kind": "missile"
+  },
+  {
+   "pos": [
+    30,
+    0,
+    -60
+   ],
+   "kind": "rocket"
+  },
+  {
+   "pos": [
+    60,
+    0,
+    20
+   ],
+   "kind": "mortar"
+  },
+  {
+   "pos": [
+    -100,
+    0,
+    -110
+   ],
+   "kind": "rocket"
+  },
+  {
+   "pos": [
+    110,
+    0,
+    100
+   ],
+   "kind": "missile"
+  },
+  {
+   "pos": [
+    -60,
+    0,
+    70
+   ],
+   "kind": "cannon"
+  },
+  {
+   "pos": [
+    0,
+    0,
+    -125
+   ],
+   "kind": "mine"
+  },
+  {
+   "pos": [
+    150,
+    0,
+    40
+   ],
+   "kind": "rocket"
+  },
+  {
+   "pos": [
+    -150,
+    0,
+    60
+   ],
+   "kind": "missile"
+  },
+  {
+   "pos": [
+    40,
+    0,
+    145
+   ],
+   "kind": "mortar"
+  }
+ ],
+ "environment": {
+  "sky": "#d9a066",
+  "fog": "#c9a67a",
+  "fogDensity": 0.0016
+ }
+}

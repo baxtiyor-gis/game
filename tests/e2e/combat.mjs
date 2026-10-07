@@ -1,10 +1,10 @@
-// Jang testi: o'yinchi harakatsiz turadi, botlar unga hujum qilishi kerak (15 s).
+// Jang testi: o'yinchi harakatsiz turadi, botlar arenada uni topib hujum qilishi kerak (30 s).
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
 import { existsSync } from 'node:fs';
 
 const exe = existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
-const server = await createServer({ server: { port: 5198 }, logLevel: 'error' });
+const server = await createServer({ server: { port: 5198, hmr: false, watch: null }, logLevel: 'error' });
 await server.listen();
 const browser = await chromium.launch({ executablePath: exe, args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
@@ -20,7 +20,8 @@ await page.evaluate(() => {
   window.__game.world.events.on('damage', (e) => e.targetId === window.__game.player.id && (window.__dmg += e.amount));
 });
 const trace = [];
-for (let i = 0; i < 15; i++) {
+const SIM = Number(process.env.COMBAT_SIM ?? 30); // o'yin ichidagi soniyalar
+for (let i = 0; i < 120 && (await page.evaluate(() => window.__game.world.time)) < SIM; i++) {
   await page.waitForTimeout(1000);
   if (process.env.TRACE) trace.push(await page.evaluate(() => window.__game.world.vehicles.filter((v) => v.id !== window.__game.player.id).map((v) => { const p = v.body.translation(); const f = v.forward(new v.object.position.constructor()); return [v.id, Math.round(p.x), Math.round(p.z), +f.x.toFixed(2), +f.z.toFixed(2), +v.input.throttle.toFixed(1), +v.input.steer.toFixed(1), (v.controller.debugInfo?.() ?? '')].join(' '); })));
 }
