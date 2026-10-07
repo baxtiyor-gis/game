@@ -5,11 +5,12 @@ const VERT = /* glsl */ `
 attribute float aSize;
 attribute vec4 aColor;
 uniform float uViewH;
+uniform float uGlow;
 varying vec4 vColor;
 void main() {
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   gl_PointSize = max(1.0, aSize * projectionMatrix[1][1] * uViewH * 0.5 / max(gl_Position.w, 0.01));
-  vColor = aColor;
+  vColor = vec4(aColor.rgb * uGlow, aColor.a);
 }`;
 
 const FRAG = /* glsl */ `
@@ -30,7 +31,8 @@ export class PointsLayer {
   private readonly geo = new THREE.BufferGeometry();
   private readonly mat: THREE.ShaderMaterial;
 
-  constructor(readonly pool: ParticlePool, additive: boolean) {
+  /** glow > 1: rang HDR (bloom ushlaydi) */
+  constructor(readonly pool: ParticlePool, additive: boolean, glow = 1) {
     const n = pool.capacity;
     this.pos = new Float32Array(n * 3);
     this.size = new Float32Array(n);
@@ -45,7 +47,7 @@ export class PointsLayer {
     this.mat = new THREE.ShaderMaterial({
       vertexShader: VERT,
       fragmentShader: FRAG,
-      uniforms: { uViewH: viewH },
+      uniforms: { uViewH: viewH, uGlow: { value: glow } },
       transparent: true,
       depthWrite: false,
       blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending,

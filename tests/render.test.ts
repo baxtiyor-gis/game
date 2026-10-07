@@ -4,6 +4,8 @@ import { ParticlePool, hexToLinear, makeStyle } from '../src/render/particlePool
 import { ShakeState, shakeTrauma } from '../src/render/shake';
 import { BAYER4, bayerThreshold, colorLevels, lowResSize } from '../src/render/ps1';
 import cfg from '../data/render.json';
+import { snapToTexelGrid } from '../src/render/environment';
+import { generateGroundPixels, upgradeMaterials } from '../src/render/materials';
 
 const style = makeStyle({ life: 1, size0: 1, size1: 2, c0: '#ffffff', c1: '#000000', alpha: 1, gravity: 0, drag: 0 });
 
@@ -78,5 +80,39 @@ describe('ps1 helpers', () => {
     expect(colorLevels(5)).toBe(31);
     expect(new Set(BAYER4).size).toBe(16);
     for (let i = 0; i < 16; i++) expect(Math.abs(bayerThreshold(i, i >> 2))).toBeLessThan(0.5);
+  });
+});
+
+describe('environment helpers', () => {
+  it('shadow snap is texel-aligned and keeps depth', () => {
+    const dir = new THREE.Vector3(0.5, 0.8, 0.3).normalize();
+    const focus = new THREE.Vector3(13.37, 0.2, -7.77);
+    const texel = 0.04;
+    const out = snapToTexelGrid(focus, dir, texel, new THREE.Vector3());
+    const r = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
+    expect(out.dot(r) / texel).toBeCloseTo(Math.round(out.dot(r) / texel), 4);
+    expect(out.dot(dir)).toBeCloseTo(focus.dot(dir), 4);
+    expect(out.distanceTo(focus)).toBeLessThan(texel * 2);
+  });
+
+  it('ground pixels are deterministic, opaque, in range', () => {
+    const a = generateGroundPixels(32, 3), b = generateGroundPixels(32, 3);
+    expect(Array.from(a)).toEqual(Array.from(b));
+    expect(a.length).toBe(32 * 32 * 4);
+    expect(a[3]).toBe(255);
+    expect(new Set(a).size).toBeGreaterThan(10);
+  });
+
+  it('upgrades Lambert to Standard, keeps color, shares materials', () => {
+    const lam = new THREE.MeshLambertMaterial({ color: '#b5835a' });
+    const s = new THREE.Scene();
+    const m1 = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), lam);
+    const m2 = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), lam);
+    s.add(m1, m2);
+    upgradeMaterials(s);
+    expect(m1.material).toBeInstanceOf(THREE.MeshStandardMaterial);
+    expect(m1.material).toBe(m2.material);
+    expect((m1.material as unknown as THREE.MeshStandardMaterial).color.getHexString()).toBe(new THREE.Color('#b5835a').getHexString());
+    expect(m1.castShadow && m1.receiveShadow).toBe(true);
   });
 });

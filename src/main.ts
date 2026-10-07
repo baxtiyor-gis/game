@@ -8,6 +8,9 @@ import { Gamepad } from './input/gamepad';
 import { PlayerController } from './input/playerController';
 import { ChaseCamera } from './render/chaseCamera';
 import { VfxSystem } from './render/vfx';
+import { installRenderMode } from './render/modern';
+import { installEnvironment } from './render/environment';
+import { makeGroundMaterial } from './render/materials';
 import { ShakeSystem } from './render/shake';
 import { spawnVehicle } from './vehicles/vehicle';
 import { DamageSystem } from './vehicles/damage';
@@ -46,14 +49,8 @@ function addRamp(world: World, x: number, z0: number, length: number, rise: numb
 
 function buildScene(world: World): void {
   const { scene, physics, rapier } = world;
-  scene.background = new THREE.Color('#d9a066');
-  scene.fog = new THREE.Fog('#d9a066', 60, 260);
-  scene.add(new THREE.HemisphereLight('#fff3d6', '#6b4a2b', 1.2));
-  const sun = new THREE.DirectionalLight('#ffffff', 1.5);
-  sun.position.set(50, 80, 30);
-  scene.add(sun);
-
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshLambertMaterial({ color: '#b5835a' }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), makeGroundMaterial(400));
+  ground.receiveShadow = true;
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
   physics.createCollider(rapier.ColliderDesc.cuboid(200, 0.5, 200).setTranslation(0, -0.5, 0).setCollisionGroups(WORLD_GROUPS));
@@ -86,6 +83,7 @@ async function boot(): Promise<void> {
   const world = await World.create({ canvas, afterFixed: () => keyboard.endTick() });
   const player = new PlayerController('p1', keyboard, new Gamepad(0));
 
+  const env = installEnvironment(world);
   buildScene(world);
   world.addSystem(new DamageSystem(world));
   const handle = spawnVehicle(world, vehicleDef('rattler'), player, { x: 0, y: 1, z: 0 }, 0);
@@ -109,6 +107,8 @@ async function boot(): Promise<void> {
   world.addSystem(whammy);
   world.addSystem(new ChaseCamera(world.camera, { object: handle.object, rearView: () => handle.input.rearView }));
   world.addSystem(new VfxSystem(world));
+  env.follow(handle.object);
+  installRenderMode(world);
   world.addSystem(new ShakeSystem(world));
   world.addSystem(new Hud(world, document.getElementById('ui')!, () => handle, (id) => whammy.score(id)));
   // Testlar uchun (Playwright): holatni o'qish

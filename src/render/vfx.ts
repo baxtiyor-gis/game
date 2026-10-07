@@ -31,7 +31,7 @@ export class VfxSystem implements System {
     private readonly world: GameWorld,
     private readonly rng: () => number = Math.random,
   ) {
-    this.layers = [new PointsLayer(this.fire, true), new PointsLayer(this.smoke, false)];
+    this.layers = [new PointsLayer(this.fire, true, cfg.fireGlow), new PointsLayer(this.smoke, false)];
     for (const l of this.layers) world.scene.add(l.points);
     const ev = world.events;
     this.offs.push(ev.on('explosion', (e) => this.explode(e.pos, e.radius)));
