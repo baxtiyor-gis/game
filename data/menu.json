@@ -9,11 +9,6 @@
     { "id": "settings", "label": "menu.options", "enabled": true },
     { "id": "controls", "label": "menu.controls", "enabled": true }
   ],
-  "arenas": [
-    { "id": "oil_fields", "name": "arena.oil_fields", "enabled": true },
-    { "id": "canyonlands", "name": "arena.canyonlands", "enabled": false },
-    { "id": "ghost_town", "name": "arena.ghost_town", "enabled": false }
-  ],
   "difficulties": [
     { "id": "easy", "label": "menu.diff.easy" },
     { "id": "normal", "label": "menu.diff.normal" },

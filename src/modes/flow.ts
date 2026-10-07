@@ -11,6 +11,7 @@ import { MENU, type ScreenId, type Settings } from '../ui/menu/config';
 import { MenuInput, type ActionEvent } from '../ui/menu/input';
 import { pickRivals } from '../ui/menu/logic';
 import { loadSettings } from '../ui/menu/store';
+import { isAvailable } from '../levels/registry';
 import { startBackdrop, type Content } from './backdrop';
 import { startArcade, type ArcadeConfig, type Match } from './arcade';
 
@@ -75,7 +76,10 @@ export class Flow {
     this.state = 'menu';
     if (location.hash.includes(MENU.playHash)) {
       const q = MENU.quickPlay;
-      this.lastCfg = { vehicleId: q.vehicle, rivalIds: q.rivals, difficulty: q.difficulty, arenaId: this.app.settings.arena, retro: this.app.settings.retro };
+      // `#play-<arena_id>`: faqat harf/raqam/_/- dan iborat bare token (testlar uchun)
+      const tok = new RegExp(`${MENU.playHash}-([A-Za-z0-9_-]+)`).exec(location.hash)?.[1];
+      const arenaId = tok && isAvailable(tok) ? tok : this.app.settings.arena;
+      this.lastCfg = { vehicleId: q.vehicle, rivalIds: q.rivals, difficulty: q.difficulty, arenaId, retro: this.app.settings.retro };
       this.restart();
     } else this.app.show('home');
   }

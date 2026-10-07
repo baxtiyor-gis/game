@@ -2,6 +2,7 @@
 import menuJson from '../../../data/menu.json';
 import driversJson from '../../../data/drivers.json';
 import type { Faction, WeaponId } from '../../core/types';
+import { ARENAS } from '../../levels/registry';
 
 export type Difficulty = 'easy' | 'normal' | 'hard';
 export type ScreenId = 'home' | 'select' | 'setup' | 'settings' | 'controls' | 'pause' | 'result';
@@ -46,5 +47,9 @@ export interface Settings {
   arena: string;
 }
 
-export const MENU = menuJson as unknown as MenuConfig;
+/** Arena ro'yxati levels/registry.ts dan olinadi (menu.json da emas). */
+export const MENU = {
+  ...(menuJson as unknown as Omit<MenuConfig, 'arenas'>),
+  arenas: ARENAS.map((a) => ({ id: a.id, name: a.nameKey, enabled: a.available })),
+} as MenuConfig;
 export const DRIVERS = driversJson as Record<string, DriverInfo>;

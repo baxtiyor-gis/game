@@ -229,6 +229,24 @@ describe('pickups', () => {
     expect(ps.isAvailable(0)).toBe(false);
   });
 
+  it('drop(): bir martalik sandiq, olinguncha qoladi, respawn yo\'q, maxDropped bilan cheklangan', () => {
+    const { world, gw, me, events } = setup();
+    const ps = new PickupSystem(gw, []);
+    world.addSystem(ps);
+    ps.drop(new THREE.Vector3(500, 0, 500), 'rocket');
+    world.step(5 * 60);
+    expect(ps.droppedCount).toBe(1);
+    ps.drop(new THREE.Vector3(0, 0, 0), 'rocket');
+    world.step(3);
+    expect(events.pickup.length).toBe(1);
+    expect(ps.droppedCount).toBe(1);
+    world.step(30 * 60);
+    expect(ps.droppedCount).toBe(1);
+    for (let i = 0; i < 20; i++) ps.drop(new THREE.Vector3(500 + i, 0, 500), 'mine');
+    expect(ps.droppedCount).toBeLessThanOrEqual(8);
+    expect(me.inventory.slots.length).toBeGreaterThan(0);
+  });
+
   it('health heals only when damaged; crate respawns after timer', () => {
     const { world, gw, me, events } = setup();
     const ps = new PickupSystem(gw, [{ pos: [0, 0, 0], kind: 'health' }]);

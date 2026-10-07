@@ -4,8 +4,9 @@ import type { Arena, ArenaDef, LoadOptions } from './types';
 import { buildTerrain } from './terrain';
 import { BuildContext } from './context';
 import { buildBoundary } from './boundary';
-import { populateDestructibles, populateInteractives, populateProps } from './populate';
+import { populateDestructibles, populateInteractives, populateProps, populateWindmillRigs } from './populate';
 import { DestructibleSystem } from './destructible';
+import { createTrain } from './train';
 import { disposePropCaches } from './props/common';
 
 export type { Arena, ArenaDef, LoadOptions } from './types';
@@ -20,6 +21,9 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   const systems: System[] = [];
   const pumps = populateInteractives(ctx);
   if (pumps) systems.push(pumps);
+  const windmills = populateWindmillRigs(ctx);
+  if (windmills) systems.push(windmills);
+  if (def.train) systems.push(createTrain(ctx, def.train, opts.onDrop));
   const destructibles = new DestructibleSystem(world, populateDestructibles(ctx), opts.onDrop);
   systems.push(destructibles);
   for (const s of systems) world.addSystem(s);

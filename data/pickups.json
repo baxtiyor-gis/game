@@ -2,6 +2,7 @@
  "maxSlots": 3,
  "pickRadius": 3,
  "respawn": 25,
+ "maxDropped": 8,
  "spin": 1.6,
  "bobAmplitude": 0.18,
  "bobSpeed": 2.2,

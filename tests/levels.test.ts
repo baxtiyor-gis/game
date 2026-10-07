@@ -5,8 +5,12 @@ import { EventBus } from '../src/core/events';
 import { loadArena } from '../src/levels/loader';
 import { maxChainPerTick } from '../src/levels/destructible';
 import type { Arena, ArenaDef } from '../src/levels/types';
+import { CG } from '../src/core/types';
 import type { GameEvents, GameWorld, PickupKind, System, VehicleHandle } from '../src/core/types';
 import oilFields from '../data/levels/oil_fields.json';
+import valleyFarms from '../data/levels/valley_farms.json';
+import { ARENAS, arenaDef } from '../src/levels/registry';
+import { TrainSystem } from '../src/levels/train';
 
 const DT = 1 / 60;
 const def = oilFields as unknown as ArenaDef;
@@ -40,9 +44,9 @@ class FakeWorld {
   }
 }
 
-async function load(onDrop?: (p: THREE.Vector3, k: PickupKind) => void): Promise<{ world: FakeWorld; arena: Arena }> {
+async function load(onDrop?: (p: THREE.Vector3, k: PickupKind) => void, d: ArenaDef = def): Promise<{ world: FakeWorld; arena: Arena }> {
   const world = new FakeWorld();
-  const arena = await loadArena(world as unknown as GameWorld, def, { onDrop });
+  const arena = await loadArena(world as unknown as GameWorld, d, { onDrop });
   world.step(1); // query pipeline yangilansin
   return { world, arena };
 }
@@ -200,6 +204,104 @@ describe('oil_fields arenasi', () => {
     sys.update!(0.5, 0);
     sys.update!(0.5, 0);
     expect(before.isEmpty()).toBe(false);
+    arena.dispose();
+  });
+});
+
+describe('valley_farms arenasi va poyezd', () => {
+  const vf = valleyFarms as unknown as ArenaDef;
+  const loadVf = (onDrop?: (p: THREE.Vector3, k: PickupKind) => void) => load(onDrop, vf);
+  const trainOf = (w: FakeWorld) => w.systems.find((s) => s.name === 'train') as TrainSystem;
+
+  it('registry: Oil Fields va Valley Farms mavjud, qolganlari tez kunda', () => {
+    expect(ARENAS.filter((a) => a.available).map((a) => a.id)).toEqual(['oil_fields', 'valley_farms']);
+    expect(ARENAS.filter((a) => !a.available && !a.def)).toHaveLength(6);
+    expect(arenaDef('valley_farms').id).toBe('valley_farms');
+    expect(() => arenaDef('casino_city')).toThrow();
+  });
+
+  it('yuklanadi: spawnlar terrain ustida, proplardan uzoq, relslardan chetda', async () => {
+    const { world, arena } = await loadVf();
+    expect(arena.spawns).toHaveLength(8);
+    expect(arena.pickupSpawns.length).toBeGreaterThanOrEqual(18);
+    for (const t of ['barn', 'silo', 'farmhouse', 'waterTower', 'tree', 'fence', 'crops', 'bridge', 'creek']) {
+      expect(vf.props.some((p) => p.type === t)).toBe(true);
+    }
+    expect(vf.interactives.some((i) => i.type === 'windmill')).toBe(true);
+    const solid = vf.props.filter((p) => !['tree', 'fence', 'crops', 'creek', 'rock'].includes(p.type)).map((p) => p.pos);
+    arena.spawns.forEach((s, i) => {
+      expect(s.pos.y).toBeCloseTo(arena.heightAt(s.pos.x, s.pos.z) + vf.spawnLift, 5);
+      for (const [x, z] of solid) expect(Math.hypot(s.pos.x - x, s.pos.z - z)).toBeGreaterThan(8);
+      for (let j = i + 1; j < arena.spawns.length; j++) expect(s.pos.distanceTo(arena.spawns[j]!.pos)).toBeGreaterThanOrEqual(15);
+      expect(rayDownY(world, s.pos.x, s.pos.z)!).toBeLessThan(s.pos.y);
+    });
+    expect(trainOf(world).cars).toHaveLength(vf.train!.wagons + 1);
+    arena.dispose();
+    expect(world.physics.colliders.len()).toBe(0);
+    expect(world.physics.bodies.len()).toBe(0);
+  });
+
+  it('poyezd harakatlanadi, iz bo\'ylab tezlik bilan yuradi va tsikl qiladi', async () => {
+    const { world, arena } = await loadVf();
+    const train = trainOf(world);
+    const s0 = train.headS;
+    const p0 = train.carPos('wagon-1');
+    world.step(60);
+    expect(train.headS - s0).toBeCloseTo(vf.train!.speed, 0);
+    expect(train.carPos('wagon-1').distanceTo(p0)).toBeGreaterThan(vf.train!.speed * 0.8);
+    expect(train.cycle).toBe(0);
+    for (let i = 0; i < 40 && train.cycle === 0; i++) world.step(60);
+    expect(train.cycle).toBe(1);
+    expect(train.headS).toBeLessThan(10);
+    arena.dispose();
+  });
+
+  it('vagon portlaganda sandiq tushadi; lokomotiv yo\'q qilinmaydi', async () => {
+    const drops: Array<[THREE.Vector3, PickupKind]> = [];
+    const { world, arena } = await loadVf((p, k) => drops.push([p.clone(), k]));
+    const train = trainOf(world);
+    const boom: Array<GameEvents['explosion']> = [];
+    world.events.on('explosion', (e) => e.sourceId === 'wagon-2' && boom.push(e));
+    world.events.emit('explosion', { pos: train.carPos('loco'), radius: 6, damage: 500, sourceId: 'p' });
+    expect(train.isDestroyed('loco')).toBe(false);
+    const target = train.carPos('wagon-2').add(new THREE.Vector3(0, 1.5, 0));
+    world.events.emit('explosion', { pos: target, radius: 6, damage: 20, sourceId: 'p' });
+    expect(train.hpOf('wagon-2')).toBeLessThan(vf.train!.wagonHp);
+    expect(train.isDestroyed('wagon-2')).toBe(false);
+    world.events.emit('explosion', { pos: target, radius: 6, damage: 100, sourceId: 'p' });
+    expect(train.isDestroyed('wagon-2')).toBe(true);
+    expect(boom).toHaveLength(1);
+    expect(drops.length).toBeGreaterThanOrEqual(1);
+    expect(drops.length).toBeLessThanOrEqual(2);
+    for (const [pos] of drops) expect(pos.distanceTo(target)).toBeLessThan(12);
+    // vagonning o'z portlashi qo'shni vagonni zanjirda yo'q qilmaydi
+    expect(train.isDestroyed('wagon-1')).toBe(false);
+    world.events.emit('damage', { targetId: 'wagon-3', sourceId: 'p', amount: 1000, weapon: 'x' });
+    expect(train.isDestroyed('wagon-3')).toBe(true);
+    arena.dispose();
+  });
+
+  it('poyezd mashinaga zarar va impuls beradi', async () => {
+    const { world, arena } = await loadVf();
+    const train = trainOf(world);
+    const pos = train.carPos('wagon-2').add(new THREE.Vector3(0, 1, 0));
+    const body = world.physics.createRigidBody(RAPIER.RigidBodyDesc.dynamic().setTranslation(pos.x, pos.y, pos.z));
+    world.physics.createCollider(RAPIER.ColliderDesc.cuboid(1, 0.5, 2).setDensity(1).setCollisionGroups((CG.VEHICLE << 16) | 0xffff), body);
+    const v = {
+      id: 'v1', alive: true, def: { mass: 1000 }, body,
+      position: (o: THREE.Vector3) => o.set(body.translation().x, body.translation().y, body.translation().z),
+    } as unknown as VehicleHandle;
+    world.vehicles.push(v);
+    const dmg: Array<GameEvents['damage']> = [];
+    world.events.on('damage', (e) => e.weapon === 'train' && dmg.push(e));
+    world.step(3);
+    expect(dmg).toHaveLength(1);
+    expect(dmg[0]!.targetId).toBe('v1');
+    expect(dmg[0]!.amount).toBeGreaterThan(0);
+    const l = body.linvel();
+    expect(Math.hypot(l.x, l.y, l.z)).toBeGreaterThan(3);
+    world.step(30); // sovutish: darhol qayta urmaydi
+    expect(dmg.length).toBeLessThanOrEqual(2);
     arena.dispose();
   });
 });

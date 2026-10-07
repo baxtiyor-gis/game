@@ -18,7 +18,12 @@
     "stationStripe": "#c0392b",
     "stationPump": "#e8e4da",
     "rock": "#8c7458",
-    "barrels": ["#b83a2a", "#2f5f8a", "#6b7b3a", "#9a7a2a"],
+    "barrels": [
+      "#b83a2a",
+      "#2f5f8a",
+      "#6b7b3a",
+      "#9a7a2a"
+    ],
     "barrelDebris": "#141210"
   },
   "pumpjack": {
@@ -28,7 +33,102 @@
     "beamLength": 7,
     "crankRadius": 1.1
   },
-  "pipe": { "radius": 0.45, "postSpacing": 7, "flangeSpacing": 6 },
-  "rock": { "colliderFactor": 0.8, "lumpiness": 0.28 },
-  "barrel": { "ribs": 2 }
+  "pipe": {
+    "radius": 0.45,
+    "postSpacing": 7,
+    "flangeSpacing": 6
+  },
+  "rock": {
+    "colliderFactor": 0.8,
+    "lumpiness": 0.28
+  },
+  "barrel": {
+    "ribs": 2
+  },
+  "farm": {
+    "colors": {
+      "barn": "#9c2f25",
+      "barnTrim": "#efe9dc",
+      "barnRoof": "#4b4f55",
+      "silo": "#c9ccd0",
+      "siloDome": "#8f959c",
+      "house": "#e9e1cf",
+      "houseRoof": "#7a3b2e",
+      "houseDoor": "#5a3d2a",
+      "glass": "#2a3a46",
+      "wood": "#7b5a3a",
+      "woodDark": "#4e3825",
+      "towerTank": "#8e9aa3",
+      "towerLeg": "#5a4a3a",
+      "trunk": "#5b4330",
+      "leaf": [
+        "#3f7a34",
+        "#4f8c3a",
+        "#2f6a2f",
+        "#6a9a3c"
+      ],
+      "corn": "#6f9d34",
+      "wheat": "#d8b24a",
+      "plowed": "#6b4a30",
+      "fence": "#8a6a45",
+      "ballast": "#6d655d",
+      "rail": "#8b8f94",
+      "sleeper": "#4a3626",
+      "water": "#3d7fa8",
+      "plank": "#8a6a45",
+      "windBlade": "#e8e4da",
+      "windTower": "#d9d6cc"
+    },
+    "tree": {
+      "trunkRadius": 0.35,
+      "trunkHeight": 3.2,
+      "crownRadius": 2.6,
+      "colliderRadius": 0.45
+    },
+    "fence": {
+      "postSpacing": 2.5,
+      "height": 1.1,
+      "postSize": 0.16,
+      "colliderThickness": 0.14
+    },
+    "crops": {
+      "rowSpacing": 1.6,
+      "rowWidth": 0.85,
+      "segment": 6,
+      "patchCell": 4,
+      "patchLift": 0.05
+    },
+    "windmill": {
+      "speed": 1.1,
+      "towerHeight": 13,
+      "blades": 12,
+      "wheelRadius": 3.3,
+      "colliderRadius": 1.1
+    },
+    "rails": {
+      "gauge": 1.5,
+      "sleeperSpacing": 1.1,
+      "ballastWidth": 3.8,
+      "ballastHeight": 0.3,
+      "segment": 2
+    },
+    "bridge": {
+      "deckThickness": 0.5,
+      "railHeight": 0.9,
+      "railThickness": 0.15
+    },
+    "creek": {
+      "level": -1.0,
+      "segment": 6
+    },
+    "silo": {
+      "radius": 2.6,
+      "height": 11
+    },
+    "waterTower": {
+      "legHeight": 9,
+      "tankRadius": 3,
+      "tankHeight": 3.6
+    }
+  }
 }

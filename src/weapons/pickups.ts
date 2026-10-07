@@ -30,6 +30,8 @@ export class PickupSystem implements System {
   private readonly kit = new CrateKit(pickupCfg.crateSize, pickupCfg.crateColor, pickupCfg.colors);
   private readonly flash: PickupFlash;
   private readonly crates: Crate[];
+  /** Dinamik (drop) sandiqlar: bir martalik, respawn yo'q; eng eskisi chiqib ketadi */
+  private readonly dropped: Crate[] = [];
 
   constructor(private readonly world: GameWorld, spawns: PickupSpawn[]) {
     this.flash = new PickupFlash(world.scene);
@@ -50,6 +52,35 @@ export class PickupSystem implements System {
     return this.crates[index].timer <= 0;
   }
 
+  /** Bir martalik sandiq qo'yadi (vagon/destructible vayron bo'lganda). Olinmaguncha qoladi; maxDropped dan oshsa eng eskisi yo'qoladi. */
+  drop(pos: THREE.Vector3, kind: PickupKind): void {
+    while (this.dropped.length >= pickupCfg.maxDropped) this.discard(this.dropped.shift()!);
+    this.dropped.push(this.build({ pos: [pos.x, pos.y, pos.z], kind }, this.dropped.length + this.crates.length));
+  }
+
+  /** Hozir sahnada turgan dinamik sandiqlar soni (test/UI uchun) */
+  get droppedCount(): number {
+    return this.dropped.length;
+  }
+
+  private discard(c: Crate): void {
+    c.group.removeFromParent();
+  }
+
+  /** Mashina yetib borsa sandiqni beradi; true = olindi. */
+  private tryTake(c: Crate): boolean {
+    const [x, y, z] = c.spawn.pos;
+    center.set(x, y + pickupCfg.hover, z);
+    for (const v of this.world.vehicles) {
+      if (!v.alive || v.position(tmp).distanceTo(center) > pickupCfg.pickRadius) continue;
+      if (!this.give(v, c.spawn.kind)) continue;
+      this.flash.burst(center, this.flashColor(c.spawn.kind));
+      this.world.events.emit('pickup', { vehicleId: v.id, kind: c.spawn.kind });
+      return true;
+    }
+    return false;
+  }
+
   fixedUpdate(dt: number): void {
     for (const c of this.crates) {
       if (c.timer > 0) {
@@ -57,23 +88,20 @@ export class PickupSystem implements System {
         if (c.timer <= 0) c.group.visible = true;
         continue;
       }
-      const [x, y, z] = c.spawn.pos;
-      center.set(x, y + pickupCfg.hover, z);
-      for (const v of this.world.vehicles) {
-        if (!v.alive || v.position(tmp).distanceTo(center) > pickupCfg.pickRadius) continue;
-        if (!this.give(v, c.spawn.kind)) continue;
-        c.timer = pickupCfg.respawn;
-        c.group.visible = false;
-        this.flash.burst(center, this.flashColor(c.spawn.kind));
-        this.world.events.emit('pickup', { vehicleId: v.id, kind: c.spawn.kind });
-        break;
-      }
+      if (!this.tryTake(c)) continue;
+      c.timer = pickupCfg.respawn;
+      c.group.visible = false;
+    }
+    for (let i = this.dropped.length - 1; i >= 0; i--) {
+      if (!this.tryTake(this.dropped[i]!)) continue;
+      this.discard(this.dropped[i]!);
+      this.dropped.splice(i, 1);
     }
   }
 
   update(dt: number): void {
     this.flash.update(dt);
-    for (const c of this.crates) {
+    for (const c of [...this.crates, ...this.dropped]) {
       c.phase += dt;
       if (!c.group.visible) continue;
       c.group.rotation.y += pickupCfg.spin * dt;
@@ -90,7 +118,8 @@ export class PickupSystem implements System {
   }
 
   dispose(): void {
-    for (const c of this.crates) c.group.removeFromParent();
+    for (const c of [...this.crates, ...this.dropped]) c.group.removeFromParent();
+    this.dropped.length = 0;
     this.flash.dispose();
     this.kit.dispose();
   }

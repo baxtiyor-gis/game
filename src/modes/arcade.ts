@@ -61,17 +61,20 @@ export interface Match extends Content {
 
 export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Match> {
   const env = installEnvironment(world);
-  const arena = await loadArena(world, arenaDef(cfg.arenaId));
+  // Sandiq tizimi arenadan keyin yaratiladi: onDrop unga kechiktirib ulanadi
+  let pickups: PickupSystem | null = null;
+  const arena = await loadArena(world, arenaDef(cfg.arenaId), { onDrop: (pos, kind) => pickups?.drop(pos, kind) });
   world.addSystem(new DamageSystem(world));
   const s0 = arena.spawns[0]!;
   const player = spawnVehicle(world, vehicleDef(cfg.vehicleId), cfg.player, s0.pos, s0.yaw);
   player.inventory.slots.push(...MENU.loadout.player.map((s) => ({ weapon: s.weapon, ammo: s.ammo })));
   player.inventory.specialAmmo = vsp.startAmmo;
   const spawns = arena.pickupSpawns;
-  const pickups = new PickupSystem(world, spawns);
+  const pk = new PickupSystem(world, spawns);
+  pickups = pk;
   const pickupView = spawns.map((s) => ({ pos: new THREE.Vector3(...s.pos), kind: s.kind, available: true }));
   const getPickups = () => {
-    pickupView.forEach((p, i) => (p.available = pickups.isAvailable(i)));
+    pickupView.forEach((p, i) => (p.available = pk.isAvailable(i)));
     return pickupView;
   };
   const rivals: VehicleHandle[] = [];
@@ -86,7 +89,7 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   }
   const whammy = new WhammySystem(world);
   world.addSystem(new WeaponSystem(world));
-  world.addSystem(pickups);
+  world.addSystem(pk);
   world.addSystem(whammy);
   world.addSystem(new ChaseCamera(world.camera, { object: player.object, rearView: () => player.input.rearView }));
   world.addSystem(new VfxSystem(world));

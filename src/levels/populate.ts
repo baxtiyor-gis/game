@@ -13,6 +13,7 @@ import { createTankVisual } from './props/tank';
 import type { DestructibleVisual } from './props/tank';
 import { propCfg, WORLD_GROUPS } from './props/common';
 import type { Origin, PropBuild } from './props/common';
+import { FARM_TYPES, populateFarmProps, populateWindmills } from './populateFarm';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
 
@@ -40,7 +41,9 @@ function origin(ctx: BuildContext, p: [number, number], yaw: number, w: number, 
 export function populateProps(ctx: BuildContext): void {
   const R = ctx.world.rapier;
   const rocks: RockItem[] = [];
+  const farmDefs = ctx.def.props.filter((d) => FARM_TYPES.has(d.type));
   for (const def of ctx.def.props) {
+    if (FARM_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -57,6 +60,7 @@ export function populateProps(ctx: BuildContext): void {
     ctx.root.add(m);
     ctx.onDispose(() => m.dispose());
   }
+  if (farmDefs.length > 0) populateFarmProps(ctx, farmDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {
@@ -74,12 +78,12 @@ function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): P
   }
 }
 
-/** Interaktivlar: animatsiyali nasoslar (System qaytaradi). */
+/** Interaktivlar: animatsiyali nasoslar (System qaytaradi). Shamol tegirmonlari — populateWindmills. */
 export function populateInteractives(ctx: BuildContext): System | null {
   const R = ctx.world.rapier;
   const rigs: ConstructorParameters<typeof PumpjackSystem>[0] = [];
   ctx.def.interactives.forEach((def, i) => {
-    if (def.type !== 'pumpjack') throw new Error(`Noma'lum interaktiv: ${def.type}`);
+    if (def.type !== 'pumpjack') return;
     const rig = createPumpjack(R, origin(ctx, def.pos, def.yaw ?? 0, 3, 9));
     attach(ctx, rig.build);
     rigs.push({ rig, speed: def.speed ?? propCfg.pumpjack.speed, phase: i * 1.7 });
@@ -88,6 +92,10 @@ export function populateInteractives(ctx: BuildContext): System | null {
 }
 
 /** Destructible obyektlar: kollayder + vizual (tank — alohida, bochka — InstancedMesh). */
+export function populateWindmillRigs(ctx: BuildContext): System | null {
+  return populateWindmills(ctx, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+}
+
 export function populateDestructibles(ctx: BuildContext): DestructibleItem[] {
   const R = ctx.world.rapier;
   const specs = ctx.def.destructibles.map((d) => {

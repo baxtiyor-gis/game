@@ -1,11 +1,11 @@
-// Menyu orqasidagi sahna: Oil Fields atrofida sekin aylanuvchi kamera (mashinasiz).
+// Menyu orqasidagi sahna: tanlangan arena atrofida sekin aylanuvchi kamera (mashinasiz).
 import * as THREE from 'three';
 import type { System } from '../core/types';
 import type { World } from '../core/world';
 import { installEnvironment } from '../render/environment';
 import { loadArena } from '../levels/loader';
 import { MENU } from '../ui/menu/config';
-import { arenaDef } from './arenas';
+import { arenaDef, resolveArenaId } from './arenas';
 import { installPipeline } from './pipeline';
 
 const cfg = MENU.backdrop;
@@ -42,7 +42,7 @@ class OrbitCamera implements System {
 
 export async function startBackdrop(world: World, arenaId: string, retro: boolean): Promise<Content> {
   const env = installEnvironment(world);
-  const arena = await loadArena(world, arenaDef(arenaId));
+  const arena = await loadArena(world, arenaDef(resolveArenaId(arenaId)));
   const focus = new THREE.Object3D();
   env.follow(focus);
   world.addSystem(new OrbitCamera(world, arena.heightAt, focus));

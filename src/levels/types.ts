@@ -26,6 +26,8 @@ export interface TerrainDef {
   noise: { amplitude: number; frequency: number; octaves: number };
   hills: HillDef[];
   flats: FlatDef[];
+  /** Yer teksturasi ustiga ko'paytiriladigan rang (#rrggbb): arenaga o'z tusini beradi */
+  tint?: string;
 }
 
 export interface BoundaryDef {
@@ -36,7 +38,9 @@ export interface BoundaryDef {
   rockScale: [number, number];
 }
 
-export type PropType = 'building' | 'pipe' | 'rock' | 'station';
+export type PropType =
+  | 'building' | 'pipe' | 'rock' | 'station'
+  | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek';
 
 export interface PropDef {
   type: PropType;
@@ -49,6 +53,11 @@ export interface PropDef {
   length?: number;
   /** pipe: yerdan ko'tarilish (m); >0 bo'lsa ustunlarda turadi */
   lift?: number;
+  /** crops: 'corn' | 'wheat' | 'plowed'; bridge/creek: qo'shimcha tur */
+  variant?: string;
+  /** creek: oqim markaz chizig'i nuqtalari; width — oqim eni (m) */
+  points?: Vec2[];
+  width?: number;
 }
 
 export interface DestructibleInstance {
@@ -61,7 +70,7 @@ export interface DestructibleInstance {
 }
 
 export interface InteractiveDef {
-  type: 'pumpjack';
+  type: 'pumpjack' | 'windmill';
   pos: Vec2;
   yaw?: number;
   /** Aylanish tezligi, rad/s (default data/levels/props.json) */
@@ -78,6 +87,20 @@ export interface PickupSpawnDef {
   /** JSON da [x, yOffset, z] (yOffset yerga qo'shiladi); Arena.pickupSpawns da mutlaq y */
   pos: [number, number, number];
   kind: PickupKind;
+}
+
+/** Temir yo'l: spline nuqtalari (arena chetidan chetiga, chegaradan tashqarigacha) va poyezd parametrlari. */
+export interface TrainDef {
+  path: Vec2[];
+  /** m/s */
+  speed: number;
+  /** Lokomotivdan keyingi vagonlar soni (4-6) */
+  wagons: number;
+  wagonHp: number;
+  /** Poyezd izning shu ulushida (0..1) boshlanadi: o'yin boshida kadrda bo'lishi uchun */
+  startProgress: number;
+  /** Oxirgi vagon izdan chiqqach, qayta paydo bo'lguncha, s */
+  respawnDelay: number;
 }
 
 export interface EnvironmentDef {
@@ -100,6 +123,7 @@ export interface ArenaDef {
   playerSpawns: SpawnDef[];
   pickupSpawns: PickupSpawnDef[];
   environment?: EnvironmentDef;
+  train?: TrainDef;
 }
 
 /** data/levels/destructibles.json: tur parametrlari */

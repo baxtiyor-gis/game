@@ -95,6 +95,7 @@ export function buildTerrain(world: GameWorld, def: TerrainDef, size: number): T
   for (let i = 0; i < pos.count; i++) pos.setY(i, heightAt(pos.getX(i), pos.getZ(i)));
   geo.computeVertexNormals();
   const mat = makeGroundMaterial(size);
+  if (def.tint) mat.color.set(def.tint);
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.name = 'terrain';

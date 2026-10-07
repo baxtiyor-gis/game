@@ -1,0 +1,15 @@
+{
+  "railLift": 0.18,
+  "loco": { "size": [3.2, 4.6, 13], "wheelRadius": 0.55 },
+  "wagon": { "size": [3.1, 3.6, 11], "wheelRadius": 0.45 },
+  "gap": 1.3,
+  "kinds": ["box", "tank", "flat", "box", "hopper", "tank"],
+  "hit": { "damage": 35, "impulseSpeed": 11, "forwardShare": 0.5, "lift": 0.25, "cooldown": 1.0, "margin": 0.7, "height": 2.2 },
+  "explosion": { "radius": 9, "damage": 18 },
+  "drop": { "min": 1, "max": 2, "sideOffset": 5, "lift": 0.6, "kinds": ["missile", "rocket", "mortar", "cannon", "mine", "health", "special"] },
+  "colors": {
+    "loco": "#23406b", "locoTrim": "#d6a41c", "locoDark": "#1b1b1f",
+    "box": "#8f3a2a", "boxDoor": "#6b2a1e", "tank": "#7d8790", "flat": "#4a4440", "hopper": "#58626b", "cargo": "#8b6b43",
+    "chassis": "#2a2622", "wheel": "#1d1b19", "wreck": "#1b1815", "ember": "#ff7a22", "lamp": "#fff2c0"
+  }
+}

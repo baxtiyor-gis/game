@@ -11,7 +11,7 @@ const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 const fires = [];
-await page.goto('http://localhost:5198/#play'); // menyuni o'tkazib yuborish (faqat testlar uchun)
+await page.goto('http://localhost:5198/#play' + (process.env.ARENA ? '-' + process.env.ARENA : '')); // menyuni o'tkazib yuborish (faqat testlar uchun)
 await page.waitForFunction(() => window.__game && window.__flow.state === 'playing', null, { timeout: 60000 });
 await page.evaluate(() => {
   window.__fires = {};
