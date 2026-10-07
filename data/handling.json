@@ -1,0 +1,73 @@
+{
+  "byStat": {
+    "engineAccel": [9.5, 11.5, 13.5, 16, 19],
+    "maxSpeed": [25, 28.5, 32, 36, 40],
+    "maxHp": [80, 100, 125, 155, 200],
+    "damageFactor": [1.25, 1.1, 1, 0.85, 0.7],
+    "steerMax": [0.46, 0.5, 0.54, 0.58, 0.62],
+    "steerRate": [4.5, 5, 5.5, 6, 6.5]
+  },
+  "chassis": {
+    "linearDamping": 0.03,
+    "angularDamping": 0.7,
+    "friction": 0.15,
+    "restitution": 0.05,
+    "comDrop": 0.3,
+    "yawInertia": 0.55,
+    "pitchInertia": 0.8,
+    "rollInertia": 0.7,
+    "downforce": 0.006
+  },
+  "wheels": {
+    "radiusFactor": 0.3,
+    "radiusMin": 0.32,
+    "radiusMax": 0.7,
+    "widthFactor": 0.7,
+    "axleFactor": 0.68,
+    "connectionLift": 1,
+    "restLengthFactor": 0.8,
+    "maxTravelFactor": 1.1,
+    "stiffness": 45,
+    "compression": 4,
+    "relaxation": 5,
+    "maxForcePerKg": 90,
+    "frictionSlip": 3.2,
+    "sideFriction": 1.4
+  },
+  "drive": {
+    "brakeAccel": 30,
+    "reverseSpeedFactor": 0.4,
+    "falloffPower": 3,
+    "idleBrake": 3,
+    "reverseThreshold": 1
+  },
+  "steer": {
+    "lateralAccel": 24,
+    "minFactor": 0.12,
+    "handbrakeBoost": 1.4
+  },
+  "drift": {
+    "rearFrictionFactor": 0.3,
+    "rearSideFactor": 0.5,
+    "handbrakeBrakeAccel": 4
+  },
+  "air": {
+    "pitchAccel": 5.5,
+    "yawAccel": 4.5,
+    "levelAccel": 2.2,
+    "angularDamping": 1.2
+  },
+  "selfRight": {
+    "uprightThreshold": 0.3,
+    "time": 1.2,
+    "lift": 1.1,
+    "maxSpeed": 6
+  },
+  "damage": {
+    "stages": [0.6, 0.3, 0.1],
+    "wreckColor": "#1a1a1a",
+    "wreckLinearDamping": 0.8,
+    "explosionImpulse": 9,
+    "explosionLift": 0.45
+  }
+}
