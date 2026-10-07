@@ -1,6 +1,6 @@
 {
  "missile": {
-  "halo_decoy": { "duration": 4, "orbitRadius": 4, "orbitSpeed": 4, "height": 1.2, "absorbRadius": 1.2 },
+  "halo_decoy": { "duration": 4, "orbitRadius": 4, "orbitSpeed": 2.5, "height": 1.2, "absorbRadius": 2.5 },
   "afterburner": { "impulseSpeed": 8, "boostAccel": 18, "duration": 1.2 },
   "missile_swarm": { "count": 5, "spread": 0.2 }
  },
