@@ -2,18 +2,20 @@ import * as THREE from 'three';
 import { World } from './core/world';
 import { vehicleDef } from './core/data';
 import { CG } from './core/types';
-import type { Controller, PickupKind } from './core/types';
+import type { PickupKind, VehicleHandle } from './core/types';
 import { Keyboard } from './input/keyboard';
 import { Gamepad } from './input/gamepad';
-import { PlayerController, emptyInput } from './input/playerController';
+import { PlayerController } from './input/playerController';
 import { ChaseCamera } from './render/chaseCamera';
-import { installPS1 } from './render/ps1';
 import { VfxSystem } from './render/vfx';
 import { ShakeSystem } from './render/shake';
 import { spawnVehicle } from './vehicles/vehicle';
 import { DamageSystem } from './vehicles/damage';
 import { WeaponSystem } from './weapons/weaponSystem';
 import { PickupSystem, type PickupSpawn } from './weapons/pickups';
+import { WhammySystem } from './weapons/whammy';
+import { BotController } from './ai/botController';
+import { Hud } from './ui/hud';
 
 const WORLD_GROUPS = (CG.WORLD << 16) | 0xffff;
 
@@ -56,6 +58,10 @@ function buildScene(world: World): void {
   scene.add(ground);
   physics.createCollider(rapier.ColliderDesc.cuboid(200, 0.5, 200).setTranslation(0, -0.5, 0).setCollisionGroups(WORLD_GROUPS));
 
+  // Arena chegarasi: 4 ta devor (maydon 400x400 m)
+  for (const [w, d, x, z] of [[400, 2, 0, 199], [400, 2, 0, -199], [2, 400, 199, 0], [2, 400, -199, 0]] as const) {
+    addBlock(world, [w, 6, d], [x, 3, z], 0, '#7a5a3c');
+  }
   addRamp(world, 0, 45, 16, 4.5, '#8a8f98');
   addRamp(world, -22, 40, 12, 3, '#8a8f98');
   addRamp(world, 24, 70, 18, 5.5, '#8a8f98');
@@ -71,8 +77,8 @@ const TEST_PICKUPS: Array<[number, number, PickupKind]> = [
   [-12, 34, 'health'], [14, 38, 'health'], [8, -8, 'special'], [-10, -8, 'rocket'], [18, 10, 'missile'],
 ];
 
-/** Harakatsiz nishon mashinalar uchun controller. */
-const idleController = (id: string): Controller => ({ id, sample: () => emptyInput() });
+/** Sinov raqiblari: [mashina/profil, x, z]. */
+const TEST_BOTS: Array<[string, number, number]> = [['sidburn', 25, 60], ['van', -30, 70]];
 
 async function boot(): Promise<void> {
   const canvas = document.getElementById('game') as HTMLCanvasElement;
@@ -84,15 +90,29 @@ async function boot(): Promise<void> {
   world.addSystem(new DamageSystem(world));
   const handle = spawnVehicle(world, vehicleDef('rattler'), player, { x: 0, y: 1, z: 0 }, 0);
   handle.inventory.slots.push({ weapon: 'rocket', ammo: 12 }, { weapon: 'missile', ammo: 8 });
-  spawnVehicle(world, vehicleDef('jefferson'), idleController('dummy1'), { x: 3, y: 1, z: 22 }, Math.PI);
-  spawnVehicle(world, vehicleDef('van'), idleController('dummy2'), { x: -4, y: 1, z: 34 }, Math.PI);
   const spawns: PickupSpawn[] = TEST_PICKUPS.map(([x, z, kind]) => ({ pos: [x, 0, z], kind }));
+  const pickups = new PickupSystem(world, spawns);
+  const pickupView = spawns.map((s) => ({ pos: new THREE.Vector3(...s.pos), kind: s.kind, available: true }));
+  const getPickups = () => {
+    pickupView.forEach((p, i) => (p.available = pickups.isAvailable(i)));
+    return pickupView;
+  };
+  for (const [id, x, z] of TEST_BOTS) {
+    let self: VehicleHandle | undefined;
+    const bot = new BotController(world, () => self, { profile: id, difficulty: 'normal', getPickups });
+    self = spawnVehicle(world, vehicleDef(id), bot, { x, y: 1, z }, Math.PI);
+    self.inventory.slots.push({ weapon: 'rocket', ammo: 12 });
+  }
+  const whammy = new WhammySystem(world);
   world.addSystem(new WeaponSystem(world));
-  world.addSystem(new PickupSystem(world, spawns));
+  world.addSystem(pickups);
+  world.addSystem(whammy);
   world.addSystem(new ChaseCamera(world.camera, { object: handle.object, rearView: () => handle.input.rearView }));
   world.addSystem(new VfxSystem(world));
   world.addSystem(new ShakeSystem(world));
-  installPS1(world);
+  world.addSystem(new Hud(world, document.getElementById('ui')!, () => handle, (id) => whammy.score(id)));
+  // Testlar uchun (Playwright): holatni o'qish
+  (window as unknown as { __game: unknown }).__game = { world, player: handle, whammy };
   world.start();
 }
 
