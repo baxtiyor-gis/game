@@ -1,0 +1,80 @@
+{
+ "hdr": { "flame": 2.6, "glow": 2.4, "tracerHead": 2.8, "tracerMid": 2.0 },
+ "viewMax": { "trailParticles": 2400, "trailMaxPerFrame": 6, "trailMaxPoint": 72, "trailResetDistance": 8 },
+ "models": {
+  "missile": {
+   "kind": "rocket", "length": 1.7, "radius": 0.15, "noseFrac": 0.22, "bodyColor": "#f2f2f6", "noseColor": "#d9261c",
+   "bandColor": "#d9261c", "bandAt": 0.1, "bandWidth": 0.16, "finCount": 4, "finSpan": 0.3, "finLength": 0.4, "finThick": 0.035,
+   "finColor": "#d9261c", "nozzleColor": "#2b2b30", "nozzleLength": 0.12,
+   "flame": { "length": 0.9, "radius": 0.11, "color": "#ff8a2a", "core": "#fff0b0" }, "flicker": 0.35, "roll": 5, "metalness": 0.35, "roughness": 0.4
+  },
+  "rocket": {
+   "kind": "rocket", "length": 1.3, "radius": 0.095, "noseFrac": 0.2, "bodyColor": "#e5342a", "noseColor": "#ffc933",
+   "bandColor": "#ffc933", "bandAt": 0.05, "bandWidth": 0.16, "finCount": 3, "finSpan": 0.18, "finLength": 0.26, "finThick": 0.03,
+   "finColor": "#ffc933", "nozzleColor": "#2b2b30", "nozzleLength": 0.1,
+   "flame": { "length": 0.6, "radius": 0.07, "color": "#ffa030", "core": "#fff4c0" }, "flicker": 0.4, "roll": 9, "metalness": 0.3, "roughness": 0.45
+  },
+  "mortar": {
+   "kind": "shell", "radius": 0.3, "tailLength": 0.4, "bodyColor": "#2f3a29", "bandColor": "#0f130e", "stripeColor": "#8ec25a",
+   "tailColor": "#1b2018", "finSpan": 0.26, "finCount": 4, "tumble": 6, "metalness": 0.55, "roughness": 0.5, "length": 0.95
+  },
+  "cannon": {
+   "kind": "rocket", "length": 0.95, "radius": 0.2, "noseFrac": 0.4, "bodyColor": "#9aa0aa", "noseColor": "#c9ced6",
+   "bandColor": "#4b4f58", "bandAt": -0.18, "bandWidth": 0.14, "finCount": 0, "finSpan": 0, "finLength": 0, "finThick": 0,
+   "finColor": "#000000", "nozzleColor": "#4b4f58", "nozzleLength": 0,
+   "tip": { "radius": 0.13, "color": "#ff7a18", "at": 0.88 }, "flicker": 0, "roll": 0, "metalness": 0.9, "roughness": 0.28
+  },
+  "mine": {
+   "kind": "disk", "length": 1.2, "radius": 0.6, "height": 0.16, "teeth": 12, "toothLength": 0.16, "bodyColor": "#33363d",
+   "toothColor": "#6b707a", "rimColor": "#d49a2a", "lightColor": "#ff2a1a", "lightRadius": 0.13, "spin": 5,
+   "blinkIdle": 1.2, "blinkArmed": 5, "duty": 0.5, "dim": 0.12, "metalness": 0.7, "roughness": 0.45
+  }
+ },
+ "special": {
+  "scale": 1.35, "tintMix": 0.4,
+  "tints": { "missile": "#7ad7ff", "rocket": "#ffd23f", "mortar": "#c58bff", "cannon": "#ff6a4a", "mine": "#7bff6b" }
+ },
+ "trails": {
+  "missile": [
+   { "rate": 140, "life": 0.16, "size": [0.34, 0.08], "from": [2.4, 1.0, 0.18, 0.9], "to": [1.2, 0.2, 0.05, 0], "add": 1, "drift": 0, "jitter": 0.04, "back": 0.95 },
+   { "rate": 70, "life": 1.15, "size": [0.35, 1.5], "from": [0.8, 0.8, 0.82, 0.5], "to": [0.45, 0.45, 0.48, 0], "add": 0, "drift": 0.5, "jitter": 0.1, "back": 1.0 }
+  ],
+  "rocket": [
+   { "rate": 130, "life": 0.14, "size": [0.26, 0.06], "from": [2.4, 1.1, 0.15, 0.9], "to": [1.4, 0.3, 0.05, 0], "add": 1, "drift": 0, "jitter": 0.03, "back": 0.7 },
+   { "rate": 60, "life": 0.45, "size": [0.2, 0.7], "from": [0.9, 0.7, 0.5, 0.4], "to": [0.4, 0.38, 0.36, 0], "add": 0.2, "drift": 0.3, "jitter": 0.06, "back": 0.75 }
+  ],
+  "mortar": [
+   { "rate": 45, "life": 1.0, "size": [0.3, 1.1], "from": [0.45, 0.5, 0.42, 0.32], "to": [0.3, 0.32, 0.3, 0], "add": 0, "drift": 0.6, "jitter": 0.12, "back": 0.1 }
+  ],
+  "cannon": [
+   { "rate": 150, "life": 0.22, "size": [0.3, 0.1], "from": [2.2, 0.9, 0.15, 0.9], "to": [1, 0.18, 0.04, 0], "add": 1, "drift": 0, "jitter": 0.03, "back": 0.5 },
+   { "rate": 110, "life": 0.55, "size": [0.22, 0.7], "from": [0.85, 0.85, 0.9, 0.35], "to": [0.6, 0.6, 0.65, 0], "add": 0.3, "drift": 0.15, "jitter": 0.05, "back": 0.5 }
+  ],
+  "mine": []
+ },
+ "tracer": {
+  "speed": 240, "length": 6, "headWidth": 0.09, "tailWidth": 0.02, "minLife": 0.03, "maxTracers": 64,
+  "head": "#fff3b8", "mid": "#ffb02a", "haloScale": 3.2, "haloIntensity": 0.22
+ },
+ "flash": { "intensity": 2.2 },
+ "crate": {
+  "bevel": 0.09, "bevelSegments": 3, "metalness": 0.55, "roughness": 0.42, "bandColor": "#2d2f36", "bandOverhang": 0.025,
+  "bandWidth": 0.16, "plateSize": 0.72, "plateBg": "#15161b", "iconScale": 0.62, "iconTexture": 128,
+  "modelScale": 0.95, "modelHeight": 0.95, "modelTilt": 0.35, "modelSpin": 1.6,
+  "ring": { "radius": 0.95, "tube": 0.055, "intensity": 1.5, "pulse": 0.12, "pulseSpeed": 3, "groundOffset": 0.08 },
+  "beam": { "radius": 0.5, "height": 3.2, "opacity": 0.12 },
+  "ringColors": { "weapon": "#ff8a2a", "health": "#3fd96b", "special": "#b36bff" },
+  "burst": { "pool": 6, "life": 0.45, "radius": 2.6, "intensity": 2.8 }
+ },
+ "icons": {
+  "viewBox": 32,
+  "mg": "M3 8h17l5 2-5 2H3z M7 14h17l5 2-5 2H7z M3 20h17l5 2-5 2H3z",
+  "missile": "M8 12h12l7 4-7 4H8z M8 12L3 7h6l3 5z M8 20l-5 5h6l3-5z M7 14l-5 2 5 2z",
+  "rocket": "M5 14.5h15l7 1.5-7 1.5H5z M5 14.5L2 11h5l2 3.5z M5 17.5L2 21h5l2-3.5z M3 15l-2 1 2 1z",
+  "mortar": "M16 9a8 8 0 1 0 0 16 8 8 0 0 0 0-16z M13 17a3 3 0 1 0 6 0 3 3 0 0 0-6 0z M15 9V6h2v3z M17 5l3-3 1.5 1.5-3 3z",
+  "cannon": "M3 11h19V9h5v10h-5v-2H3z M10 27a5 5 0 1 0 0-10 5 5 0 1 0 0 10z M10 24.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 1 1 0 5z",
+  "mine": "M16 3l3 5 5-3 1 6 6 1-3 5 3 5-6 1-1 6-5-3-3 5-3-5-5 3-1-6-6-1 3-5-3-5 6-1 1-6 5 3z M16 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
+  "special": "M16 2l4.2 9.2 10 1.1-7.4 6.8 2.1 9.9L16 23.9 7.1 29l2.1-9.9L1.8 12.3l10-1.1z",
+  "health": "M12 4h8v8h8v8h-8v8h-8v-8H4v-8h8z"
+ }
+}

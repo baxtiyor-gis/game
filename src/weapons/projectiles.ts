@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type { GameWorld, System, VehicleHandle, WeaponId } from '../core/types';
 import { detonate } from './impact';
 import { tuning, weaponDef } from './params';
-import { ProjectileView } from './projectileView';
+import { ProjectileView, type ViewExtra } from './projectileView';
 import { castSegment } from './raycast';
 
 export interface SpawnOpts {
@@ -57,6 +57,7 @@ const axis = new THREE.Vector3();
 const hitPos = new THREE.Vector3();
 const tmp = new THREE.Vector3();
 const render = new THREE.Vector3();
+const extra: ViewExtra = { id: 0, age: 0, moving: false, tag: null, splash: 1 };
 
 /** Snaryadlar pooli: 60 Hz harakat, Rapier ray bilan to'qnashuv, InstancedMesh render. */
 export class ProjectileSystem implements System {
@@ -118,13 +119,19 @@ export class ProjectileSystem implements System {
     for (const p of this.pool) if (p.active) this.step(p, dt);
   }
 
-  update(_dt: number, alpha: number): void {
-    this.view.begin();
-    for (const p of this.pool) {
+  update(dt: number, alpha: number): void {
+    this.view.begin(dt);
+    for (let i = 0; i < this.pool.length; i++) {
+      const p = this.pool[i];
       if (!p.active) continue;
       render.lerpVectors(p.prev, p.pos, alpha);
       const moving = p.vel.lengthSq() > 1e-6;
-      this.view.add(p.weapon, render, moving && !p.mine ? tmp.copy(p.vel).normalize() : null);
+      extra.id = i;
+      extra.age = p.age;
+      extra.moving = moving;
+      extra.tag = p.tag;
+      extra.splash = p.splashScale;
+      this.view.add(p.weapon, render, moving && !p.mine ? tmp.copy(p.vel).normalize() : null, extra);
     }
     this.view.end();
   }

@@ -27,6 +27,10 @@ export const HUD_CSS = `
   padding-top:clamp(8px,2.2vw,14px);display:flex;flex-direction:column;gap:clamp(2px,.7vw,5px)}
 .hud-slot{display:flex;justify-content:space-between;gap:6px;padding:clamp(1px,.5vw,3px) clamp(3px,1vw,6px);
   font-size:clamp(10px,2.8vw,17px);color:#b9863a;border:2px solid transparent;background:rgba(0,0,0,.35)}
+.hud-slot .ico{display:inline-flex;flex:none;align-items:center;width:1.25em;height:1.25em;margin-right:.35em;font-size:1.25em;line-height:1}
+.hud-slot .ico svg{width:100%;height:100%;filter:drop-shadow(1px 1px 0 #000)}
+.hud-slot.sel .ico svg{filter:none}
+.hud-slot span:first-of-type{flex:1}
 .hud-slot.sel{color:#1a0a00;background:linear-gradient(90deg,#ffd23f,#ff8a1f);border-color:#fff;text-shadow:none;
   transform:translateX(clamp(-10px,-2vw,-4px))}
 .hud-slot.mg{color:#ffd23f}

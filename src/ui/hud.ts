@@ -6,6 +6,7 @@ import { aheadDistance, fillTemplate, formatScore, isCritical, litSegments, ndcT
 import type { RadarPoint } from './format';
 import { HUD } from './hudConfig';
 import { HUD_CSS } from './hudStyle';
+import { weaponIcon, type IconId } from './icons';
 import { Radar } from './radar';
 
 const SLOTS = 3;
@@ -37,6 +38,8 @@ export class Hud implements System {
   private readonly vehicle: Txt;
   private driverId = '';
   private readonly slotName: Txt[] = [];
+  private readonly slotIcon: HTMLElement[] = [];
+  private readonly slotIconId: string[] = [];
   private readonly slotAmmo: Txt[] = [];
   private readonly slotSel: Flag[] = [];
   private readonly mgName: Txt;
@@ -89,16 +92,20 @@ export class Hud implements System {
     const wpn = h('div', 'hud-panel hud-wpn', this.box);
     for (let i = 0; i < SLOTS; i++) {
       const row = h('div', 'hud-slot', wpn);
+      this.slotIcon.push(h('i', 'ico', row));
+      this.slotIconId.push('');
       this.slotName.push(new Txt(h('span', '', row)));
       this.slotAmmo.push(new Txt(h('span', '', row)));
       this.slotSel.push(new Flag(row, 'sel'));
     }
     const mg = h('div', 'hud-slot mg', wpn);
+    h('i', 'ico', mg).innerHTML = weaponIcon('mg');
     this.mgName = new Txt(h('span', '', mg));
     this.mgAmmo = new Txt(h('span', '', mg));
     this.mgName.set(t('weapon.mg'));
     this.mgAmmo.set(t('hud.infinite'));
     const sp = h('div', 'hud-slot mg', wpn);
+    h('i', 'ico', sp).innerHTML = weaponIcon('special');
     this.spName = new Txt(h('span', '', sp));
     this.spAmmo = new Txt(h('span', '', sp));
     this.spName.set(t('hud.special'));
@@ -173,11 +180,18 @@ export class Hud implements System {
     const inv = p.inventory;
     for (let i = 0; i < SLOTS; i++) {
       const s = inv.slots[i];
+      this.setSlotIcon(i, s ? s.weapon : '');
       this.slotName[i].set(s ? t(`weapon.${s.weapon}`) : t('hud.empty'));
       this.slotAmmo[i].set(s ? String(s.ammo) : '');
       this.slotSel[i].set(i === inv.selected && !!s);
     }
     this.spAmmo.set(String(inv.specialAmmo));
+  }
+
+  private setSlotIcon(i: number, id: IconId | ''): void {
+    if (this.slotIconId[i] === id) return;
+    this.slotIconId[i] = id;
+    this.slotIcon[i].innerHTML = id ? weaponIcon(id) : '';
   }
 
   private updateWorld(p: VehicleHandle | undefined): void {
