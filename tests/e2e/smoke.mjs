@@ -17,15 +17,14 @@ await page.goto('http://localhost:5199/');
 await page.waitForTimeout(1500);
 await page.keyboard.down('Space'); // pulemyot
 await page.keyboard.press('KeyJ'); // tanlangan qurol
+await page.waitForTimeout(150);
+await page.screenshot({ path: out }); // tracer, snaryad va sandiqlar ko'rinadi
 await page.keyboard.down('KeyW');
 await page.waitForTimeout(2000);
 await page.keyboard.down('KeyD');
 await page.waitForTimeout(800);
 await page.keyboard.up('KeyD');
 await page.keyboard.up('KeyW');
-await page.keyboard.press('KeyJ');
-await page.waitForTimeout(120);
-await page.screenshot({ path: out });
 await page.keyboard.up('Space');
 await browser.close();
 await server.close();

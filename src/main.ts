@@ -7,6 +7,9 @@ import { Keyboard } from './input/keyboard';
 import { Gamepad } from './input/gamepad';
 import { PlayerController, emptyInput } from './input/playerController';
 import { ChaseCamera } from './render/chaseCamera';
+import { installPS1 } from './render/ps1';
+import { VfxSystem } from './render/vfx';
+import { ShakeSystem } from './render/shake';
 import { spawnVehicle } from './vehicles/vehicle';
 import { DamageSystem } from './vehicles/damage';
 import { WeaponSystem } from './weapons/weaponSystem';
@@ -87,6 +90,9 @@ async function boot(): Promise<void> {
   world.addSystem(new WeaponSystem(world));
   world.addSystem(new PickupSystem(world, spawns));
   world.addSystem(new ChaseCamera(world.camera, { object: handle.object, rearView: () => handle.input.rearView }));
+  world.addSystem(new VfxSystem(world));
+  world.addSystem(new ShakeSystem(world));
+  installPS1(world);
   world.start();
 }
 
