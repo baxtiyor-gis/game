@@ -1,0 +1,21 @@
+{
+  "maxChainPerTick": 4,
+  "types": {
+    "tank": {
+      "hp": 30,
+      "radius": 4,
+      "height": 8.5,
+      "centerHeight": 4.6,
+      "explosion": { "radius": 18, "damage": 60 },
+      "fuse": 0.25
+    },
+    "barrel": {
+      "hp": 6,
+      "radius": 0.5,
+      "height": 1.1,
+      "centerHeight": 0.6,
+      "explosion": { "radius": 5, "damage": 8 },
+      "fuse": 0.1
+    }
+  }
+}

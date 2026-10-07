@@ -1,0 +1,34 @@
+{
+  "colors": {
+    "tank": "#c4c8ce",
+    "tankLeg": "#5d636b",
+    "tankDebris": "#1b1815",
+    "scorch": "#0f0d0b",
+    "pumpBody": "#c9482c",
+    "pumpBeam": "#d6a41c",
+    "pumpBase": "#4a4d52",
+    "pipe": "#8a6a4a",
+    "pipeFlange": "#4b4640",
+    "pipePost": "#55504a",
+    "wall": "#b8ad97",
+    "roof": "#5d6872",
+    "door": "#33302c",
+    "window": "#23303a",
+    "stationCanopy": "#d8d2c4",
+    "stationStripe": "#c0392b",
+    "stationPump": "#e8e4da",
+    "rock": "#8c7458",
+    "barrels": ["#b83a2a", "#2f5f8a", "#6b7b3a", "#9a7a2a"],
+    "barrelDebris": "#141210"
+  },
+  "pumpjack": {
+    "speed": 1.3,
+    "beamAmplitude": 0.24,
+    "pivotHeight": 5.3,
+    "beamLength": 7,
+    "crankRadius": 1.1
+  },
+  "pipe": { "radius": 0.45, "postSpacing": 7, "flangeSpacing": 6 },
+  "rock": { "colliderFactor": 0.8, "lumpiness": 0.28 },
+  "barrel": { "ribs": 2 }
+}

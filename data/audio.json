@@ -1,0 +1,66 @@
+{
+  "muteKey": "KeyM",
+  "master": {
+    "gain": 0.7,
+    "gainMin": 0,
+    "gainMax": 1
+  },
+  "sfx": {
+    "gain": 0.6,
+    "gainMin": 0,
+    "gainMax": 1,
+    "poolSize": 24
+  },
+  "music": {
+    "gain": 0.4,
+    "gainMin": 0,
+    "gainMax": 1
+  },
+  "engine": {
+    "distanceCutoff": 150,
+    "minFreq": 80,
+    "maxFreq": 800,
+    "baseFreq": 150,
+    "noiseAmount": 0.15
+  },
+  "weapons": {
+    "mg": { "freq": 4000, "duration": 0.08, "gain": 0.5 },
+    "rocket": { "freq": 1200, "duration": 0.25, "gain": 0.7, "timbre": "whoosh" },
+    "missile": { "freq": 1200, "duration": 0.25, "gain": 0.7, "timbre": "whoosh" },
+    "mortar": { "freq": 400, "duration": 0.4, "gain": 0.8, "timbre": "bum" },
+    "cannon": { "freq": 2000, "duration": 0.15, "gain": 0.9, "timbre": "deep" },
+    "mine": { "freq": 1000, "duration": 0.1, "gain": 0.4, "timbre": "click" }
+  },
+  "explosion": {
+    "baseFreq": 150,
+    "noiseBand": 200,
+    "attack": 0.01,
+    "decay": 0.5,
+    "gain": 0.8
+  },
+  "pickup": {
+    "freq": 2400,
+    "duration": 0.2,
+    "gain": 0.6
+  },
+  "whammy": {
+    "baseFreq": 200,
+    "duration": 0.15,
+    "gain": 0.7,
+    "chordFreqs": [200, 300, 450]
+  },
+  "music": {
+    "gain": 0.4,
+    "bpm": 100,
+    "bassFreq": 55,
+    "bassGain": 0.6,
+    "kickFreq": 100,
+    "kickGain": 0.7,
+    "snareFreq": 4000,
+    "snareGain": 0.5,
+    "hihatFreq": 10000,
+    "hihatGain": 0.3,
+    "guitarGain": 0.4,
+    "guitarBandwidth": 400
+  }
+}
