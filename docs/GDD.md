@@ -70,7 +70,13 @@ Har biri: ~300×300 m, chegaralar, 15–30 sandiq joyi, 1–3 interaktiv obyekt.
 Quest (har haydovchiga missiyalar zanjiri: yo'q qilish / himoya qilish / yig'ish; raqiblar 1→N; personaj ochiladi), Arcade, Survival, 2 o'yinchi Versus, 2 o'yinchi Co-op (ekran ikkiga bo'linadi).
 
 ## Vizual / audio
-PS1 ko'rinishi: 320×240 ichki render, vertex snapping, affine UV, 64–128px teksturalar, uzoqlikda tuman, dithering. 1970-yillar funk musiqasi, pozitsion ovoz effektlari, dvigatel ovozi aylanishlarga bog'liq.
+**Qaror (foydalanuvchi):** gameplay Vigilante 8 dagidek, grafika esa biroz zamonaviy.
+- To'liq aniqlikda render, PBR materiallar (MeshStandardMaterial), ACES tone mapping, sRGB.
+- Real vaqt soyalari (quyosh, o'yinchi atrofida), osmon gradienti + quyosh, atmosfera tumani.
+- Post-processing: bloom (portlash, olov, faralar), FXAA/SMAA, yengil vinyetka.
+- Mashinalar: low-poly emas, "mid-poly" (1.5–4k uchburchak), xrom, oyna, yoritiladigan faralar; 70-yillar dizayni saqlanadi.
+- PS1 rejimi (240p, dither) — sozlamalarda ixtiyoriy "Retro" rejim sifatida qoladi (data/render.json → `retro`).
+1970-yillar funk musiqasi, pozitsion ovoz effektlari, dvigatel ovozi aylanishlarga bog'liq.
 
 ## Unumdorlik chegaralari
 O'rta noutbukda 60 FPS; ≤ 8 mashina; ≤ 300 snaryad (pool); draw call < 300; birinchi yuklanish < 30 MB.

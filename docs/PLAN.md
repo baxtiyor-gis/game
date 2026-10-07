@@ -32,7 +32,7 @@
 | Whammy | Bir vaqtda bir nechta qurol bilan urish → x2…x6 "Whammy" bonus |
 | Statlar | Acceleration, Top Speed, Armor, Target Avoidance |
 | Muhit | To'liq buziladigan binolar, interaktiv elementlar: poyezdni otib qurol olish (Valley Farms), Area 51 da samolyot uchirish, neft rezervuarlari portlashi, aeroport kranlari |
-| Vizual | PS1 low-poly, affine teksturalar, vertex jitter, tuman, 70-yillar estetikasi |
+| Vizual | Asl: PS1 low-poly. **Bizda: zamonaviyroq** — PBR, soyalar, bloom; PS1 ixtiyoriy "Retro" rejim |
 | Audio | 70-yillar funk saundtreki, baland portlashlar, personaj ovozlari |
 
 **Personaj ↔ mashina** (❓ = T0.1 da tasdiqlanadi):
