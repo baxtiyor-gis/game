@@ -1,0 +1,152 @@
+[
+ {
+  "id": "missile.halo_decoy",
+  "weapon": "missile",
+  "input": [
+   "U",
+   "U",
+   "D"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "missile.afterburner",
+  "weapon": "missile",
+  "input": [
+   "U",
+   "U",
+   "U"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "missile.missile_swarm",
+  "weapon": "missile",
+  "input": [
+   "U",
+   "U",
+   "R"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "rocket.road_runner",
+  "weapon": "rocket",
+  "input": [
+   "U",
+   "D",
+   "D"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "rocket.stampede",
+  "weapon": "rocket",
+  "input": [
+   "U",
+   "D",
+   "U"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "rocket.bastion",
+  "weapon": "rocket",
+  "input": [
+   "U",
+   "D",
+   "R"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mortar.turtle_turnover",
+  "weapon": "mortar",
+  "input": [
+   "D",
+   "D",
+   "D"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mortar.crater_maker",
+  "weapon": "mortar",
+  "input": [
+   "D",
+   "D",
+   "U"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mortar.tire_buster",
+  "weapon": "mortar",
+  "input": [
+   "D",
+   "D",
+   "R"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "cannon.cow_puncher",
+  "weapon": "cannon",
+  "input": [
+   "D",
+   "U",
+   "D"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "cannon.buckshot",
+  "weapon": "cannon",
+  "input": [
+   "D",
+   "U",
+   "U"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "cannon.ricochet",
+  "weapon": "cannon",
+  "input": [
+   "D",
+   "U",
+   "R"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mine.bear_hug",
+  "weapon": "mine",
+  "input": [
+   "L",
+   "R",
+   "D"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mine.cactus_patch",
+  "weapon": "mine",
+  "input": [
+   "L",
+   "R",
+   "U"
+  ],
+  "ammoCost": 3
+ },
+ {
+  "id": "mine.hovering_mines",
+  "weapon": "mine",
+  "input": [
+   "L",
+   "R",
+   "R"
+  ],
+  "ammoCost": 3
+ }
+]

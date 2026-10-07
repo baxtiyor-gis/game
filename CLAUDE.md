@@ -6,7 +6,7 @@ Stek: TypeScript, Vite, Three.js, Rapier3D (WASM), Vitest, Playwright.
 ## Buyruqlar
 - `npm run dev` — dev server
 - `npm run check` — lint + typecheck + unit testlar (commitdan oldin o'tishi shart)
-- `npm run e2e` — Playwright smoke testlar
+- `npm run e2e` — Playwright smoke (brauzer, skrinshot test-results/smoke.png)
 
 ## Qoidalar
 - Kontent va balans faqat `data/*.json` da; kodda "magic number" yo'q.

@@ -1,0 +1,50 @@
+{
+ "missile": {
+  "id": "missile",
+  "ammoPerPickup": 8,
+  "damage": 14,
+  "speed": 45,
+  "cooldown": 0.5,
+  "splashRadius": 2.5,
+  "lifetime": 5,
+  "homingTurnRate": 2.2
+ },
+ "rocket": {
+  "id": "rocket",
+  "ammoPerPickup": 12,
+  "damage": 9,
+  "speed": 70,
+  "cooldown": 0.25,
+  "splashRadius": 2,
+  "lifetime": 3
+ },
+ "mortar": {
+  "id": "mortar",
+  "ammoPerPickup": 5,
+  "damage": 28,
+  "speed": 30,
+  "cooldown": 1.2,
+  "splashRadius": 6,
+  "lifetime": 6,
+  "knockback": 9000
+ },
+ "cannon": {
+  "id": "cannon",
+  "ammoPerPickup": 6,
+  "damage": 22,
+  "speed": 90,
+  "cooldown": 0.9,
+  "splashRadius": 1.5,
+  "lifetime": 2,
+  "knockback": 12000
+ },
+ "mine": {
+  "id": "mine",
+  "ammoPerPickup": 5,
+  "damage": 30,
+  "speed": 0,
+  "cooldown": 0.6,
+  "splashRadius": 4,
+  "lifetime": 60
+ }
+}

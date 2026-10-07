@@ -1,0 +1,59 @@
+{
+ "keyboard": {
+  "throttle": [
+   "KeyW",
+   "ArrowUp"
+  ],
+  "brake": [
+   "KeyS",
+   "ArrowDown"
+  ],
+  "left": [
+   "KeyA",
+   "ArrowLeft"
+  ],
+  "right": [
+   "KeyD",
+   "ArrowRight"
+  ],
+  "handbrake": [
+   "ShiftLeft"
+  ],
+  "mg": [
+   "Space"
+  ],
+  "weapon": [
+   "KeyJ",
+   "ControlLeft"
+  ],
+  "special": [
+   "KeyK"
+  ],
+  "prev": [
+   "KeyQ"
+  ],
+  "next": [
+   "KeyE"
+  ],
+  "rear": [
+   "KeyR"
+  ]
+ },
+ "gamepad": {
+  "throttle": 7,
+  "brake": 6,
+  "mg": 0,
+  "weapon": 2,
+  "special": 3,
+  "prev": 4,
+  "next": 5,
+  "rear": 1,
+  "dpadUp": 12,
+  "dpadDown": 13,
+  "dpadLeft": 14,
+  "dpadRight": 15,
+  "steerAxis": 0,
+  "deadzone": 0.15
+ },
+ "comboWindow": 0.4
+}
