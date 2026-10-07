@@ -1,0 +1,33 @@
+{
+ "difficulty": {
+  "easy":   { "aimError": 0.16, "reactionTime": 0.9, "decisionInterval": 0.45, "leadAccuracy": 0.5, "comboScale": 0.3, "throttleCap": 0.7, "fireInterval": 0.5 },
+  "normal": { "aimError": 0.08, "reactionTime": 0.5, "decisionInterval": 0.3, "leadAccuracy": 0.85, "comboScale": 0.7, "throttleCap": 0.9, "fireInterval": 0.25 },
+  "hard":   { "aimError": 0.025, "reactionTime": 0.2, "decisionInterval": 0.2, "leadAccuracy": 1, "comboScale": 1, "throttleCap": 1, "fireInterval": 0.1 }
+ },
+ "utility": {
+  "attackRange": 120, "weakWeight": 0.6, "attackWeight": 1, "noAmmoAttackFactor": 0.4,
+  "lowHp": 0.4, "healBelow": 0.65, "healWeight": 1.4, "evadeWeight": 1.2, "crowdWeight": 0.5,
+  "crowdRadius": 45, "crowdCount": 3, "collectWeight": 1.2, "lowAmmo": 6, "lowAmmoNeed": 0.5,
+  "pickupRange": 150, "wanderScore": 0.15, "hysteresis": 0.1, "greedWeight": 0.4, "preferredBonus": 0.25
+ },
+ "steering": {
+  "arriveRadius": 12, "turnThrottle": 0.35, "sharpAngle": 1.2, "steerGain": 2.2,
+  "whiskerAngles": [-1.0, -0.5, 0, 0.5, 1.0], "whiskerBase": 8, "whiskerPerSpeed": 0.6,
+  "whiskerInterval": 0.05, "whiskerHeight": 0.3, "avoidWeight": 1.4, "brakeDanger": 0.8,
+  "stuckSpeed": 1.2, "stuckTime": 1.2, "reverseTime": 1.1, "flipUpY": 0.35,
+  "circleAngle": 0.6, "circleFlip": 6, "fleeDistance": 70, "zigzagPeriod": 1.6, "zigzagAmount": 0.6,
+  "wanderRadius": 70, "wanderBounds": 180, "wanderRepick": 8, "reachRadius": 5
+ },
+ "aim": {
+  "fireCone": 0.12, "losInterval": 0.2, "losHeight": 0.5, "mineRange": 18, "mineRearDot": -0.4,
+  "comboCooldown": 6, "mgRange": 70, "maxLeadTime": 3, "retargetInterval": 0.5,
+  "weaponRanges": {
+   "missile": { "min": 12, "ideal": 45, "max": 90, "cone": 0.5 },
+   "rocket":  { "min": 6,  "ideal": 30, "max": 70, "cone": 0.14 },
+   "mortar":  { "min": 25, "ideal": 60, "max": 110, "cone": 0.2 },
+   "cannon":  { "min": 8,  "ideal": 35, "max": 80, "cone": 0.1 },
+   "mine":    { "min": 0,  "ideal": 8,  "max": 18, "cone": 3.2 }
+  },
+  "offensiveCombos": ["missile.missile_swarm", "rocket.stampede", "mortar.crater_maker", "cannon.buckshot", "mine.cactus_patch"]
+ }
+}

@@ -23,16 +23,21 @@ export function acquireTarget(ctx: FireContext): VehicleHandle | null {
   return best;
 }
 
+/** Nishonga homing parametri; avoidance burilish tezligini susaytiradi. */
+export function homingFor(target: VehicleHandle | null, baseRate: number): { target: VehicleHandle; rate: number } | undefined {
+  if (!target) return undefined;
+  const t = tuning.missile;
+  const damp = Math.max(t.minHoming, 1 - t.avoidanceDamp * (target.def.stats.avoidance - 1));
+  return { target, rate: baseRate * damp };
+}
+
 /** Interceptor Missiles: eng yaqin oldidagi nishonga homing; avoidance homing ni susaytiradi. */
 export const missile: Weapon = {
   id: 'missile',
   fire(ctx) {
     const def = weaponDef('missile');
     const vel = ctx.forward.clone().multiplyScalar(def.speed);
-    const target = acquireTarget(ctx);
-    const t = tuning.missile;
-    const damp = Math.max(t.minHoming, 1 - t.avoidanceDamp * (target ? target.def.stats.avoidance - 1 : 0));
-    const homing = target ? { target, rate: (def.homingTurnRate ?? 0) * damp } : undefined;
+    const homing = homingFor(acquireTarget(ctx), def.homingTurnRate ?? 0);
     ctx.projectiles.spawn({ weapon: 'missile', owner: ctx.owner, pos: ctx.muzzle, vel, homing });
   },
 };

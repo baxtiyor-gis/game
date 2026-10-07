@@ -1,7 +1,7 @@
 {
  "mg": { "damage": 1.4, "cooldown": 0.09, "range": 90, "spread": 0.012, "tracerLife": 0.07, "tracerWidth": 0.07, "tracerColor": "#ffe27a" },
  "muzzle": { "gap": 0.4, "height": 0.35 },
- "projectiles": { "max": 300, "splashFactor": 0.5, "knockbackLift": 0.35 },
+ "projectiles": { "max": 300, "splashFactor": 0.5, "bounceSeparation": 0.1, "knockbackLift": 0.35 },
  "visual": {
   "missile": { "size": [0.25, 0.25, 1.1], "color": "#e8e8f0" },
   "rocket": { "size": [0.18, 0.18, 0.8], "color": "#ff8a2a" },

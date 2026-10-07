@@ -1,0 +1,4 @@
+{
+ "kill": 100,
+ "whammy": { "windowMs": 500, "minWeapons": 2, "maxCount": 6, "bonusPerCount": 25, "ignoreWeapons": ["explosion"] }
+}

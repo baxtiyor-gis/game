@@ -12,11 +12,24 @@ export interface SpawnOpts {
   vel: THREE.Vector3;
   gravity?: boolean;
   /** effektiv burilish tezligi (rad/s) — homing qiymati allaqachon avoidance bilan susaytirilgan */
-  homing?: { target: VehicleHandle; rate: number };
+  homing?: { target: HomingTarget; rate: number };
   mine?: boolean;
+  /** 'damage' eventidagi weapon nomi (maxsus harakat id si); berilmasa qurol id si */
+  tag?: string;
+  /** zarar / sachratma radiusi / knockback ko'paytirgichlari (default 1) */
+  scale?: { damage?: number; splash?: number; knockback?: number };
+  /** devordan sakrashlar soni (ricochet) */
+  bounces?: number;
+  /** har tickda harakatdan oldin chaqiriladi (maxsus traektoriya) */
+  onStep?: (p: Projectile, dt: number) => void;
+  /** portlashdan keyin chaqiriladi (qo'shimcha ta'sir) */
+  onExplode?: (pos: THREE.Vector3, hit: VehicleHandle | null) => void;
 }
 
-class Projectile {
+/** Homing nishoni: haqiqiy mashina yoki decoy. */
+export type HomingTarget = Pick<VehicleHandle, 'alive' | 'position'>;
+
+export class Projectile {
   active = false;
   weapon: WeaponId = 'rocket';
   owner!: VehicleHandle;
@@ -26,9 +39,16 @@ class Projectile {
   life = 0;
   age = 0;
   gravity = false;
-  homing: { target: VehicleHandle; rate: number } | null = null;
+  homing: { target: HomingTarget; rate: number } | null = null;
   mine = false;
   landed = false;
+  tag: string | null = null;
+  damageScale = 1;
+  splashScale = 1;
+  knockbackScale = 1;
+  bounces = 0;
+  onStep: SpawnOpts['onStep'] = undefined;
+  onExplode: SpawnOpts['onExplode'] = undefined;
 }
 
 const dir = new THREE.Vector3();
@@ -69,7 +89,29 @@ export class ProjectileSystem implements System {
     p.homing = o.homing ?? null;
     p.mine = o.mine ?? false;
     p.landed = false;
+    p.tag = o.tag ?? null;
+    p.damageScale = o.scale?.damage ?? 1;
+    p.splashScale = o.scale?.splash ?? 1;
+    p.knockbackScale = o.scale?.knockback ?? 1;
+    p.bounces = o.bounces ?? 0;
+    p.onStep = o.onStep;
+    p.onExplode = o.onExplode;
     return true;
+  }
+
+  /**
+   * Halo decoy: `victim` ga qaratilgan homing snaryadlarni `decoy` ga buradi;
+   * decoy ga `absorb` m yaqinlashganlar zararsiz portlaydi.
+   */
+  divert(victim: VehicleHandle, decoy: HomingTarget, absorb: number): void {
+    const c = decoy.position(tmp.set(0, 0, 0)).clone();
+    for (const p of this.pool) {
+      if (!p.active || !p.homing || p.owner === victim) continue;
+      if (p.homing.target === victim) p.homing.target = decoy;
+      if (p.homing.target !== decoy || p.pos.distanceTo(c) > absorb) continue;
+      p.active = false;
+      this.world.events.emit('explosion', { pos: p.pos.clone(), radius: absorb, damage: 0, sourceId: p.owner.id });
+    }
   }
 
   fixedUpdate(dt: number): void {
@@ -97,6 +139,7 @@ export class ProjectileSystem implements System {
     if (p.life <= 0) return this.explode(p, null);
     if (p.landed) return this.checkMine(p);
     p.prev.copy(p.pos);
+    p.onStep?.(p, dt);
     if (p.homing) this.steer(p, dt);
     if (p.gravity) p.vel.y += this.world.physics.gravity.y * dt;
     const speed = p.vel.length();
@@ -109,6 +152,7 @@ export class ProjectileSystem implements System {
       return;
     }
     hitPos.copy(p.pos).addScaledVector(dir, hit.t);
+    if (p.bounces > 0 && !hit.vehicle) return this.bounce(p, hit.normal, hitPos);
     if (p.mine && !hit.vehicle) {
       p.pos.copy(hitPos).y += tuning.mine.restHeight;
       p.prev.copy(p.pos);
@@ -118,6 +162,13 @@ export class ProjectileSystem implements System {
     }
     p.pos.copy(hitPos);
     this.explode(p, hit.vehicle);
+  }
+
+  private bounce(p: Projectile, n: { x: number; y: number; z: number }, at: THREE.Vector3): void {
+    want.set(n.x, n.y, n.z);
+    p.vel.addScaledVector(want, -2 * p.vel.dot(want));
+    p.pos.copy(at).addScaledVector(want, tuning.projectiles.bounceSeparation);
+    p.bounces--;
   }
 
   /** Burchak bo'yicha cheklangan burilish; avoidance allaqachon rate ga kiritilgan. */
@@ -150,8 +201,9 @@ export class ProjectileSystem implements System {
     const def = weaponDef(p.weapon);
     const d = p.vel.lengthSq() > 1e-6 ? tmp.copy(p.vel).normalize() : tmp.set(0, 1, 0);
     detonate(this.world, {
-      weapon: p.weapon, sourceId: p.owner.id, pos: p.pos, dir: d, damage: def.damage,
-      splash: def.splashRadius, knockback: def.knockback ?? 0, hit,
+      weapon: p.tag ?? p.weapon, sourceId: p.owner.id, pos: p.pos, dir: d, damage: def.damage * p.damageScale,
+      splash: def.splashRadius * p.splashScale, knockback: (def.knockback ?? 0) * p.knockbackScale, hit,
     });
+    p.onExplode?.(p.pos, hit);
   }
 }

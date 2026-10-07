@@ -9,6 +9,7 @@ import { mortar } from './mortar';
 import { tuning, weaponDef } from './params';
 import { ProjectileSystem } from './projectiles';
 import { rocket } from './rocket';
+import { Specials } from './specials/specials';
 import type { FireContext, Weapon } from './weapon';
 
 const WEAPONS: Record<WeaponId, Weapon> = { missile, rocket, mortar, cannon, mine };
@@ -22,6 +23,7 @@ export class WeaponSystem implements System {
   readonly projectiles: ProjectileSystem;
   readonly effects: Effects;
   private readonly mgReady = new Map<string, number>();
+  private readonly specials = new Specials();
   private readonly weaponReady = new Map<string, number>();
 
   constructor(private readonly world: GameWorld) {
@@ -31,6 +33,7 @@ export class WeaponSystem implements System {
 
   fixedUpdate(dt: number): void {
     for (const v of [...this.world.vehicles]) if (v.alive) this.tickVehicle(v);
+    this.specials.tick(dt);
     this.projectiles.fixedUpdate(dt);
   }
 
@@ -40,6 +43,7 @@ export class WeaponSystem implements System {
   }
 
   dispose(): void {
+    this.specials.timers.clear();
     this.projectiles.dispose();
     this.effects.dispose();
   }
@@ -52,7 +56,9 @@ export class WeaponSystem implements System {
       const n = inv.slots.length;
       inv.selected = (inv.selected + input.cycleWeapon + n) % n;
     }
-    if (input.fireMG && now >= (this.mgReady.get(v.id) ?? 0)) {
+    const combo = input.combo ? this.specials.perform(v, input.combo, () => this.context(v)) : null;
+    if (combo) this.world.events.emit('fire', { sourceId: v.id, weapon: combo });
+    if (!combo && input.fireMG && now >= (this.mgReady.get(v.id) ?? 0)) {
       this.mgReady.set(v.id, now + tuning.mg.cooldown);
       machinegun.fire(this.context(v));
       this.world.events.emit('fire', { sourceId: v.id, weapon: 'mg' });
