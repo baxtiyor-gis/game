@@ -1,5 +1,6 @@
 import { t } from '../../core/data';
 import { h } from '../dom';
+import { TOUCH_MODES } from '../../input/touch';
 import { MENU, type Action } from './config';
 import { Rows } from './rows';
 import { backButton, type Host, type Screen } from './screen';
@@ -38,6 +39,15 @@ export function settingsScreen(host: Host): Screen {
       value: () => onOff(s.unlockAll),
       adjust: () => {
         s.unlockAll = !s.unlockAll;
+        host.save();
+      },
+    },
+    {
+      label: () => t('settings.touch'),
+      value: () => t(`settings.touch.${s.touch}`),
+      adjust: (d) => {
+        const n = TOUCH_MODES.length;
+        s.touch = TOUCH_MODES[(TOUCH_MODES.indexOf(s.touch) + d + n) % n]!;
         host.save();
       },
     },

@@ -5,6 +5,7 @@ import { DRIVERS, MENU, type Action } from './config';
 import { accelTime, factionGroups, fill, flatOrder, statBars, stepGroup, topSpeedKmh } from './logic';
 import { Preview } from './preview';
 import { Rows } from './rows';
+import { onSwipe } from './swipe';
 import { backButton, type Host, type Screen } from './screen';
 import { isUnlocked } from './store';
 
@@ -47,6 +48,7 @@ export function selectScreen(host: Host, vehicles: readonly VehicleDef[]): Scree
   const detail = h('div', 'm-detail', sel);
   const prevBox = h('div', 'm-prev', detail);
   const preview = new Preview(prevBox);
+  onSwipe(prevBox, (d) => choose(idx + d));
   const lockBox = h('div', 'm-lockbox', prevBox);
   h('b', '', lockBox, t('select.locked'));
   h('span', '', lockBox, t('select.lockedHint'));

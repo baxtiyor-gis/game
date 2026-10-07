@@ -1,5 +1,6 @@
 // Sozlamalar saqlash (localStorage; mavjud bo'lmasa yoki xato bersa jim ishlaydi).
 import type { VehicleDef } from '../../core/types';
+import { TOUCH_MODES } from '../../input/touch';
 import { MENU, type Settings } from './config';
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
@@ -22,6 +23,7 @@ export function sanitize(raw: unknown, vehicles: readonly VehicleDef[]): Setting
     rivals: Math.round(clamp(num(r.rivals, d.rivals), MENU.rivals.min, MENU.rivals.max)),
     vehicle,
     arena,
+    touch: TOUCH_MODES.find((m) => m === r.touch) ?? d.touch,
   };
 }
 

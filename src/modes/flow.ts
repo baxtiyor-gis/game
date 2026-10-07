@@ -6,6 +6,7 @@ import type { System } from '../core/types';
 import type { Keyboard } from '../input/keyboard';
 import type { PlayerController } from '../input/playerController';
 import { AudioSystem } from '../audio/audioSystem';
+import { TouchControls } from '../ui/touchControls';
 import { MenuApp } from '../ui/menu/app';
 import { MENU, type ScreenId, type Settings } from '../ui/menu/config';
 import { MenuInput, type ActionEvent } from '../ui/menu/input';
@@ -41,6 +42,7 @@ export class Flow {
   private listener: { current?: THREE.Object3D } = {};
   private readonly audio: AudioSystem;
   private readonly audioProxy: System;
+  private readonly touch: TouchControls;
 
   constructor(private readonly deps: FlowDeps) {
     this.world = deps.world;
@@ -53,6 +55,15 @@ export class Flow {
       onSettings: (prev, cur) => this.onSettings(prev, cur),
     });
     this.input = new MenuInput((e) => this.onAction(e));
+    // Sensorli boshqaruv: controller shu manbadan o'qiydi; faqat 'playing' holatida ko'rinadi
+    this.touch = new TouchControls(deps.ui, settings.touch, {
+      onPause: () => this.pause(),
+      weapon: () => {
+        const inv = this.match?.player.inventory;
+        return inv?.slots[inv.selected]?.weapon;
+      },
+    });
+    deps.player.setTouch(this.touch.input);
     // AudioSystem butun ilova umri davomida bitta (gesture listenerlari bir marta), World.reset uni dispose qilmasin
     this.audio = new AudioSystem(deps.world, () => this.listener.current);
     this.audioProxy = { name: 'audio', update: (dt, a) => this.audio.update(dt, a) };
@@ -94,6 +105,7 @@ export class Flow {
 
   private onSettings(prev: Settings, cur: Settings): void {
     this.applyVolume();
+    this.touch.setMode(cur.touch);
     if (prev.retro !== cur.retro) this.dirty = true;
   }
 
@@ -145,6 +157,7 @@ export class Flow {
     this.endAt = null;
     (window as unknown as { __game: unknown }).__game = { world: this.world, player: match.player, whammy: match.whammy, arena: match.arena };
     this.deps.keyboard.endTick();
+    this.touch.input.reset();
     this.world.paused = false;
     this.world.suspended = false;
     this.app.setLoading(false);
@@ -192,6 +205,7 @@ export class Flow {
 
   // ---- Har kadr ----
   private frame(): void {
+    this.touch.update(this.state === 'playing');
     const m = this.match;
     if (this.state !== 'playing' || !m) return;
     const st = m.state();

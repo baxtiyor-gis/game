@@ -65,6 +65,7 @@ export const MENU_CSS = `
 .m-stat{padding:clamp(5px,1.4vw,10px) clamp(8px,2vw,14px);border:3px solid #ff8a1f;background:rgba(0,0,0,.7);box-shadow:3px 3px 0 #000;transform:skewX(-6deg)}
 .m-stat span{display:block;font-size:clamp(9px,2.2vw,13px);color:#ff8a1f}
 .m-stat b{display:block;font-weight:400;font-size:clamp(20px,5.4vw,38px);color:#ffd23f}
+@media (pointer:coarse){.m-root{touch-action:manipulation;-webkit-tap-highlight-color:transparent}.m-arrow{padding:.25em .7em}.m-topback{padding:8px 16px}}
 @media (max-width:760px){.m-topback{position:static;align-self:flex-start;margin-bottom:2px}}
 @media (max-height:520px){.m-logo{margin-top:6px;font-size:clamp(34px,9vh,70px)}.m-row{padding:5px 14px;font-size:17px}.m-rows{gap:5px}.m-tagline{display:none}}
 @media (prefers-reduced-motion:reduce){.m-root *{animation:none!important;transition:none!important}}

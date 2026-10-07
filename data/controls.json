@@ -55,5 +55,24 @@
   "steerAxis": 0,
   "deadzone": 0.15
  },
- "comboWindow": 0.4
+ "comboWindow": 0.4,
+ "touch": {
+  "defaultMode": "auto",
+  "stickRadius": 64,
+  "deadzone": 0.18,
+  "zoneFraction": 0.5,
+  "opacity": 0.6,
+  "rotateHintSeconds": 6,
+  "flick": {
+   "window": 0.16,
+   "minDist": 0.7,
+   "minEnd": 0.55,
+   "cooldown": 0.18,
+   "axisRatio": 1.3
+  },
+  "swipe": {
+   "minPx": 48,
+   "ratio": 1.5
+  }
+ }
 }

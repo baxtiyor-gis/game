@@ -34,6 +34,9 @@ export const HUD_CSS = `
 .hud-slot.sel{color:#1a0a00;background:linear-gradient(90deg,#ffd23f,#ff8a1f);border-color:#fff;text-shadow:none;
   transform:translateX(clamp(-10px,-2vw,-4px))}
 .hud-slot.mg{color:#ffd23f}
+.tc-on .hud-wpn{left:clamp(6px,2vw,16px);right:auto;bottom:auto;width:clamp(116px,30vw,170px);
+  top:calc(clamp(6px,2vw,16px) + clamp(8px,2.2vw,14px) + clamp(13px,3.6vw,24px) + clamp(8px,2.2vw,13px) + clamp(2px,.8vw,6px) + clamp(9px,2.6vw,18px) + clamp(4px,1.2vw,8px) + 10px)}
+.tc-on .hud-slot{font-size:clamp(9px,min(2.8vw,2.6vh),14px)}
 .hud-msg{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);opacity:0;white-space:nowrap;
   font-size:clamp(24px,8vw,64px);color:#ffd23f;text-shadow:3px 3px 0 #000,-1px -1px 0 #e5252a}
 .hud-msg.whammy{color:#ff8a1f;font-size:clamp(30px,10vw,84px);text-shadow:4px 4px 0 #000,-2px -2px 0 #e5252a}

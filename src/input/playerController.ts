@@ -3,6 +3,7 @@ import type { Controller, Dir, InputState } from '../core/types';
 import { ComboBuffer } from './combo';
 import type { Gamepad } from './gamepad';
 import type { Keyboard } from './keyboard';
+import type { TouchInput } from './touch';
 
 export function emptyInput(): InputState {
   return {
@@ -20,7 +21,7 @@ const DIRS: [Dir, readonly string[], number][] = [
   ['R', kb.right, gp.dpadRight],
 ];
 
-/** Klaviatura va/yoki gamepad dan InputState yig'adi. */
+/** Klaviatura, gamepad va/yoki sensorli boshqaruvdan InputState yig'adi. */
 export class PlayerController implements Controller {
   private readonly buffer = new ComboBuffer(combos, controls.comboWindow);
   private time = 0;
@@ -30,7 +31,13 @@ export class PlayerController implements Controller {
     readonly id: string,
     private readonly keyboard: Keyboard | null,
     private readonly pad: Gamepad | null,
+    private touch: TouchInput | null = null,
   ) {}
+
+  /** Sensorli manba (UI keyin yaratadi). */
+  setTouch(touch: TouchInput | null): void {
+    this.touch = touch;
+  }
 
   sample(dt: number): InputState {
     this.time += dt;
@@ -47,15 +54,23 @@ export class PlayerController implements Controller {
       if (k?.wasPressed(keys) || p?.wasPressed(btn)) this.buffer.tap(dir, this.time);
     }
 
-    const mgPressed = !!(k?.wasPressed(kb.mg) || p?.wasPressed(gp.mg));
-    s.combo = mgPressed ? this.buffer.trigger(this.time) : null;
-    s.throttle = up - down;
+    const tc = this.touch?.drain() ?? null;
+    for (const dir of tc?.taps ?? []) this.buffer.tap(dir, this.time);
+    let throttle = up - down;
+    if (tc) {
+      if (Math.abs(tc.throttle) > Math.abs(throttle)) throttle = tc.throttle;
+      steer += tc.steer;
+    }
+
+    const mgPressed = !!(k?.wasPressed(kb.mg) || p?.wasPressed(gp.mg) || tc?.mgPressed);
+    s.combo = tc?.combo ?? (mgPressed ? this.buffer.trigger(this.time) : null);
+    s.throttle = Math.max(-1, Math.min(1, throttle));
     s.steer = Math.max(-1, Math.min(1, steer));
-    s.handbrake = !!k?.isDown(kb.handbrake);
-    s.fireMG = !!(k?.isDown(kb.mg) || p?.isDown(gp.mg));
-    s.fireWeapon = !!(k?.wasPressed(kb.weapon) || p?.wasPressed(gp.weapon));
-    s.fireSpecial = !!(k?.wasPressed(kb.special) || p?.wasPressed(gp.special));
-    s.cycleWeapon = k?.wasPressed(kb.next) || p?.wasPressed(gp.next) ? 1 : k?.wasPressed(kb.prev) || p?.wasPressed(gp.prev) ? -1 : 0;
+    s.handbrake = !!(k?.isDown(kb.handbrake) || tc?.drift);
+    s.fireMG = !!(k?.isDown(kb.mg) || p?.isDown(gp.mg) || tc?.mg || tc?.mgPressed);
+    s.fireWeapon = !!(k?.wasPressed(kb.weapon) || p?.wasPressed(gp.weapon) || tc?.weaponPressed);
+    s.fireSpecial = !!(k?.wasPressed(kb.special) || p?.wasPressed(gp.special) || tc?.specialPressed);
+    s.cycleWeapon = k?.wasPressed(kb.next) || p?.wasPressed(gp.next) || tc?.cycle ? 1 : k?.wasPressed(kb.prev) || p?.wasPressed(gp.prev) ? -1 : 0;
     s.rearView = !!(k?.isDown(kb.rear) || p?.isDown(gp.rear));
     return s;
   }
