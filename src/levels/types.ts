@@ -146,6 +146,8 @@ export interface DestructibleType {
 export interface LoadOptions {
   /** Destructible yo'q bo'lganda sandiq chiqarish uchun (main PickupSystem ga ulaydi) */
   onDrop?: (pos: THREE.Vector3, kind: PickupKind) => void;
+  /** Qurilish jarayoni (0..1): yuklanish ekrani uchun; qadamlar orasida bosh oqim bo'shatiladi */
+  onProgress?: (fraction: number) => void;
 }
 
 export interface Arena {

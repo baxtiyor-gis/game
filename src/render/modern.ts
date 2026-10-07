@@ -35,14 +35,15 @@ export interface ModernPipeline {
   dispose(): void;
 }
 
-/** Zamonaviy ko'rinish: ACES + sRGB + PCFSoft soya + bloom + FXAA + vinyetka. */
+/** Zamonaviy ko'rinish: ACES + sRGB + PCF soya + bloom + FXAA + vinyetka. */
 export function installModern(world: World): ModernPipeline {
   const r = world.renderer;
   r.outputColorSpace = THREE.SRGBColorSpace;
   r.toneMapping = THREE.ACESFilmicToneMapping;
   r.toneMappingExposure = cfg.exposure;
   r.shadowMap.enabled = true;
-  r.shadowMap.type = THREE.PCFSoftShadowMap;
+  // three r18x: PCFSoftShadowMap olib tashlangan (render da baribir PCF ga almashtiriladi) — kalitlar oldindan mos bo'lsin
+  r.shadowMap.type = THREE.PCFShadowMap;
   r.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, cfg.pixelRatioMax));
 
   const composer = new EffectComposer(r);

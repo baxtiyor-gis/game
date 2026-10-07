@@ -28,8 +28,9 @@ function groundY(ctx: BuildContext, x: number, z: number, yaw: number, w: number
   return y;
 }
 
-function attach(ctx: BuildContext, b: PropBuild): void {
-  ctx.root.add(b.object);
+function attach(ctx: BuildContext, b: PropBuild, isStatic = false): void {
+  if (isStatic) ctx.statics.push(b.object);
+  else ctx.root.add(b.object);
   for (const d of b.colliders) ctx.addCollider(d);
 }
 
@@ -53,7 +54,7 @@ export function populateProps(ctx: BuildContext): void {
       ctx.addCollider(R.ColliderDesc.ball(r).setTranslation(def.pos[0], y + r * 0.5, def.pos[1]).setCollisionGroups(WORLD_GROUPS));
       continue;
     }
-    attach(ctx, buildStatic(R, ctx, def, yaw));
+    attach(ctx, buildStatic(R, ctx, def, yaw), true);
   }
   if (rocks.length > 0) {
     const m = buildRocks(rocks);

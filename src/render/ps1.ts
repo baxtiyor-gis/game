@@ -138,6 +138,11 @@ export class PS1Pipeline {
     r.render(this.quadScene, this.quadCam);
   }
 
+  /** Yangi qo'shilgan obyektlarga PS1 materiallarini darhol qo'llaydi (shader isitishdan oldin). */
+  prepare(): void {
+    applyPS1Scene(this.world.scene);
+  }
+
   dispose(): void {
     this.target.dispose();
     this.mat.dispose();

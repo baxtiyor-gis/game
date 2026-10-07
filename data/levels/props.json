@@ -1,4 +1,5 @@
 {
+  "merge": { "cell": 120 },
   "colors": {
     "tank": "#c4c8ce",
     "tankLeg": "#5d636b",

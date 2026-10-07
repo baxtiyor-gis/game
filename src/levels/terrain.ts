@@ -91,8 +91,9 @@ export function buildTerrain(world: GameWorld, def: TerrainDef, size: number): T
 
   const geo = new THREE.PlaneGeometry(size, size, n, n);
   geo.rotateX(-Math.PI / 2);
+  // PlaneGeometry tugunlari tartibi to'r bilan bir xil (i = iz * stride + ix): balandlik to'g'ridan-to'g'ri nusxalanadi
   const pos = geo.getAttribute('position');
-  for (let i = 0; i < pos.count; i++) pos.setY(i, heightAt(pos.getX(i), pos.getZ(i)));
+  for (let i = 0; i < pos.count; i++) pos.setY(i, grid[i]!);
   geo.computeVertexNormals();
   const mat = makeGroundMaterial(size);
   if (def.tint) mat.color.set(def.tint);

@@ -3,6 +3,7 @@ import type { GameWorld, System } from '../core/types';
 import cfgJson from '../../data/render.json';
 import { makeSkyDome, makeSkyMaterial } from './sky';
 import { upgradeMaterials } from './materials';
+import { timed } from '../core/perf';
 import { applyEnvParams, resolveEnvironment } from './envParams';
 import type { EnvironmentDef } from '../levels/types';
 
@@ -15,7 +16,15 @@ export interface EnvironmentOptions {
   autoUpgrade?: boolean;
   /** Soya kamerasi kuzatadigan obyekt (keyin follow() bilan o'zgartirish mumkin) */
   follow?: THREE.Object3D | null;
+  /** Arena muhiti: darhol qo'llanadi (env map bir marta pishiriladi) */
+  environment?: EnvironmentDef;
 }
+
+/**
+ * Pishirilgan PMREM env map lar keshi: kalit — osmon parametrlari. Match/orqa fon qayta qurilganda qayta pishirilmaydi
+ * (PMREM shaderlari ham qayta kompilyatsiya qilinmaydi). Renderer bo'yicha alohida.
+ */
+const envCache = new WeakMap<THREE.WebGLRenderer, Map<string, THREE.WebGLRenderTarget>>();
 
 /** Quyosh soyasi markazini yorug'lik-fazosi texel to'rtiga yaxlitlaydi (soya titrashini oldini oladi). */
 export function snapToTexelGrid(
@@ -37,7 +46,6 @@ export class Environment implements System {
   private readonly dir = new THREE.Vector3(...(cfg.sunDirection as [number, number, number])).normalize();
   private readonly dome: THREE.Mesh;
   private readonly skyMat: THREE.ShaderMaterial;
-  private envRT: THREE.WebGLRenderTarget;
   private readonly tmp = new THREE.Vector3();
   private frames = 0;
 
@@ -67,32 +75,42 @@ export class Environment implements System {
     scene.add(this.sun, this.sun.target);
 
     // PBR aks etish uchun osmondan environment map
-    this.envRT = this.bakeEnv();
     scene.environmentIntensity = cfg.envIntensity;
-
-    this.placeSun();
+    this.applyArenaEnvironment(opts.environment);
     if (opts.autoUpgrade !== false) upgradeMaterials(scene);
   }
 
-  /** Osmondan PMREM environment map pishiradi; vaqtinchalik sfera/generator bo'shatiladi. */
-  private bakeEnv(): THREE.WebGLRenderTarget {
+  /** Osmondan PMREM environment map (keshdan yoki yangi pishiriladi; kesh egasi — envCache). */
+  private bakeEnv(): void {
+    const r = this.world.renderer;
+    const u = this.skyMat.uniforms;
+    const key = JSON.stringify([this.dir.toArray(), ...['uTop', 'uHorizon', 'uGround', 'uSunColor'].map((k) => (u[k]!.value as THREE.Color).getHex())]);
+    let cache = envCache.get(r);
+    if (!cache) envCache.set(r, (cache = new Map()));
+    let rt = cache.get(key);
+    if (!rt) cache.set(key, (rt = this.bake()));
+    this.world.scene.environment = rt.texture;
+  }
+
+  private bake(): THREE.WebGLRenderTarget {
     const envScene = new THREE.Scene();
     const sphere = new THREE.Mesh(new THREE.SphereGeometry(10, 24, 16), this.skyMat);
     envScene.add(sphere);
-    const pmrem = new THREE.PMREMGenerator(this.world.renderer);
-    const rt = pmrem.fromScene(envScene, 0.02);
-    pmrem.dispose();
+    const rt = timed('pmrem', () => {
+      const pmrem = new THREE.PMREMGenerator(this.world.renderer);
+      const out = pmrem.fromScene(envScene, cfg.envBlur, undefined, undefined, { size: cfg.envMapSize });
+      pmrem.dispose();
+      return out;
+    });
     sphere.geometry.dispose();
     envScene.clear();
-    this.world.scene.environment = rt.texture;
     return rt;
   }
 
-  /** Arena JSON dagi osmon/tuman/quyosh/hemisphere ni qo'llaydi (yo'q maydon = default), env map qayta pishiriladi. */
+  /** Arena JSON dagi osmon/tuman/quyosh/hemisphere ni qo'llaydi (yo'q maydon = default), env map keshdan/pishiriladi. */
   applyArenaEnvironment(def?: EnvironmentDef): void {
     applyEnvParams(resolveEnvironment(def), { scene: this.world.scene, skyMat: this.skyMat, sun: this.sun, hemi: this.hemi, dir: this.dir });
-    this.envRT.dispose();
-    this.envRT = this.bakeEnv();
+    this.bakeEnv();
     this.placeSun();
   }
 
@@ -119,7 +137,6 @@ export class Environment implements System {
     const s = this.world.scene;
     s.remove(this.dome, this.hemi, this.sun, this.sun.target);
     this.dome.geometry.dispose();
-    this.envRT.dispose();
     this.skyMat.dispose();
     this.sun.shadow.dispose();
   }

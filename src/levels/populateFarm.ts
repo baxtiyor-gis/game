@@ -66,7 +66,8 @@ export function populateFarmProps(ctx: BuildContext, defs: PropDef[], origin: Or
     else {
       const b = single(ctx, def, yaw, origin);
       if (!b) throw new Error(`Noma'lum ferma propi: ${def.type}`);
-      add(b.object);
+      ctx.statics.push(b.object);
+      ctx.onDispose(() => disposeGroup(b.object));
       for (const c of b.colliders) ctx.addCollider(c);
     }
   }

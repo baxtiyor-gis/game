@@ -7,6 +7,8 @@ import type { ArenaDef } from './types';
 export class BuildContext {
   readonly root = new THREE.Group();
   readonly colliders: RAPIER.Collider[] = [];
+  /** Statik (harakatsiz, o'zgarmas) prop daraxtlari: qurilish oxirida mergeStatic bilan birlashtiriladi */
+  readonly statics: THREE.Object3D[] = [];
   private readonly disposers: Array<() => void> = [];
 
   constructor(

@@ -21,7 +21,8 @@ import { Hud } from '../ui/hud';
 import { MENU } from '../ui/menu/config';
 import { arenaDef } from './arenas';
 import { StatusOverlay } from './statusOverlay';
-import { installPipeline } from './pipeline';
+import { hideCanvas, installPipeline, precompileScene, prepareScene } from './pipeline';
+import { timed, yieldFrame, type Progress } from '../core/perf';
 import type { Content } from './backdrop';
 
 export interface ArcadeConfig {
@@ -37,6 +38,8 @@ export interface ArcadeConfig {
   extraSystems?: System[];
   /** Audio tinglovchi uchun o'yinchi obyekti beriladi */
   onPlayer?: (player: VehicleHandle) => void;
+  /** Yuklanish jarayoni (0..1) */
+  onProgress?: Progress;
 }
 
 export interface MatchStats {
@@ -59,15 +62,29 @@ export interface Match extends Content {
   markEnd(): void;
 }
 
+/** Yuklanish bosqichlari chegaralari (progress 0..1) */
+const P = MENU.loadingSteps;
+
 export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Match> {
-  const env = installEnvironment(world);
+  const progress = cfg.onProgress ?? (() => undefined);
+  const def = arenaDef(cfg.arenaId);
+  const showCanvas = hideCanvas(world);
+  const env = timed('environment', () => installEnvironment(world, { environment: def.environment }));
+  world.renderer.getContext().flush(); // PMREM GPU da fonda ishlasin (arena CPU da quriladi)
+  const pipe = timed('pipeline', () => installPipeline(world, cfg.retro));
+  progress(P.env);
+  await yieldFrame();
   // Sandiq tizimi arenadan keyin yaratiladi: onDrop unga kechiktirib ulanadi
   let pickups: PickupSystem | null = null;
-  const arena = await loadArena(world, arenaDef(cfg.arenaId), { onDrop: (pos, kind) => pickups?.drop(pos, kind) });
-  env.applyArenaEnvironment(arena.def.environment);
+  const arena = await loadArena(world, def, {
+    onDrop: (pos, kind) => pickups?.drop(pos, kind),
+    onProgress: (f) => progress(P.env + f * (P.arena - P.env)),
+  });
+  precompileScene(world, pipe); // arena shaderlari GPU da fonda, mashinalar CPU da quriladi
+  await yieldFrame();
   world.addSystem(new DamageSystem(world));
   const s0 = arena.spawns[0]!;
-  const player = spawnVehicle(world, vehicleDef(cfg.vehicleId), cfg.player, s0.pos, s0.yaw);
+  const player = timed('vehicles', () => spawnVehicle(world, vehicleDef(cfg.vehicleId), cfg.player, s0.pos, s0.yaw));
   player.inventory.slots.push(...MENU.loadout.player.map((s) => ({ weapon: s.weapon, ammo: s.ammo })));
   player.inventory.specialAmmo = vsp.startAmmo;
   const spawns = arena.pickupSpawns;
@@ -84,10 +101,12 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   };
   const rivals: VehicleHandle[] = [];
   for (const [i, id] of cfg.rivalIds.entries()) {
+    progress(P.arena + ((i + 1) / (cfg.rivalIds.length + 1)) * (P.vehicles - P.arena));
+    await yieldFrame();
     const sp = arena.spawns[(i + 1) % arena.spawns.length]!;
     let self: VehicleHandle | undefined;
     const bot = new BotController(world, () => self, { profile: id, difficulty: cfg.difficulty, getPickups });
-    self = spawnVehicle(world, vehicleDef(id), bot, sp.pos, sp.yaw);
+    self = timed('vehicles', () => spawnVehicle(world, vehicleDef(id), bot, sp.pos, sp.yaw));
     self.inventory.slots.push(...MENU.loadout.bot.map((s) => ({ weapon: s.weapon, ammo: s.ammo })));
     self.inventory.specialAmmo = vsp.startAmmo;
     rivals.push(self);
@@ -99,12 +118,13 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   world.addSystem(new ChaseCamera(world.camera, { object: player.object, rearView: () => player.input.rearView }));
   world.addSystem(new VfxSystem(world));
   env.follow(player.object);
-  const pipe = installPipeline(world, cfg.retro);
   world.addSystem(new ShakeSystem(world));
   for (const s of cfg.extraSystems ?? []) world.addSystem(s);
   cfg.onPlayer?.(player);
   world.addSystem(new StatusOverlay(world, cfg.hudRoot, () => player));
   world.addSystem(new Hud(world, cfg.hudRoot, () => player, (id) => whammy.score(id)));
+  await prepareScene(world, pipe, (f) => progress(P.vehicles + f * (1 - P.vehicles)));
+  showCanvas();
 
   let kills = 0;
   let whammies = 0;

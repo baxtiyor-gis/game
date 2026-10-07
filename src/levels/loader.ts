@@ -8,24 +8,33 @@ import { populateDestructibles, populateInteractives, populateProps, populateWin
 import { DestructibleSystem } from './destructible';
 import { createTrain } from './train';
 import { disposePropCaches } from './props/common';
+import { mergeStatic } from './mergeStatic';
+import { timed, yieldFrame } from '../core/perf';
 
 export type { Arena, ArenaDef, LoadOptions } from './types';
 export { DestructibleSystem } from './destructible';
 
 /** Arena JSON dan sahna quradi: terrain, chegara, proplar, destructible/interaktivlar, spawnlar, sandiq joylari. */
 export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptions = {}): Promise<Arena> {
-  const terrain = buildTerrain(world, def.terrain, def.size);
+  const progress = opts.onProgress ?? (() => undefined);
+  const terrain = timed('terrain', () => buildTerrain(world, def.terrain, def.size));
+  progress(0.35);
+  await yieldFrame();
   const ctx = new BuildContext(world, def, terrain.heightAt);
-  buildBoundary(ctx);
-  populateProps(ctx);
+  timed('boundary', () => buildBoundary(ctx));
+  timed('props', () => populateProps(ctx));
+  ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root)));
+  progress(0.65);
+  await yieldFrame();
   const systems: System[] = [];
-  const pumps = populateInteractives(ctx);
+  const pumps = timed('interactives', () => populateInteractives(ctx));
   if (pumps) systems.push(pumps);
-  const windmills = populateWindmillRigs(ctx);
+  const windmills = timed('windmills', () => populateWindmillRigs(ctx));
   if (windmills) systems.push(windmills);
-  if (def.train) systems.push(createTrain(ctx, def.train, opts.onDrop));
-  const destructibles = new DestructibleSystem(world, populateDestructibles(ctx), opts.onDrop);
+  if (def.train) systems.push(timed('train', () => createTrain(ctx, def.train!, opts.onDrop)));
+  const destructibles = new DestructibleSystem(world, timed('destructibles', () => populateDestructibles(ctx)), opts.onDrop);
   systems.push(destructibles);
+  progress(1);
   for (const s of systems) world.addSystem(s);
 
   const spawns = def.playerSpawns.map((s) => ({

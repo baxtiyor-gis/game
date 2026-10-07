@@ -30,6 +30,10 @@ export interface MenuConfig {
   repeat: { delay: number; rate: number };
   keys: Record<Action, string[]>;
   backdrop: { radius: number; height: number; lookHeight: number; speed: number; fov: number };
+  /** Yuklanish bosqichlari chegaralari (0..1): muhit, arena, mashinalar; qolgani — shader isitish */
+  loadingSteps: { env: number; arena: number; vehicles: number };
+  /** Yuklanish ekrani: maslahat almashish oralig'i (s), so'nish (ms), maslahat kalitlari (strings.json) */
+  loading: { tipSeconds: number; fadeMs: number; tips: string[] };
   preview: Record<string, number | string>;
   loadout: { player: { weapon: WeaponId; ammo: number }[]; bot: { weapon: WeaponId; ammo: number }[] };
   quickPlay: { vehicle: string; rivals: string[]; difficulty: Difficulty };

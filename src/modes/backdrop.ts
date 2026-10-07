@@ -6,7 +6,7 @@ import { installEnvironment } from '../render/environment';
 import { loadArena } from '../levels/loader';
 import { MENU } from '../ui/menu/config';
 import { arenaDef, resolveArenaId } from './arenas';
-import { installPipeline } from './pipeline';
+import { hideCanvas, installPipeline, prepareScene } from './pipeline';
 
 const cfg = MENU.backdrop;
 
@@ -41,12 +41,15 @@ class OrbitCamera implements System {
 }
 
 export async function startBackdrop(world: World, arenaId: string, retro: boolean): Promise<Content> {
-  const env = installEnvironment(world);
-  const arena = await loadArena(world, arenaDef(resolveArenaId(arenaId)));
-  env.applyArenaEnvironment(arena.def.environment);
+  const def = arenaDef(resolveArenaId(arenaId));
+  const showCanvas = hideCanvas(world);
+  const env = installEnvironment(world, { environment: def.environment });
+  const arena = await loadArena(world, def);
   const focus = new THREE.Object3D();
   env.follow(focus);
   world.addSystem(new OrbitCamera(world, arena.heightAt, focus));
   const pipe = installPipeline(world, retro);
+  await prepareScene(world, pipe);
+  showCanvas();
   return { dispose: () => (pipe.dispose(), world.reset()) };
 }

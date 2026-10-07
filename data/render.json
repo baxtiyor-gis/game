@@ -195,6 +195,8 @@
       "far": 420
     },
     "envIntensity": 0.8,
+    "envMapSize": 64,
+    "envBlur": 0.02,
     "shadow": {
       "half": 45,
       "near": 1,
@@ -223,5 +225,12 @@
     "repeatPerMeter": 0.125,
     "roughness": 0.95,
     "seed": 7
+  },
+  "warmup": {
+    "width": 64,
+    "height": 36,
+    "fenceTimeoutMs": 4000,
+    "frameBudgetMs": 30,
+    "pollMs": 2
   }
 }

@@ -42,6 +42,15 @@
     "pause": ["KeyP"]
   },
   "backdrop": { "radius": 95, "height": 26, "lookHeight": 5, "speed": 0.06, "fov": 55 },
+  "loadingSteps": { "env": 0.05, "arena": 0.35, "vehicles": 0.5 },
+  "loading": {
+    "tipSeconds": 5,
+    "fadeMs": 250,
+    "tips": [
+      "tip.combo", "tip.comboCost", "tip.special", "tip.specialAmmo", "tip.whammy", "tip.rear",
+      "tip.handbrake", "tip.crates", "tip.oil_fields.barrels", "tip.oil_fields.pumps", "tip.valley_farms.train", "tip.valley_farms.creek"
+    ]
+  },
   "preview": {
     "fov": 28, "pitch": 0.32, "spin": 0.7, "fitMargin": 0.95, "pixelRatioMax": 2,
     "envIntensity": 0.8, "sun": 2.4, "hemi": 0.7, "padRadiusFactor": 0.8, "padColor": "#1a0a00", "padRing": "#ff8a1f"

@@ -1,18 +1,20 @@
 // O'yin oqimi: menyu <-> match. Sahna (World) ni sinxronlaydi, pauza va natijani boshqaradi.
 import type * as THREE from 'three';
 import type { World } from '../core/world';
-import { vehicles } from '../core/data';
+import { t, vehicleDef, vehicles } from '../core/data';
+import { yieldFrame } from '../core/perf';
 import type { System } from '../core/types';
 import type { Keyboard } from '../input/keyboard';
 import type { PlayerController } from '../input/playerController';
 import { AudioSystem } from '../audio/audioSystem';
 import { TouchControls } from '../ui/touchControls';
+import { LoadingScreen } from '../ui/loading';
 import { MenuApp } from '../ui/menu/app';
 import { MENU, type ScreenId, type Settings } from '../ui/menu/config';
 import { MenuInput, type ActionEvent } from '../ui/menu/input';
 import { pickRivals } from '../ui/menu/logic';
 import { loadSettings } from '../ui/menu/store';
-import { isAvailable } from '../levels/registry';
+import { ARENAS, isAvailable } from '../levels/registry';
 import { startBackdrop, type Content } from './backdrop';
 import { startArcade, type ArcadeConfig, type Match } from './arcade';
 
@@ -43,6 +45,7 @@ export class Flow {
   private readonly audio: AudioSystem;
   private readonly audioProxy: System;
   private readonly touch: TouchControls;
+  private readonly loading: LoadingScreen;
 
   constructor(private readonly deps: FlowDeps) {
     this.world = deps.world;
@@ -64,6 +67,7 @@ export class Flow {
       },
     });
     deps.player.setTouch(this.touch.input);
+    this.loading = new LoadingScreen(deps.ui);
     // AudioSystem butun ilova umri davomida bitta (gesture listenerlari bir marta), World.reset uni dispose qilmasin
     this.audio = new AudioSystem(deps.world, () => this.listener.current);
     this.audioProxy = { name: 'audio', update: (dt, a) => this.audio.update(dt, a) };
@@ -129,9 +133,11 @@ export class Flow {
       try {
         await this.build(cfg);
       } catch (err) {
-        // Sahna qurilmadi: menyuga qaytamiz (xato enqueue da konsolga yoziladi)
+        // Sahna qurilmadi: yarim qurilgan sahna tozalanadi, menyuga qaytamiz (xato enqueue da konsolga yoziladi)
         this.dropContent();
+        this.world.reset();
         this.state = 'menu';
+        this.loading.hide();
         this.app.setLoading(false);
         this.app.show('home');
         throw err;
@@ -140,9 +146,14 @@ export class Flow {
   }
 
   private async build(cfg: NonNullable<Flow['lastCfg']>): Promise<void> {
-    this.dropContent();
+    const t0 = performance.now();
+    const v = vehicleDef(cfg.vehicleId);
+    const arenaName = t(ARENAS.find((a) => a.id === cfg.arenaId)?.nameKey ?? cfg.arenaId);
+    this.loading.show({ arenaId: cfg.arenaId, arena: arenaName, driver: t(v.driver), vehicle: t(v.name), rivals: cfg.rivalIds.length });
     this.app.setLoading(true);
     this.world.suspended = true;
+    await yieldFrame(); // yuklanish ekrani avval chizilsin
+    this.dropContent();
     const match = await startArcade(this.world, {
       ...cfg,
       retro: this.app.settings.retro,
@@ -150,6 +161,7 @@ export class Flow {
       hudRoot: this.deps.ui,
       extraSystems: [this.audioProxy],
       onPlayer: (p) => (this.listener.current = p.object),
+      onProgress: (f) => this.loading.progress(f),
     });
     this.match = match;
     this.content = match;
@@ -164,6 +176,12 @@ export class Flow {
     this.input.capture = false;
     this.state = 'playing';
     this.audio.ctx?.resume().catch(() => undefined);
+    performance.measure('match:built', { start: t0, end: performance.now() });
+    // Birinchi o'yin kadri ekranga chiqqach (rAF dagi chizish + kompozitsiya tugagach) — umumiy yuklanish vaqti
+    requestAnimationFrame(() => setTimeout(() => {
+      performance.measure('match:firstFrame', { start: t0, end: performance.now() });
+      if (this.state !== 'loading') this.loading.hide();
+    }));
   }
 
   pause(): void {
@@ -263,8 +281,11 @@ export class Flow {
         this.dropContent();
         this.world.suspended = true;
         const s = this.app.settings;
+        const t0 = performance.now();
         this.content = await startBackdrop(this.world, s.arena, s.retro);
         this.kind = 'backdrop';
+        // orqa fonning birinchi kadri ekranga chiqqach (boot -> menyu tayyor)
+        requestAnimationFrame(() => setTimeout(() => performance.measure('menu:backdrop', { start: t0, end: performance.now() })));
       }
       this.world.suspended = !this.wantBackdrop();
     });
