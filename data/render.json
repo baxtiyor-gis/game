@@ -1,0 +1,61 @@
+{
+  "ps1": {
+    "height": 240,
+    "colorBits": 5,
+    "ditherStrength": 1,
+    "snapScale": 1,
+    "rescanFrames": 30,
+    "fog": { "color": "#9a8f78", "near": 60, "far": 320 }
+  },
+  "styles": {
+    "fire": { "life": 0.8, "size0": 0.25, "size1": 0.6, "c0": "#fff2a0", "c1": "#c83a10", "alpha": 1, "gravity": -3, "drag": 2 },
+    "flash": { "life": 0.14, "size0": 1, "size1": 0.4, "c0": "#ffffff", "c1": "#ffd060", "alpha": 1, "gravity": 0, "drag": 0 },
+    "spark": { "life": 0.9, "size0": 1, "size1": 0.4, "c0": "#ffe890", "c1": "#ff5a10", "alpha": 1, "gravity": 14, "drag": 0.6 },
+    "smokeDark": { "life": 2.2, "size0": 0.3, "size1": 1, "c0": "#3c3c3c", "c1": "#101010", "alpha": 0.8, "gravity": -1.5, "drag": 1.2 },
+    "smokeWhite": { "life": 1.6, "size0": 0.4, "size1": 1, "c0": "#e8e8e8", "c1": "#a0a0a0", "alpha": 0.6, "gravity": -2, "drag": 1 },
+    "muzzle": { "life": 0.09, "size0": 1, "size1": 0.5, "c0": "#fffbd0", "c1": "#ff9a20", "alpha": 1, "gravity": 0, "drag": 4 }
+  },
+  "vfx": {
+    "maxFire": 1000,
+    "maxSmoke": 1000,
+    "maxDt": 0.1,
+    "explosion": {
+      "flash": { "sizePerRadius": 1.3 },
+      "fireball": { "perRadius": 5, "speedPerRadius": 1.4, "sizePerRadius": 1 },
+      "smoke": { "perRadius": 4, "speedPerRadius": 0.6, "sizePerRadius": 1.1 },
+      "sparks": { "perRadius": 5, "speedPerRadius": 3.2, "sizePerRadius": 0.04 },
+      "lift": 0.5
+    },
+    "destroyedRadius": 7,
+    "muzzle": {
+      "count": 4,
+      "speed": 6,
+      "size": 0.35,
+      "heightFrac": 0.55,
+      "forwardFrac": 0.55,
+      "defaultScale": 1,
+      "weaponScale": { "cannon": 2, "missile": 1.4, "rocket": 1.4, "mortar": 1.8, "mine": 0.5 }
+    },
+    "damage": {
+      "forwardFrac": 0.3,
+      "heightFrac": 1,
+      "riseSpeed": 2.5,
+      "spread": 0.6,
+      "size": 0.8,
+      "stages": {
+        "1": { "smoke": "smokeWhite", "rate": 8, "fire": 0 },
+        "2": { "smoke": "smokeDark", "rate": 14, "fire": 0 },
+        "3": { "smoke": "smokeDark", "rate": 14, "fire": 18 }
+      }
+    }
+  },
+  "shake": {
+    "maxOffset": 0.9,
+    "decayPerSec": 1.6,
+    "frequency": 24,
+    "maxDistance": 60,
+    "falloff": 1.5,
+    "refRadius": 6,
+    "radiusPower": 1
+  }
+}

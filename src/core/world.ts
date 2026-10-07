@@ -20,6 +20,8 @@ export class World implements GameWorld {
   readonly events = new EventBus<GameEvents>();
   readonly vehicles: VehicleHandle[] = [];
   time = 0;
+  /** Ixtiyoriy render almashtirgich (PS1 post-FX shu orqali ulanadi) */
+  renderHook?: (r: THREE.WebGLRenderer, scene: THREE.Scene, cam: THREE.Camera) => void;
 
   private systems: System[] = [];
   private loop: FixedLoop;
@@ -76,7 +78,8 @@ export class World implements GameWorld {
 
   private frame(dt: number, alpha: number): void {
     for (const s of this.systems) s.update?.(dt, alpha);
-    this.renderer.render(this.scene, this.camera);
+    if (this.renderHook) this.renderHook(this.renderer, this.scene, this.camera);
+    else this.renderer.render(this.scene, this.camera);
   }
 
   private resize(): void {
