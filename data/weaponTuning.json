@@ -1,0 +1,16 @@
+{
+ "mg": { "damage": 1.4, "cooldown": 0.09, "range": 90, "spread": 0.012, "tracerLife": 0.07, "tracerWidth": 0.07, "tracerColor": "#ffe27a" },
+ "muzzle": { "gap": 0.4, "height": 0.35 },
+ "projectiles": { "max": 300, "splashFactor": 0.5, "knockbackLift": 0.35 },
+ "visual": {
+  "missile": { "size": [0.25, 0.25, 1.1], "color": "#e8e8f0" },
+  "rocket": { "size": [0.18, 0.18, 0.8], "color": "#ff8a2a" },
+  "mortar": { "size": [0.45, 0.45, 0.45], "color": "#4a5a3a" },
+  "cannon": { "size": [0.35, 0.35, 0.6], "color": "#222222" },
+  "mine": { "size": [0.9, 0.25, 0.9], "color": "#c0392b" }
+ },
+ "missile": { "lockRange": 90, "lockCone": 0.6, "avoidanceDamp": 0.15, "minHoming": 0.1 },
+ "mortar": { "elevation": 0.85 },
+ "mine": { "throwSpeed": 6, "throwUp": 3, "armDelay": 1, "triggerRadius": 2.6, "restHeight": 0.15 },
+ "fx": { "flashLife": 0.35, "flashMax": 16, "flashColor": "#ffb347", "tracerMax": 48 }
+}
