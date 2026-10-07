@@ -5,7 +5,7 @@ import { CG } from '../core/types';
 import type { Controller, GameWorld, InputState, Inventory, System, VehicleDef, VehicleHandle } from '../core/types';
 import { createVehicleModel, poseWheel } from './model';
 import type { VehicleModel } from './model';
-import { applyAirControl, bodyAxes, SelfRighter } from './motion';
+import { applyAirControl, bodyAxes, limitYawRate, SelfRighter } from './motion';
 import { tuningFor } from './tuning';
 import type { Tuning } from './tuning';
 
@@ -169,6 +169,7 @@ class Vehicle implements VehicleHandle, System {
       const down = c.downforce * fv * fv * this.def.mass * dt;
       this.body.applyImpulse({ x: 0, y: -down, z: 0 }, true);
       this.body.setAngularDamping(c.angularDamping);
+      limitYawRate(this.body, c.maxYawRate);
     }
     this.righter.update(this.body, dt);
   }

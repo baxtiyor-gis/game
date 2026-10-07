@@ -32,7 +32,21 @@ export function applyAirControl(body: RAPIER.RigidBody, input: InputState, dt: n
   spin.addScaledVector(r, input.throttle * a.pitchAccel * dt);
   spin.addScaledVector(u, -input.steer * a.yawAccel * dt);
   spin.addScaledVector(f, -r.y * a.levelAccel * dt); // r.y > 0: o'ng tomon yuqori -> teskari aylantir
+  // Tushayotganda burun tezlik yo'nalishiga yaqinlashadi (g'ildirakka qo'nish).
+  const lv = body.linvel();
+  const vlen = Math.hypot(lv.x, lv.y, lv.z);
+  if (vlen > a.levelMinSpeed) spin.addScaledVector(r, (f.y - lv.y / vlen) * a.pitchLevelAccel * dt);
   body.setAngvel({ x: spin.x, y: spin.y, z: spin.z }, true);
+}
+
+/** Yerda: chassis yaw tezligini cheklaydi (yo'qsa handbrake bilan o'z o'qi atrofida aylanib ketadi). */
+export function limitYawRate(body: RAPIER.RigidBody, maxRate: number): void {
+  const { up: u } = bodyAxes(body);
+  const av = body.angvel();
+  const yaw = av.x * u.x + av.y * u.y + av.z * u.z;
+  if (Math.abs(yaw) <= maxRate) return;
+  const k = (maxRate * Math.sign(yaw) - yaw);
+  body.setAngvel({ x: av.x + u.x * k, y: av.y + u.y * k, z: av.z + u.z * k }, true);
 }
 
 /** Ag'darilib qolganda ~time soniyadan keyin yaw saqlangan holda g'ildirakka qo'yadi. */

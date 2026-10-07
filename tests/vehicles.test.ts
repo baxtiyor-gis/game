@@ -102,4 +102,29 @@ describe('damage', () => {
     expect(destroyed).toBe(1);
     dmg.dispose();
   });
+
+  it('explosion damages by distance and pushes', () => {
+    const { world, v } = setup();
+    const dmg = new DamageSystem(world as unknown as GameWorld);
+    const pos = new THREE.Vector3(3, 1, 0);
+    world.events.emit('explosion', { pos, radius: 10, damage: 40, sourceId: null });
+    expect(v.hp).toBeLessThan(v.maxHp);
+    expect(v.body.linvel().x).toBeLessThan(0);
+    const far = v.hp;
+    world.events.emit('explosion', { pos: new THREE.Vector3(50, 1, 0), radius: 10, damage: 40, sourceId: null });
+    expect(v.hp).toBe(far);
+    dmg.dispose();
+  });
+});
+
+describe('self-righting', () => {
+  it('flips back upright after ~1.2 s', () => {
+    const { world, v } = setup();
+    v.body.setRotation({ x: 0, y: 0, z: 1, w: 0 }, true);
+    v.body.setTranslation({ x: 0, y: 1, z: 0 }, true);
+    world.step(150);
+    const r = v.body.rotation();
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(new THREE.Quaternion(r.x, r.y, r.z, r.w));
+    expect(up.y).toBeGreaterThan(0.9);
+  });
 });

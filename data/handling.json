@@ -16,13 +16,15 @@
     "yawInertia": 0.55,
     "pitchInertia": 0.8,
     "rollInertia": 0.7,
-    "downforce": 0.006
+    "downforce": 0.006,
+    "maxYawRate": 2.2
   },
   "wheels": {
     "radiusFactor": 0.3,
     "radiusMin": 0.32,
     "radiusMax": 0.7,
     "widthFactor": 0.7,
+    "outsetFactor": 0.2,
     "axleFactor": 0.68,
     "connectionLift": 1,
     "restLengthFactor": 0.8,
@@ -44,17 +46,19 @@
   "steer": {
     "lateralAccel": 24,
     "minFactor": 0.12,
-    "handbrakeBoost": 1.4
+    "handbrakeBoost": 1
   },
   "drift": {
-    "rearFrictionFactor": 0.3,
-    "rearSideFactor": 0.5,
+    "rearFrictionFactor": 0.45,
+    "rearSideFactor": 0.6,
     "handbrakeBrakeAccel": 4
   },
   "air": {
     "pitchAccel": 5.5,
     "yawAccel": 4.5,
     "levelAccel": 2.2,
+    "pitchLevelAccel": 3,
+    "levelMinSpeed": 5,
     "angularDamping": 1.2
   },
   "selfRight": {

@@ -18,7 +18,7 @@ export function wheelLayout(def: VehicleDef): WheelSpec[] {
   const [sx, sy, sz] = def.size;
   const radius = Math.min(w.radiusMax, Math.max(w.radiusMin, sy * w.radiusFactor));
   const width = radius * w.widthFactor;
-  const x = sx / 2 - width / 2;
+  const x = sx / 2 - width / 2 + width * w.outsetFactor;
   const z = (sz / 2) * w.axleFactor;
   const y = -sy / 2 + radius * w.connectionLift;
   const base = { y, radius, width, restLength: radius * w.restLengthFactor, maxTravel: radius * w.maxTravelFactor };
