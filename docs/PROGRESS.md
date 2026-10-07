@@ -6,3 +6,4 @@
 - T2.1–T2.3 — bajarildi — Rapier raycast mashina (src/vehicles/*), data/handling.json (stat→fizika), DamageSystem; main.ts da rattler + rampalar; 11 test. Arkada sozlamalar: AWD, yon-tezlanish bilan rul cheklovi, yaw-limit, handbrake drift, havoda boshqaruv, 1.2 s o'nglanish
 - T1.5+T3.7 — bajarildi — src/render/{ps1,vfx,shake,particlePool,pointsLayer}.ts, data/render.json, World.renderHook; PS1 post-FX (240p, Bayer dither, 15-bit, vertex snap), pooled VFX, kamera silkinishi; 9 test
 - T3.1+T3.2+T3.5 — bajarildi — src/weapons/* (pulemyot hitscan+tracer, 5 qurol, snaryad pooli, WeaponSystem, PickupSystem), data/weaponTuning.json + pickups.json, main.ts da 10 sandiq + 2 nishon; tests/weapons.test.ts (11 test)
+- T8.1 — bajarildi — src/ui/{hud,format,hudConfig,hudStyle,radar,dom}.ts, tests/ui.test.ts, strings hud.*; HUD: hp bar, qurollar, radar, xabarlar, nishon, win/lose (combos.test.ts da boshqa agent ishidan 3 ta fail)

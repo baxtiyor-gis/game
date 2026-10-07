@@ -249,13 +249,9 @@ export class Hud implements System {
     this.msgLeft = secs;
     this.msgEl.className = `hud-msg ${m.kind}`;
     this.msgEl.textContent = m.text;
-    if (typeof this.msgEl.animate !== 'function') {
-      this.msgEl.style.opacity = '1';
-      return;
-    }
     const still = reducedMotion();
     const at = (s: number): string => (still ? 'translate(-50%,-50%)' : `translate(-50%,-50%) scale(${s})`);
-    this.msgEl.animate(
+    this.msgEl.animate?.(
       [
         { opacity: 0, transform: at(1.7) },
         { opacity: 1, transform: at(1), offset: 0.15 },
