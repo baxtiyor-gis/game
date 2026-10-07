@@ -106,7 +106,7 @@
    7.5
   ],
   "color": "#c0392b",
-  "special": "special_convoy",
+  "special": "battering_ram",
   "verified": false
  },
  {
@@ -128,7 +128,7 @@
    5.2
   ],
   "color": "#8e6b3a",
-  "special": "special_dave",
+  "special": "camper_bombs",
   "verified": false
  },
  {
@@ -150,7 +150,7 @@
    3.9
   ],
   "color": "#556b2f",
-  "special": "special_loki",
+  "special": "air_strike",
   "verified": false
  },
  {
@@ -172,7 +172,7 @@
    4.6
   ],
   "color": "#e8e8e8",
-  "special": "special_houston",
+  "special": "nitro_flame",
   "verified": false
  },
  {
@@ -194,7 +194,7 @@
    4.1
   ],
   "color": "#ff7f2a",
-  "special": "special_boogie",
+  "special": "disco_ball",
   "verified": false
  },
  {
@@ -216,7 +216,7 @@
    4.8
   ],
   "color": "#f1c40f",
-  "special": "special_beezwax",
+  "special": "bee_swarm",
   "verified": false
  },
  {
@@ -238,7 +238,7 @@
    4.6
   ],
   "color": "#1a1a1a",
-  "special": "special_sid",
+  "special": "burner",
   "verified": false
  },
  {
@@ -260,7 +260,7 @@
    9.0
   ],
   "color": "#f5b301",
-  "special": "special_molo",
+  "special": "smoke_screen",
   "verified": false
  },
  {
@@ -282,7 +282,7 @@
    3.0
   ],
   "color": "#9bf0ff",
-  "special": "special_y",
+  "special": "abduction_beam",
   "verified": false
  }
 ]

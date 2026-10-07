@@ -209,6 +209,7 @@ export class Hud implements System {
       if (v === p || !v.alive) continue;
       enemies++;
       if (!p) continue;
+      if (v.status && v.status.smoke > 0) continue; // tutun pardasi ichida: radardan yo'qoladi
       v.position(this.tmpV);
       const dx = this.tmpV.x - this.pos.x;
       const dz = this.tmpV.z - this.pos.z;

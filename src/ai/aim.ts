@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { combos, weapons } from '../core/data';
 import type { WeaponId, WeaponSlot } from '../core/types';
 import { aimCfg, type AiProfile, type DifficultyCfg } from './config';
+import type { SpecialAiHint } from '../weapons/vehicleSpecials/params';
 
 export type Rng = () => number;
 
@@ -92,4 +93,11 @@ export function inFireCone(w: WeaponId | null, angleErr: number, difficulty: Dif
   // Pulemyot (hitscan): konus masofaga qarab torayadi — nishon o'lchamiga mos.
   if (!w) return Math.abs(angleErr) <= Math.atan2(aimCfg.mgHitRadius, Math.max(dist, 1));
   return Math.abs(angleErr) <= aimCfg.weaponRanges[w].cone + difficulty.aimError;
+}
+
+/** Mashina maxsus quroli otilishi kerakmi: masofa/burchak/orqadagi quvuvchiga qarab (hint: data/vehicleSpecials.json). */
+export function specialFits(h: SpecialAiHint, dist: number, headingErr: number, chaserBehind: boolean): boolean {
+  if (h.mode === 'rear') return chaserBehind;
+  if (dist < h.min || dist > h.max) return false;
+  return h.mode === 'around' || Math.abs(headingErr) <= h.cone;
 }

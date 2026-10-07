@@ -8,7 +8,7 @@
  "crateSize": 1.1,
  "hover": 0.9,
  "healFraction": 0.35,
- "specialAmmo": 1,
+ "specialAmmo": 2,
  "crateColor": "#8a6b3e",
  "colors": {
   "missile": "#e8e8f0",

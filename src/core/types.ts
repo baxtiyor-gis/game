@@ -93,9 +93,21 @@ export interface VehicleHandle {
   inventory: Inventory;
   /** Engine "o'chirilgan" (Gridlock/White Lightning) qolgan vaqt, s */
   stalled: number;
+  /** Maxsus qurol holatlari (ko'rlik, tutun, zirh). Soxta handle larda bo'lmasligi mumkin. */
+  status?: VehicleStatus;
   speed(): number; // m/s
   forward(out: THREE.Vector3): THREE.Vector3;
   position(out: THREE.Vector3): THREE.Vector3;
+}
+
+/** Maxsus qurollar qo'yadigan vaqtinchalik holatlar (vaqtlar sekundda, kamayib boradi). */
+export interface VehicleStatus {
+  /** Ko'r qilingan: AI aim xatosi oshadi, o'yinchida ekran oqaradi */
+  blind: number;
+  /** Tutun pardasi ichida: radar va AI nishonidan yo'qoladi */
+  smoke: number;
+  /** Olinadigan zarar ko'paytirgichi (1 = oddiy; taran zirhi < 1) */
+  armorMul: number;
 }
 
 // ---------- Events ----------
@@ -106,6 +118,10 @@ export interface GameEvents {
   fire: { sourceId: string; weapon: string };
   explosion: { pos: THREE.Vector3; radius: number; damage: number; sourceId: string | null };
   whammy: { sourceId: string; targetId: string; count: number };
+  /** Maxsus qurol holati qo'yildi (HUD / VFX uchun) */
+  status: { targetId: string; kind: 'blind' | 'stalled' | 'smoke'; duration: number };
+  /** Kamera silkinishi (zilzila): pos markazi, radius ta'sir doirasi */
+  shake: { pos: THREE.Vector3; radius: number };
   matchEnd: { winnerId: string | null };
 }
 

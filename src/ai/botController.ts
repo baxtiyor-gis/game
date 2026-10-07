@@ -7,7 +7,8 @@ import {
   aimCfg, aiProfile, difficultyCfg, steeringCfg as sc, utilityCfg,
   type AiProfile, type Difficulty, type DifficultyCfg,
 } from './config';
-import { aimNoise, blendLead, chooseWeapon, inFireCone, leadPoint, perturbAim, pickCombo, projectileSpeed, type Rng } from './aim';
+import { aimNoise, blendLead, chooseWeapon, inFireCone, leadPoint, perturbAim, pickCombo, projectileSpeed, specialFits, type Rng } from './aim';
+import { specialCfg, vsp } from '../weapons/vehicleSpecials/params';
 import { Sensors } from './sensors';
 import { blendSteer, circlePoint, fleePoint, headingError, seek, StuckDetector, uprightY, type Drive } from './steering';
 import { decide, type ActionKind, type UtilContext } from './utility';
@@ -61,6 +62,7 @@ export class BotController implements Controller {
   private reactionLeft = 0;
   private nextFire = 0;
   private nextCombo = 0;
+  private nextSpecial = 0;
   private nextCycle = 0;
   private circleDir: 1 | -1 = 1;
   private nextCircleFlip = 0;
@@ -129,7 +131,10 @@ export class BotController implements Controller {
   private think(me: VehicleHandle): void {
     const diff = this.diff;
     this.nextThink = this.time + diff.decisionInterval * (0.8 + 0.4 * this.rng());
-    const enemies = this.world.vehicles.filter((v) => v !== me && v.alive);
+    // Tutun pardasi ichidagi raqib `smokeSeeRange` dan uzoqda ko'rinmaydi (nishon yo'qoladi).
+    const enemies = this.world.vehicles.filter(
+      (v) => v !== me && v.alive && !(v.status && v.status.smoke > 0 && v.position(ePos).distanceTo(tmpPos) > vsp.status.smokeSeeRange),
+    );
     const inv = me.inventory;
     let ammo = 0;
     for (const sl of inv.slots) ammo += sl.ammo;
@@ -212,7 +217,8 @@ export class BotController implements Controller {
     blendLead(ePos, lead, this.diff.leadAccuracy, lead);
     if (this.time >= this.nextAimRoll) {
       this.nextAimRoll = this.time + aimCfg.retargetInterval;
-      this.aimAngle = aimNoise(this.diff.aimError, this.rng);
+      const blind = (this.self()?.status?.blind ?? 0) > 0 ? vsp.status.blindAimMul : 1; // Disco Ball: aim xatosi oshadi
+      this.aimAngle = aimNoise(this.diff.aimError * blind, this.rng);
     }
     perturbAim(lead, tmpPos, this.aimAngle, aimPt);
   }
@@ -230,6 +236,8 @@ export class BotController implements Controller {
     const e = this.enemy;
     if (this.action === 'evade') {
       if (this.chaserBehind && slot?.weapon === 'mine' && slot.ammo > 0 && this.time >= this.nextFire) this.fire(slot);
+      if (e?.alive) e.position(ePos);
+      this.special(me, e?.alive ? Math.hypot(ePos.x - tmpPos.x, ePos.z - tmpPos.z) : Infinity, 0, false);
       return;
     }
     if (!e?.alive) return;
@@ -238,12 +246,23 @@ export class BotController implements Controller {
     this.sensors.updateLos(me, tmpPos, e, ePos);
     const dist = Math.hypot(ePos.x - tmpPos.x, ePos.z - tmpPos.z);
     const err = headingError(tmpFwd, tmpPos, aimPt);
+    this.special(me, dist, err, this.sensors.los);
     if (!this.sensors.los) return;
     if (dist <= aimCfg.mgRange && inFireCone(null, err, this.diff, dist)) s.fireMG = true;
     if (!slot || slot.ammo <= 0 || slot.weapon === 'mine' || this.time < this.nextFire) return;
     const r = aimCfg.weaponRanges[slot.weapon];
     if (dist < r.min || dist > r.max || !inFireCone(slot.weapon, err, this.diff)) return;
     this.fire(slot);
+  }
+
+  /** Mashina maxsus quroli (K tugmasi): masofa/vaziyatga qarab (data/vehicleSpecials.json ai ko'rsatmasi). */
+  private special(me: VehicleHandle, dist: number, err: number, los: boolean): void {
+    const hint = specialCfg(me.def.special)?.ai;
+    if (!hint || me.inventory.specialAmmo <= 0 || this.time < this.nextSpecial) return;
+    if (hint.mode === 'front' && !los) return;
+    if (!specialFits(hint, dist, err, this.chaserBehind)) return;
+    this.nextSpecial = this.time + vsp.status.botRetry;
+    if (this.rng() < this.diff.comboScale) this.state.fireSpecial = true;
   }
 
   private fire(slot: { weapon: keyof typeof weapons; ammo: number }): void {

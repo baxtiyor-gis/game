@@ -29,7 +29,20 @@
     "missile": { "freq": 1200, "duration": 0.25, "gain": 0.7, "timbre": "whoosh" },
     "mortar": { "freq": 400, "duration": 0.4, "gain": 0.8, "timbre": "bum" },
     "cannon": { "freq": 2000, "duration": 0.15, "gain": 0.9, "timbre": "deep" },
-    "mine": { "freq": 1000, "duration": 0.1, "gain": 0.4, "timbre": "click" }
+    "mine": { "freq": 1000, "duration": 0.1, "gain": 0.4, "timbre": "click" },
+    "special.gridlock": { "freq": 900, "duration": 0.3, "gain": 0.6, "timbre": "whoosh" },
+    "special.bass_quake": { "freq": 70, "duration": 0.5, "gain": 0.9, "timbre": "bum" },
+    "special.white_lightning": { "freq": 3000, "duration": 0.2, "gain": 0.7, "timbre": "mg" },
+    "special.tantrum_gun": { "freq": 2400, "duration": 0.1, "gain": 0.5, "timbre": "click" },
+    "special.battering_ram": { "freq": 180, "duration": 0.3, "gain": 0.8, "timbre": "deep" },
+    "special.camper_bombs": { "freq": 500, "duration": 0.2, "gain": 0.6, "timbre": "click" },
+    "special.air_strike": { "freq": 700, "duration": 0.4, "gain": 0.8, "timbre": "whoosh" },
+    "special.nitro_flame": { "freq": 600, "duration": 0.4, "gain": 0.7, "timbre": "whoosh" },
+    "special.disco_ball": { "freq": 1500, "duration": 0.3, "gain": 0.5, "timbre": "click" },
+    "special.bee_swarm": { "freq": 1800, "duration": 0.3, "gain": 0.5, "timbre": "whoosh" },
+    "special.burner": { "freq": 350, "duration": 0.4, "gain": 0.7, "timbre": "whoosh" },
+    "special.smoke_screen": { "freq": 300, "duration": 0.3, "gain": 0.6, "timbre": "bum" },
+    "special.abduction_beam": { "freq": 1100, "duration": 0.5, "gain": 0.6, "timbre": "whoosh" }
   },
   "explosion": {
     "baseFreq": 150,

@@ -21,47 +21,47 @@
  },
  "moth": {
   "bio": "bio.moth",
-  "specialName": "special.special_convoy.name",
-  "specialDesc": "special.special_convoy.desc"
+  "specialName": "special.battering_ram.name",
+  "specialDesc": "special.battering_ram.desc"
  },
  "stag": {
   "bio": "bio.stag",
-  "specialName": "special.special_dave.name",
-  "specialDesc": "special.special_dave.desc"
+  "specialName": "special.camper_bombs.name",
+  "specialDesc": "special.camper_bombs.desc"
  },
  "glenn": {
   "bio": "bio.glenn",
-  "specialName": "special.special_loki.name",
-  "specialDesc": "special.special_loki.desc"
+  "specialName": "special.air_strike.name",
+  "specialDesc": "special.air_strike.desc"
  },
  "palamino": {
   "bio": "bio.palamino",
-  "specialName": "special.special_houston.name",
-  "specialDesc": "special.special_houston.desc"
+  "specialName": "special.nitro_flame.name",
+  "specialDesc": "special.nitro_flame.desc"
  },
  "leprechaun": {
   "bio": "bio.leprechaun",
-  "specialName": "special.special_boogie.name",
-  "specialDesc": "special.special_boogie.desc"
+  "specialName": "special.disco_ball.name",
+  "specialDesc": "special.disco_ball.desc"
  },
  "van": {
   "bio": "bio.van",
-  "specialName": "special.special_beezwax.name",
-  "specialDesc": "special.special_beezwax.desc"
+  "specialName": "special.bee_swarm.name",
+  "specialDesc": "special.bee_swarm.desc"
  },
  "sidburn": {
   "bio": "bio.sidburn",
-  "specialName": "special.special_sid.name",
-  "specialDesc": "special.special_sid.desc"
+  "specialName": "special.burner.name",
+  "specialDesc": "special.burner.desc"
  },
  "bus": {
   "bio": "bio.bus",
-  "specialName": "special.special_molo.name",
-  "specialDesc": "special.special_molo.desc"
+  "specialName": "special.smoke_screen.name",
+  "specialDesc": "special.smoke_screen.desc"
  },
  "ufo": {
   "bio": "bio.ufo",
-  "specialName": "special.special_y.name",
-  "specialDesc": "special.special_y.desc"
+  "specialName": "special.abduction_beam.name",
+  "specialDesc": "special.abduction_beam.desc"
  }
 }

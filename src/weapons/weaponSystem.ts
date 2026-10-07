@@ -10,6 +10,7 @@ import { tuning, weaponDef } from './params';
 import { ProjectileSystem } from './projectiles';
 import { rocket } from './rocket';
 import { Specials } from './specials/specials';
+import { VehicleSpecials } from './vehicleSpecials/system';
 import type { FireContext, Weapon } from './weapon';
 
 const WEAPONS: Record<WeaponId, Weapon> = { missile, rocket, mortar, cannon, mine };
@@ -24,26 +25,32 @@ export class WeaponSystem implements System {
   readonly effects: Effects;
   private readonly mgReady = new Map<string, number>();
   private readonly specials = new Specials();
+  /** Mashinaning o'z maxsus quroli (K tugmasi, inventory.specialAmmo) */
+  readonly vehicleSpecials: VehicleSpecials;
   private readonly weaponReady = new Map<string, number>();
 
   constructor(private readonly world: GameWorld) {
     this.projectiles = new ProjectileSystem(world);
     this.effects = new Effects(world);
+    this.vehicleSpecials = new VehicleSpecials(world);
   }
 
   fixedUpdate(dt: number): void {
     for (const v of [...this.world.vehicles]) if (v.alive) this.tickVehicle(v);
     this.specials.tick(dt);
+    this.vehicleSpecials.tick(dt);
     this.projectiles.fixedUpdate(dt);
   }
 
   update(dt: number, alpha: number): void {
     this.projectiles.update(dt, alpha);
     this.effects.update(dt);
+    this.vehicleSpecials.update(dt);
   }
 
   dispose(): void {
     this.specials.timers.clear();
+    this.vehicleSpecials.dispose();
     this.projectiles.dispose();
     this.effects.dispose();
   }
@@ -62,6 +69,10 @@ export class WeaponSystem implements System {
       this.mgReady.set(v.id, now + tuning.mg.cooldown);
       machinegun.fire(this.context(v));
       this.world.events.emit('fire', { sourceId: v.id, weapon: 'mg' });
+    }
+    if (input.fireSpecial) {
+      const sp = this.vehicleSpecials.fire(v, () => this.context(v));
+      if (sp) this.world.events.emit('fire', { sourceId: v.id, weapon: sp });
     }
     if (input.fireWeapon) this.fireSelected(v, now);
   }

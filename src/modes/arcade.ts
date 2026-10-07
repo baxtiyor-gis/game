@@ -14,11 +14,13 @@ import type { Arena } from '../levels/types';
 import { DamageSystem } from '../vehicles/damage';
 import { spawnVehicle } from '../vehicles/vehicle';
 import { PickupSystem } from '../weapons/pickups';
+import { vsp } from '../weapons/vehicleSpecials/params';
 import { WeaponSystem } from '../weapons/weaponSystem';
 import { WhammySystem } from '../weapons/whammy';
 import { Hud } from '../ui/hud';
 import { MENU } from '../ui/menu/config';
 import { arenaDef } from './arenas';
+import { StatusOverlay } from './statusOverlay';
 import { installPipeline } from './pipeline';
 import type { Content } from './backdrop';
 
@@ -64,6 +66,7 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   const s0 = arena.spawns[0]!;
   const player = spawnVehicle(world, vehicleDef(cfg.vehicleId), cfg.player, s0.pos, s0.yaw);
   player.inventory.slots.push(...MENU.loadout.player.map((s) => ({ weapon: s.weapon, ammo: s.ammo })));
+  player.inventory.specialAmmo = vsp.startAmmo;
   const spawns = arena.pickupSpawns;
   const pickups = new PickupSystem(world, spawns);
   const pickupView = spawns.map((s) => ({ pos: new THREE.Vector3(...s.pos), kind: s.kind, available: true }));
@@ -78,6 +81,7 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
     const bot = new BotController(world, () => self, { profile: id, difficulty: cfg.difficulty, getPickups });
     self = spawnVehicle(world, vehicleDef(id), bot, sp.pos, sp.yaw);
     self.inventory.slots.push(...MENU.loadout.bot.map((s) => ({ weapon: s.weapon, ammo: s.ammo })));
+    self.inventory.specialAmmo = vsp.startAmmo;
     rivals.push(self);
   }
   const whammy = new WhammySystem(world);
@@ -91,6 +95,7 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   world.addSystem(new ShakeSystem(world));
   for (const s of cfg.extraSystems ?? []) world.addSystem(s);
   cfg.onPlayer?.(player);
+  world.addSystem(new StatusOverlay(world, cfg.hudRoot, () => player));
   world.addSystem(new Hud(world, cfg.hudRoot, () => player, (id) => whammy.score(id)));
 
   let kills = 0;

@@ -59,7 +59,7 @@ export class DamageSystem implements System {
   private onDamage(e: GameEvents['damage']): void {
     const v = this.find(e.targetId);
     if (!v || !v.alive || e.amount <= 0) return;
-    v.hp = Math.max(0, v.hp - e.amount * tuningFor(v.def).damageFactor);
+    v.hp = Math.max(0, v.hp - e.amount * tuningFor(v.def).damageFactor * (v.status?.armorMul ?? 1));
     v.object.userData.damageStage = damageStage(v.hp, v.maxHp);
     if (v.hp > 0) return;
     v.alive = false;

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import type RAPIER from '@dimforge/rapier3d-compat';
 import { handling } from '../core/data';
 import { CG } from '../core/types';
-import type { Controller, GameWorld, InputState, Inventory, System, VehicleDef, VehicleHandle } from '../core/types';
+import type { Controller, GameWorld, InputState, Inventory, System, VehicleDef, VehicleHandle, VehicleStatus } from '../core/types';
 import { createVehicleModel, poseWheel } from './model';
 import type { VehicleModel } from './model';
 import { applyAirControl, bodyAxes, SelfRighter } from './motion';
@@ -27,6 +27,7 @@ class Vehicle implements VehicleHandle, System {
   input: InputState = NEUTRAL;
   inventory: Inventory = { slots: [], selected: 0, specialAmmo: 0 };
   stalled = 0;
+  status: VehicleStatus = { blind: 0, smoke: 0, armorMul: 1 };
 
   private readonly tuning: Tuning;
   private readonly model: VehicleModel;

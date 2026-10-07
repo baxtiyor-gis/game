@@ -43,12 +43,13 @@ export class ShakeSystem implements System {
   private readonly lastPos = new THREE.Vector3();
   private readonly tmp = new THREE.Vector3();
   private time = 0;
-  private readonly off: () => void;
+  private readonly off: Array<() => void>;
 
   constructor(private readonly world: GameWorld) {
-    this.off = world.events.on('explosion', (e) => {
+    const add = (e: { pos: THREE.Vector3; radius: number }): void => {
       this.state.add(shakeTrauma(e.pos.distanceTo(this.world.camera.position), e.radius));
-    });
+    };
+    this.off = [world.events.on('explosion', add), world.events.on('shake', add)];
   }
 
   update(dt: number): void {
@@ -64,6 +65,6 @@ export class ShakeSystem implements System {
   }
 
   dispose(): void {
-    this.off();
+    for (const off of this.off) off();
   }
 }
