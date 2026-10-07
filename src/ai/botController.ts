@@ -47,7 +47,8 @@ export class BotController implements Controller {
   private readonly sensors: Sensors;
   private readonly stuck = new StuckDetector();
   private readonly state: InputState = emptyInput();
-  private readonly drive: Drive = { throttle: 0, steer: 0 };
+  private readonly drive: Drive = { throttle: 0, steer: 0, err: 0 };
+  private speedLimit = Infinity;
   private action: ActionKind = 'wander';
   private enemy: VehicleHandle | null = null;
   private pickupPos: THREE.Vector3 | null = null;
@@ -82,6 +83,13 @@ export class BotController implements Controller {
     this.sensors = new Sensors(world);
   }
 
+  /** Diagnostika (e2e): joriy harakat, nishon va masofa. */
+  debugInfo(): string {
+    const e = this.enemy;
+    const d = e ? Math.round(e.position(ePos).distanceTo(tmpPos)) : -1;
+    return `${this.action} tgt=${e?.id ?? '-'} d=${d} slot=${this.desiredSlot} los=${this.sensors.los} av=${this.sensors.avoid.steer.toFixed(2)}/${this.sensors.avoid.max.toFixed(2)} ${this.stuck.mode}`;
+  }
+
   sample(dt: number): InputState {
     const s = this.state;
     s.throttle = 0; s.steer = 0; s.handbrake = false; s.fireMG = false;
@@ -109,6 +117,9 @@ export class BotController implements Controller {
     this.steer();
     s.steer = blendSteer(this.drive.steer, avoid);
     s.throttle = Math.min(this.drive.throttle, this.diff.throttleCap);
+    // Tezlik nazorati: burilishda va yaqin jangda sekinlashadi (aks holda aylana radiusi juda katta).
+    const lim = Math.min(this.speedLimit, sc.cornerSpeed + (sc.cruiseSpeed - sc.cornerSpeed) * (1 - Math.min(1, Math.abs(this.drive.err) / sc.sharpAngle)));
+    s.throttle = Math.min(s.throttle, Math.max(-1, (lim - speed) / sc.speedGain));
     if (avoid.front > sc.brakeDanger && speed > sc.stuckSpeed * 3) s.throttle = Math.min(s.throttle, 0);
     if (this.action === 'attack' || this.action === 'evade') this.shoot(me);
     return s;
@@ -124,7 +135,8 @@ export class BotController implements Controller {
     for (const sl of inv.slots) ammo += sl.ammo;
     const ctx: UtilContext = {
       pos: tmpPos, hpFrac: me.hp / me.maxHp, totalAmmo: ammo, current: this.action,
-      enemies: enemies.map((v) => ({ id: v.id, pos: v.position(new THREE.Vector3()), hpFrac: v.hp / v.maxHp })),
+      currentEnemy: this.enemy?.id,
+      enemies: enemies.map((v) => ({ id: v.id, pos: v.position(new THREE.Vector3()), hpFrac: v.hp / v.maxHp, human: !(v.controller instanceof BotController) })),
       pickups: this.opts.getPickups?.() ?? [],
     };
     const d = decide(ctx, this.profile, utilityCfg);
@@ -152,6 +164,7 @@ export class BotController implements Controller {
 
   /** Harakat yo'nalishi: this.drive ni to'ldiradi. */
   private steer(): void {
+    this.speedLimit = Infinity;
     switch (this.action) {
       case 'attack': if (this.enemy?.alive) return this.attackMove();
         break;
@@ -172,6 +185,7 @@ export class BotController implements Controller {
     e.position(ePos);
     this.aimPoint(e);
     const dist = Math.hypot(ePos.x - tmpPos.x, ePos.z - tmpPos.z);
+    if (dist < this.moveIdeal * sc.attackSlowFactor) this.speedLimit = sc.attackSpeed;
     if (dist > this.moveIdeal * 1.3) seek(tmpFwd, tmpPos, aimPt, sc, false, this.drive);
     else seek(tmpFwd, tmpPos, circlePoint(tmpPos, ePos, Math.max(this.moveIdeal, 1), this.circleDir, sc, goal), sc, false, this.drive);
   }
@@ -225,7 +239,7 @@ export class BotController implements Controller {
     const dist = Math.hypot(ePos.x - tmpPos.x, ePos.z - tmpPos.z);
     const err = headingError(tmpFwd, tmpPos, aimPt);
     if (!this.sensors.los) return;
-    if (dist <= aimCfg.mgRange && inFireCone(null, err, this.diff)) s.fireMG = true;
+    if (dist <= aimCfg.mgRange && inFireCone(null, err, this.diff, dist)) s.fireMG = true;
     if (!slot || slot.ammo <= 0 || slot.weapon === 'mine' || this.time < this.nextFire) return;
     const r = aimCfg.weaponRanges[slot.weapon];
     if (dist < r.min || dist > r.max || !inFireCone(slot.weapon, err, this.diff)) return;

@@ -121,6 +121,11 @@ describe('utility', () => {
     c.enemies = [{ id: 'a', pos: V(30, 0, 0), hpFrac: 1 }, { id: 'b', pos: V(0, 0, 30), hpFrac: 0.2 }];
     expect(decide(c, profile, utilityCfg).enemy).toBe(1);
   });
+  it('prefers the human player over a slightly closer bot', () => {
+    const c = base();
+    c.enemies = [{ id: 'bot', pos: V(25, 0, 0), hpFrac: 1 }, { id: 'p1', pos: V(35, 0, 0), hpFrac: 1, human: true }];
+    expect(decide(c, profile, utilityCfg).enemy).toBe(1);
+  });
   it('wanders when there is nothing to do', () => {
     expect(decide({ ...base(), enemies: [] }, profile, utilityCfg).action).toBe('wander');
   });
@@ -130,7 +135,7 @@ describe('utility', () => {
 });
 
 describe('steering', () => {
-  const out: Drive = { throttle: 0, steer: 0 };
+  const out: Drive = { throttle: 0, steer: 0, err: 0 };
 
   it('steers right (steer > 0) toward a target on the vehicle right, using real forward()', () => {
     for (const yaw of [0, 1.1, Math.PI, -2.3]) {

@@ -3,7 +3,7 @@
 import type * as THREE from 'three';
 import type { SteeringCfg } from './config';
 
-export interface Drive { throttle: number; steer: number }
+export interface Drive { throttle: number; steer: number; err: number }
 
 const clamp = (x: number, lo: number, hi: number): number => (x < lo ? lo : x > hi ? hi : x);
 
@@ -18,6 +18,7 @@ export function seek(
   fwd: THREE.Vector3, pos: THREE.Vector3, target: THREE.Vector3, cfg: SteeringCfg, arrive: boolean, out: Drive,
 ): Drive {
   const err = headingError(fwd, pos, target);
+  out.err = err;
   out.steer = clamp(err * cfg.steerGain, -1, 1);
   out.throttle = Math.abs(err) > cfg.sharpAngle ? cfg.turnThrottle : 1;
   if (arrive) {

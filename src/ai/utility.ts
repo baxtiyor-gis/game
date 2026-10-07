@@ -5,7 +5,7 @@ import type { AiProfile, UtilityCfg } from './config';
 
 export type ActionKind = 'attack' | 'evade' | 'collect' | 'heal' | 'wander';
 
-export interface UtilEnemy { id: string; pos: THREE.Vector3; hpFrac: number }
+export interface UtilEnemy { id: string; pos: THREE.Vector3; hpFrac: number; human?: boolean }
 export interface UtilPickup { pos: THREE.Vector3; kind: PickupKind; available: boolean }
 
 export interface UtilContext {
@@ -15,6 +15,7 @@ export interface UtilContext {
   enemies: UtilEnemy[]; // tirik raqiblar
   pickups: UtilPickup[];
   current: ActionKind | null;
+  currentEnemy?: string; // oldingi nishon id si (barqarorlik)
 }
 
 export interface Decision {
@@ -34,7 +35,8 @@ export function pickTarget(ctx: UtilContext, cfg: UtilityCfg): number {
   let bestScore = -Infinity;
   for (let i = 0; i < ctx.enemies.length; i++) {
     const e = ctx.enemies[i];
-    const s = 1 - clamp01(dist2d(ctx.pos, e.pos) / cfg.attackRange) + cfg.weakWeight * (1 - e.hpFrac);
+    const s = 1 - clamp01(dist2d(ctx.pos, e.pos) / cfg.attackRange) + cfg.weakWeight * (1 - e.hpFrac)
+      + (e.human ? cfg.humanBias : 0) + (e.id === ctx.currentEnemy ? cfg.stickBonus : 0);
     if (s > bestScore) { bestScore = s; best = i; }
   }
   return best;

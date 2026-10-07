@@ -88,7 +88,8 @@ export function pickCombo(slot: WeaponSlot | undefined, profile: AiProfile, diff
 }
 
 /** Nishon yo'nalishi qurol konusiga tushdimi (angleErr — mashina oldi va nishon orasidagi burchak). */
-export function inFireCone(w: WeaponId | null, angleErr: number, difficulty: DifficultyCfg): boolean {
-  const cone = w ? aimCfg.weaponRanges[w].cone : aimCfg.fireCone;
-  return Math.abs(angleErr) <= cone + difficulty.aimError;
+export function inFireCone(w: WeaponId | null, angleErr: number, difficulty: DifficultyCfg, dist = 0): boolean {
+  // Pulemyot (hitscan): konus masofaga qarab torayadi — nishon o'lchamiga mos.
+  if (!w) return Math.abs(angleErr) <= Math.atan2(aimCfg.mgHitRadius, Math.max(dist, 1));
+  return Math.abs(angleErr) <= aimCfg.weaponRanges[w].cone + difficulty.aimError;
 }

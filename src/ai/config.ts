@@ -19,7 +19,7 @@ export interface UtilityCfg {
   attackRange: number; weakWeight: number; attackWeight: number; noAmmoAttackFactor: number;
   lowHp: number; healBelow: number; healWeight: number; evadeWeight: number; crowdWeight: number;
   crowdRadius: number; crowdCount: number; collectWeight: number; lowAmmo: number; lowAmmoNeed: number;
-  pickupRange: number; wanderScore: number; hysteresis: number; greedWeight: number; preferredBonus: number;
+  pickupRange: number; humanBias: number; stickBonus: number; wanderScore: number; hysteresis: number; greedWeight: number; preferredBonus: number;
 }
 
 export interface SteeringCfg {
@@ -29,13 +29,14 @@ export interface SteeringCfg {
   stuckSpeed: number; stuckTime: number; reverseTime: number; flipUpY: number;
   circleAngle: number; circleFlip: number; fleeDistance: number; zigzagPeriod: number; zigzagAmount: number;
   wanderRadius: number; wanderBounds: number; wanderRepick: number; reachRadius: number;
+  cruiseSpeed: number; cornerSpeed: number; attackSpeed: number; attackSlowFactor: number; speedGain: number;
 }
 
 export interface WeaponRangeCfg { min: number; ideal: number; max: number; cone: number }
 
 export interface AimCfg {
   fireCone: number; losInterval: number; losHeight: number; mineRange: number; mineRearDot: number;
-  comboCooldown: number; mgRange: number; maxLeadTime: number; retargetInterval: number;
+  comboCooldown: number; mgRange: number; mgHitRadius: number; maxLeadTime: number; retargetInterval: number;
   weaponRanges: Record<WeaponId, WeaponRangeCfg>;
   offensiveCombos: string[];
 }
