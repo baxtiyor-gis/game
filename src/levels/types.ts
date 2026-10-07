@@ -103,10 +103,12 @@ export interface TrainDef {
   respawnDelay: number;
 }
 
+/** Arena osmoni/tumani/quyoshi (hammasi ixtiyoriy; yo'q bo'lsa data/render.json default). */
 export interface EnvironmentDef {
-  sky?: string;
-  fog?: string;
-  fogDensity?: number;
+  sky?: { top?: string; horizon?: string; ground?: string; sunColor?: string };
+  fog?: { color?: string; near?: number; far?: number };
+  sun?: { color?: string; direction?: [number, number, number]; intensity?: number };
+  hemi?: { sky?: string; ground?: string; intensity?: number };
 }
 
 export interface ArenaDef {
@@ -137,6 +139,8 @@ export interface DestructibleType {
   explosion: { radius: number; damage: number };
   /** O'lgandan portlashgacha kechikish, s (zanjir ketma-ketligi uchun) */
   fuse: number;
+  /** Pulemyot (hitscan) zarari ko'paytirgichi: hp / (dps * soniya) bo'yicha balans */
+  mgScale: number;
 }
 
 export interface LoadOptions {

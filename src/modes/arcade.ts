@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { vehicleDef } from '../core/data';
 import type { Controller, System, VehicleHandle } from '../core/types';
 import type { World } from '../core/world';
-import { BotController } from '../ai/botController';
+import { BotController, type BotPickup } from '../ai/botController';
 import type { Difficulty } from '../ai/config';
 import { ChaseCamera } from '../render/chaseCamera';
 import { installEnvironment } from '../render/environment';
@@ -64,6 +64,7 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   // Sandiq tizimi arenadan keyin yaratiladi: onDrop unga kechiktirib ulanadi
   let pickups: PickupSystem | null = null;
   const arena = await loadArena(world, arenaDef(cfg.arenaId), { onDrop: (pos, kind) => pickups?.drop(pos, kind) });
+  env.applyArenaEnvironment(arena.def.environment);
   world.addSystem(new DamageSystem(world));
   const s0 = arena.spawns[0]!;
   const player = spawnVehicle(world, vehicleDef(cfg.vehicleId), cfg.player, s0.pos, s0.yaw);
@@ -73,9 +74,13 @@ export async function startArcade(world: World, cfg: ArcadeConfig): Promise<Matc
   const pk = new PickupSystem(world, spawns);
   pickups = pk;
   const pickupView = spawns.map((s) => ({ pos: new THREE.Vector3(...s.pos), kind: s.kind, available: true }));
-  const getPickups = () => {
+  // Statik joylar + faol drop lar (poyezddan tushgan sandiqlar); massiv qayta ishlatiladi
+  const allView: BotPickup[] = [...pickupView];
+  const getPickups = (): BotPickup[] => {
     pickupView.forEach((p, i) => (p.available = pk.isAvailable(i)));
-    return pickupView;
+    allView.length = pickupView.length;
+    for (const d of pk.listDropped()) allView.push(d);
+    return allView;
   };
   const rivals: VehicleHandle[] = [];
   for (const [i, id] of cfg.rivalIds.entries()) {

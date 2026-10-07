@@ -3,6 +3,7 @@ import type RAPIER from '@dimforge/rapier3d-compat';
 import type { GameWorld, PickupKind, System } from '../core/types';
 import type { DestructibleType } from './types';
 import type { DestructibleVisual } from './props/tank';
+import { registerHitTarget, unregisterHitTarget } from '../core/hitTargets';
 import cfgJson from '../../data/levels/destructibles.json';
 
 export const destructibleTypes = cfgJson.types as Record<string, DestructibleType>;
@@ -46,6 +47,12 @@ export class DestructibleSystem implements System {
     private readonly onDrop?: (pos: THREE.Vector3, kind: PickupKind) => void,
   ) {
     this.entries = items.map((i) => ({ ...i, hp: i.type.hp, dead: false, queued: false, fuse: 0 }));
+    for (const e of this.entries) {
+      registerHitTarget(world, e.collider.handle, {
+        id: e.id,
+        damage: (amount, _src, weapon) => this.hit(e, weapon === 'mg' ? amount * e.type.mgScale : amount),
+      });
+    }
     this.off = [
       world.events.on('explosion', (e) => this.onExplosion(e.pos, e.radius, e.damage)),
       world.events.on('damage', (e) => {
@@ -109,6 +116,7 @@ export class DestructibleSystem implements System {
 
   private destroy(e: Entry): void {
     e.dead = true;
+    unregisterHitTarget(this.world, e.collider.handle);
     this.world.physics.removeCollider(e.collider, true);
     e.visual.setDestroyed();
     const center = e.pos.clone();

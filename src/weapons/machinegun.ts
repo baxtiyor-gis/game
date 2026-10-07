@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { findHitTarget } from '../core/hitTargets';
 import { tuning } from './params';
 import { castSegment } from './raycast';
 import type { Weapon } from './weapon';
@@ -21,6 +22,8 @@ export const machinegun: Weapon = {
     ctx.effects.tracer(ctx.muzzle, end);
     if (hit?.vehicle?.alive) {
       ctx.world.events.emit('damage', { targetId: hit.vehicle.id, sourceId: ctx.owner.id, amount: mg.damage, weapon: 'mg' });
+    } else if (hit && !hit.vehicle) {
+      findHitTarget(ctx.world, hit.collider)?.damage(mg.damage, ctx.owner.id, 'mg');
     }
   },
 };

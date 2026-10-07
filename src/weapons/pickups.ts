@@ -13,7 +13,15 @@ export interface PickupSpawn {
   kind: PickupKind;
 }
 
+/** Tashqi (bot/radar) ko'rinish: oldindan ajratilgan, sandiq bilan birga yashaydi */
+export interface PickupInfo {
+  pos: THREE.Vector3;
+  kind: PickupKind;
+  available: boolean;
+}
+
 interface Crate {
+  info?: PickupInfo;
   spawn: PickupSpawn;
   group: THREE.Group;
   view: CrateView;
@@ -32,6 +40,8 @@ export class PickupSystem implements System {
   private readonly crates: Crate[];
   /** Dinamik (drop) sandiqlar: bir martalik, respawn yo'q; eng eskisi chiqib ketadi */
   private readonly dropped: Crate[] = [];
+  /** `dropped` bilan sinxron ro'yxat (drop/olinishda yangilanadi, so'rovda allocation yo'q) */
+  private readonly droppedInfo: PickupInfo[] = [];
 
   constructor(private readonly world: GameWorld, spawns: PickupSpawn[]) {
     this.flash = new PickupFlash(world.scene);
@@ -55,7 +65,15 @@ export class PickupSystem implements System {
   /** Bir martalik sandiq qo'yadi (vagon/destructible vayron bo'lganda). Olinmaguncha qoladi; maxDropped dan oshsa eng eskisi yo'qoladi. */
   drop(pos: THREE.Vector3, kind: PickupKind): void {
     while (this.dropped.length >= pickupCfg.maxDropped) this.discard(this.dropped.shift()!);
-    this.dropped.push(this.build({ pos: [pos.x, pos.y, pos.z], kind }, this.dropped.length + this.crates.length));
+    const c = this.build({ pos: [pos.x, pos.y, pos.z], kind }, this.dropped.length + this.crates.length);
+    c.info = { pos: new THREE.Vector3(pos.x, pos.y, pos.z), kind, available: true };
+    this.dropped.push(c);
+    this.droppedInfo.push(c.info);
+  }
+
+  /** Faol drop sandiqlar (bot/radar uchun). Qaytgan massiv tizimniki: o'zgartirmang, nusxa olmang. */
+  listDropped(): readonly PickupInfo[] {
+    return this.droppedInfo;
   }
 
   /** Hozir sahnada turgan dinamik sandiqlar soni (test/UI uchun) */
@@ -65,6 +83,8 @@ export class PickupSystem implements System {
 
   private discard(c: Crate): void {
     c.group.removeFromParent();
+    const k = this.droppedInfo.indexOf(c.info!);
+    if (k >= 0) this.droppedInfo.splice(k, 1);
   }
 
   /** Mashina yetib borsa sandiqni beradi; true = olindi. */
@@ -120,6 +140,7 @@ export class PickupSystem implements System {
   dispose(): void {
     for (const c of [...this.crates, ...this.dropped]) c.group.removeFromParent();
     this.dropped.length = 0;
+    this.droppedInfo.length = 0;
     this.flash.dispose();
     this.kit.dispose();
   }

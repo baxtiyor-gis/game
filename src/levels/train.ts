@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type RAPIER from '@dimforge/rapier3d-compat';
 import type { GameEvents, GameWorld, PickupKind, System } from '../core/types';
+import { registerHitTarget } from '../core/hitTargets';
 import type { BuildContext } from './context';
 import type { TrainDef } from './types';
 import { TrackPath } from './trackPath';
@@ -91,12 +92,18 @@ export class TrainSystem implements System {
     const R = this.world.rapier;
     const body = this.world.physics.createRigidBody(R.RigidBodyDesc.kinematicPositionBased());
     const hh = (size[1] - BASE) / 2;
-    this.world.physics.createCollider(
+    const collider = this.world.physics.createCollider(
       R.ColliderDesc.cuboid(size[0] / 2, hh, size[2] / 2).setTranslation(0, BASE + hh, 0).setFriction(0.3).setCollisionGroups(WORLD_GROUPS), body);
     const model = buildCar(kind, size);
     root.add(model.group);
     const pose = (): Pose => ({ p: new THREE.Vector3(), q: new THREE.Quaternion() });
-    return { id, kind, size, offset, hp: this.def.wagonHp, dead: false, invulnerable: kind === 'loco', body, model, prev: pose(), cur: pose() };
+    const car: Car = { id, kind, size, offset, hp: this.def.wagonHp, dead: false, invulnerable: kind === 'loco', body, model, prev: pose(), cur: pose() };
+    if (!car.invulnerable) {
+      registerHitTarget(this.world, collider.handle, {
+        id, damage: (amount, _src, weapon) => this.hurt(car, weapon === 'mg' ? amount * cfg.mgScale : amount),
+      });
+    }
+    return car;
   }
 
   isDestroyed(id: string): boolean {

@@ -43,6 +43,7 @@ class OrbitCamera implements System {
 export async function startBackdrop(world: World, arenaId: string, retro: boolean): Promise<Content> {
   const env = installEnvironment(world);
   const arena = await loadArena(world, arenaDef(resolveArenaId(arenaId)));
+  env.applyArenaEnvironment(arena.def.environment);
   const focus = new THREE.Object3D();
   env.follow(focus);
   world.addSystem(new OrbitCamera(world, arena.heightAt, focus));

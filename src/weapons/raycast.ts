@@ -7,6 +7,7 @@ export interface SegmentHit {
   t: number; // masofa (dir birlik vektor)
   vehicle: VehicleHandle | null; // null = dunyo (yer/bino)
   normal: { x: number; y: number; z: number }; // sirt normali
+  collider: number; // tekkan collider handle (hitTargets registri uchun)
 }
 
 const GROUPS = (CG.PROJECTILE << 16) | CG.WORLD | CG.VEHICLE;
@@ -20,5 +21,5 @@ export function castSegment(
   if (!hit) return null;
   const handle = hit.collider.parent()?.handle;
   const vehicle = handle === undefined ? null : (world.vehicles.find((v) => v.body.handle === handle) ?? null);
-  return { t: hit.timeOfImpact, vehicle, normal: hit.normal };
+  return { t: hit.timeOfImpact, vehicle, normal: hit.normal, collider: hit.collider.handle };
 }

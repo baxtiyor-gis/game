@@ -963,8 +963,9 @@
   }
  ],
  "environment": {
-  "sky": "#d9a066",
-  "fog": "#c9a67a",
-  "fogDensity": 0.0016
+  "sky": { "top": "#c9763a", "horizon": "#f2b866", "ground": "#8a5a30", "sunColor": "#ffd89a" },
+  "fog": { "color": "#e2ab70", "near": 60, "far": 340 },
+  "sun": { "color": "#ffc27a", "direction": [0.55, 0.5, 0.35], "intensity": 3.4 },
+  "hemi": { "sky": "#f0c890", "ground": "#7a4a22", "intensity": 0.95 }
  }
 }

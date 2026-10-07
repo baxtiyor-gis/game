@@ -63,12 +63,11 @@ for (let i = 0; i < 5; i++) {
   await waitState('result');
 }
 console.log(JSON.stringify(first));
-// Ma'lum qoldiq: render/environment.ts har instansda 1 geometriya + 1 tekstura (PMREM sfera) qoldiradi -> match boshiga <= 1.
+// Resurs oqishi chegarasi: match boshiga 0 (geometriya/tekstura/tana/bolalar o'smasligi kerak).
 const base = first[0];
 first.forEach((s, i) => {
   for (const k of Object.keys(base)) {
-    const allowed = k === 'geo' || k === 'tex' ? base[k] + i * 2 : base[k];
-    if (s[k] > allowed) fail(`resurs oqishi: ${k} ${base[k]} -> ${s[k]} (${i}-tsikl)`);
+    if (s[k] > base[k]) fail(`resurs oqishi: ${k} ${base[k]} -> ${s[k]} (${i}-tsikl)`);
   }
 });
 

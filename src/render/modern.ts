@@ -77,6 +77,8 @@ export function installModern(world: World): ModernPipeline {
     render,
     dispose: () => {
       world.renderHook = undefined;
+      // EffectComposer.dispose() pass larni bo'shatmaydi (bloom/FXAA/Output render targetlari) — avval ularni
+      for (const pass of composer.passes) pass.dispose?.();
       composer.dispose();
     },
   };

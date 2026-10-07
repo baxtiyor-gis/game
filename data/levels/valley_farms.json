@@ -286,7 +286,12 @@
     {"pos": [-175, 0, 115], "kind": "missile"},
     {"pos": [70, 0, -95], "kind": "mortar"}
   ],
-  "environment": {"sky": "#9cc8ea", "fog": "#cfe0ea", "fogDensity": 0.0012},
+  "environment": {
+    "sky": { "top": "#2f78cf", "horizon": "#bfe0ee", "ground": "#4d6b4a", "sunColor": "#fff6dc" },
+    "fog": { "color": "#b9d8dc", "near": 100, "far": 480 },
+    "sun": { "color": "#fff3dc", "direction": [0.4, 0.85, 0.25], "intensity": 2.6 },
+    "hemi": { "sky": "#a8d0f2", "ground": "#4f6a3a", "intensity": 1.0 }
+  },
   "train": {
     "path": [
       [-240, -14],

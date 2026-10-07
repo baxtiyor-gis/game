@@ -7,7 +7,8 @@
       "height": 8.5,
       "centerHeight": 4.6,
       "explosion": { "radius": 18, "damage": 60 },
-      "fuse": 0.25
+      "fuse": 0.25,
+      "mgScale": 0.32
     },
     "barrel": {
       "hp": 6,
@@ -15,7 +16,8 @@
       "height": 1.1,
       "centerHeight": 0.6,
       "explosion": { "radius": 5, "damage": 8 },
-      "fuse": 0.1
+      "fuse": 0.1,
+      "mgScale": 0.19
     }
   }
 }
