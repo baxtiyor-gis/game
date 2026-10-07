@@ -207,7 +207,11 @@
   },
   "materials": {
     "roughness": 0.8,
-    "metalness": 0.05
+    "metalness": 0.05,
+    "clearcoatRoughnessMin": 0.35,
+    "roughnessMin": 0.3,
+    "metalRoughnessMin": 0.6,
+    "metalThreshold": 0.8
   },
   "ground": {
     "textureSize": 256,

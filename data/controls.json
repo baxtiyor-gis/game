@@ -63,6 +63,7 @@
   "zoneFraction": 0.5,
   "opacity": 0.6,
   "rotateHintSeconds": 6,
+  "hintMaxFrameMs": 250,
   "flick": {
    "window": 0.16,
    "minDist": 0.7,

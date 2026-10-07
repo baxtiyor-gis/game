@@ -25,23 +25,43 @@ for (const [name, w, h] of [['landscape', 844, 390], ['portrait', 390, 844]]) {
   const touch = (type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts.map(([x, y, id]) => ({ x, y, id })) });
   const state = () => page.evaluate(() => window.__flow.state);
   const waitState = (s) => page.waitForFunction((x) => window.__flow.state === x, s, { timeout: 90000 });
-  const shot = (n) => page.screenshot({ path: `test-results/touch-${name}-${n}.png` });
-  const center = async (sel) => {
-    const b = await page.locator(sel).first().boundingBox();
-    if (!b) fail(`${name}: ${sel} topilmadi`);
-    return [b.x + b.width / 2, b.y + b.height / 2];
+  const shot = (n) => page.screenshot({ path: `test-results/touch-${name}-${n}.png`, timeout: 90000 });
+  const waitFn = (fn, arg) => page.waitForFunction(fn, arg, { timeout: 90000 });
+  // Element markazi: ko'rinib, ikki ketma-ket kadrda joyi o'zgarmaguncha (animatsiya tugashi) holat bo'yicha kutiladi.
+  // Playwright tap()/boundingBox() ning 30 s lik harakat-kutishi o'rniga: swiftshader da sahna qurilishi/og'ir kadr
+  // bosh oqimni uzoq band qilishi mumkin, holat bo'yicha kutish esa band oqim bo'shashini kutadi.
+  const center = async (sel, n = 0) => {
+    await waitFn(([q, i]) => {
+      const e = document.querySelectorAll(q)[i];
+      const r = e?.getBoundingClientRect();
+      if (!r || !r.width || !r.height) return false;
+      const k = [r.x, r.y, r.width, r.height].join();
+      const same = window.__rk === k;
+      window.__rk = k;
+      return same;
+    }, [sel, n]);
+    return page.evaluate(([q, i]) => {
+      const r = document.querySelectorAll(q)[i].getBoundingClientRect();
+      return [r.x + r.width / 2, r.y + r.height / 2];
+    }, [sel, n]);
   };
-  const tapRow = async (sel, n) => page.locator(sel).nth(n).tap();
+  // Haqiqiy sensor tap (CDP). noAck: brauzer javobini kutmaydi (BOSHLASH sahnani qurib bosh oqimni 10-40 s band qiladi).
+  const tapRow = async (sel, n = 0, noAck = false) => {
+    const [x, y] = await center(sel, n);
+    await touch('touchStart', [[x, y, 1]]);
+    const end = touch('touchEnd', []);
+    if (noAck) end.catch(() => undefined);
+    else await end;
+  };
 
   await page.goto('http://localhost:5199/');
   await waitState('menu');
-  await sleep(1500);
+  await waitFn(() => document.querySelectorAll('.m-screen.show .m-rows .m-row').length > 0);
   await shot('menu');
 
   // Menyu: sensor bilan ARCADE -> mashina tanlash
   await tapRow('.m-screen.show .m-rows .m-row', 0);
-  await page.waitForFunction(() => window.__flow.app.screen === 'select');
-  await sleep(800);
+  await waitFn(() => window.__flow.app.screen === 'select' && !!document.querySelector('.m-card.sel b'));
 
   // Swipe: mashina almashadi
   const driver = () => page.evaluate(() => document.querySelector('.m-card.sel b')?.textContent);
@@ -51,24 +71,21 @@ for (const [name, w, h] of [['landscape', 844, 390], ['portrait', 390, 844]]) {
   await touch('touchMove', [[px, py, 1]]);
   await touch('touchMove', [[px - 70, py, 1]]);
   await touch('touchEnd', []);
-  await sleep(300);
-  const d1 = await driver();
-  if (d0 === d1) fail(`${name}: swipe mashinani almashtirmadi (${d0})`);
+  await waitFn((d) => document.querySelector('.m-card.sel b')?.textContent !== d, d0).catch(() => fail(`${name}: swipe mashinani almashtirmadi (${d0})`));
   await shot('select');
   // Orqaga swipe -> boshlang'ich mashina
   await touch('touchStart', [[px - 60, py, 1]]);
   await touch('touchMove', [[px + 70, py, 1]]);
   await touch('touchEnd', []);
-  await sleep(300);
-  if ((await driver()) !== d0) fail(`${name}: teskari swipe ishlamadi`);
+  await waitFn((d) => document.querySelector('.m-card.sel b')?.textContent === d, d0).catch(() => fail(`${name}: teskari swipe ishlamadi`));
 
   await tapRow('.m-screen.show .m-confirm .m-row', 0);
-  await page.waitForFunction(() => window.__flow.app.screen === 'setup');
-  await sleep(500);
+  await waitFn(() => window.__flow.app.screen === 'setup' && document.querySelectorAll('.m-screen.show .m-rows .m-row').length > 3);
   await shot('setup');
-  await tapRow('.m-screen.show .m-rows .m-row', 3); // BOSHLASH
+  await tapRow('.m-screen.show .m-rows .m-row', 3, true); // BOSHLASH
   await waitState('playing');
-  await sleep(400);
+  // Sensor qatlami o'yin kadri (rAF) da yangilanadi: ko'rinishini holat bo'yicha kutamiz
+  await waitFn(() => !!document.querySelector('.tc-root.show'));
   // Portretda "telefonni yoting" maslahati ko'rinadi (bloklamaydi), landshaftda yo'q
   const hint = await page.evaluate(() => {
     const e = document.querySelector('.tc-hint');
@@ -77,7 +94,6 @@ for (const [name, w, h] of [['landscape', 844, 390], ['portrait', 390, 844]]) {
   if (hint.show !== (h > w) || hint.pe !== 'none') fail(`${name}: maslahat holati noto'g'ri ${JSON.stringify(hint)}`);
 
   await shot('game-idle');
-  await sleep(1500);
 
   const ui = await page.evaluate(() => ({
     show: !!document.querySelector('.tc-root.show'),
@@ -113,49 +129,43 @@ for (const [name, w, h] of [['landscape', 844, 390], ['portrait', 390, 844]]) {
   await touch('touchMove', [[sx, sy - rad, 1]]);
   const [mx, my] = await center('.tc-mg');
   await touch('touchStart', [[sx, sy - rad, 1], [mx, my, 2]]);
-  await sleep(600);
+  // Joystik+pulemyot: mashina tezlanishi (to'siqqa urilib to'xtashi mumkin, shuning uchun lahza emas, erishilgan holat), 'fire', throttle
+  const mid = await (await waitFn(() => {
+    const p = window.__game.player;
+    return p.speed() > 5 && window.__fires > 0 && p.input.throttle > 0.9 ? { speed: p.speed(), fires: window.__fires } : false;
+  }).catch(() => fail(`${name}: joystik/pulemyot ishlamadi (tezlik, 'fire' yoki throttle>0.9 holatiga yetilmadi)`))).jsonValue();
   await shot('game-drive');
-  await sleep(1200);
-  const mid = await page.evaluate(() => ({ speed: window.__game.player.speed(), fires: window.__fires, input: window.__game.player.input }));
-  if (!(mid.speed > 1)) fail(`${name}: joystik mashinani harakatlantirmadi (speed=${mid.speed})`);
-  if (!(mid.fires > 0)) fail(`${name}: pulemyot 'fire' chiqarmadi`);
-  if (!(mid.input.throttle > 0.9)) fail(`${name}: throttle=${mid.input.throttle}`);
   // Rul: o'ngga
   await touch('touchMove', [[sx + rad, sy, 1], [mx, my, 2]]);
-  await sleep(200);
-  const steer = await page.evaluate(() => window.__game.player.input.steer);
-  if (!(steer > 0.9)) fail(`${name}: steer=${steer}`);
+  await waitFn(() => window.__game.player.input.steer > 0.9);
   await touch('touchEnd', []);
-  await sleep(200);
+  await waitFn(() => { const i = window.__game.player.input; return i.throttle === 0 && i.steer === 0 && !i.fireMG; });
   const rel = await page.evaluate(() => window.__game.player.input);
   if (rel.throttle !== 0 || rel.steer !== 0 || rel.fireMG) fail(`${name}: barmoq ko'tarilgach input tozalanmadi ${JSON.stringify(rel)}`);
 
   // Kombo paneli: tugma ochadi, panelda 3 ta harakat
-  await page.locator('.tc-combo-btn').tap();
-  await sleep(300);
+  await tapRow('.tc-combo-btn');
+  await waitFn(() => !!document.querySelector('.tc-panel.open'));
   const acts = await page.locator('.tc-panel.open .tc-act').count();
   if (acts !== 3) fail(`${name}: kombo panelida ${acts} tugma`);
   await shot('game-combo');
-  await page.locator('.tc-combo-btn').tap();
+  await tapRow('.tc-combo-btn');
 
   // Klaviatura bosilsa yashirinadi, keyin sensor qaytaradi
   await page.keyboard.press('KeyA');
-  await sleep(200);
-  if (await page.evaluate(() => !!document.querySelector('.tc-root.show'))) fail(`${name}: klaviatura bosilganda yashirinmadi`);
+  await waitFn(() => !document.querySelector('.tc-root.show'));
   await touch('touchStart', [[sx, sy, 1]]);
   await touch('touchEnd', []);
-  await sleep(200);
-  if (await page.evaluate(() => !document.querySelector('.tc-root.show'))) fail(`${name}: sensor qayta ko'rsatmadi`);
+  await waitFn(() => !!document.querySelector('.tc-root.show'));
 
   // Rejim "O'chirilgan"
   await page.evaluate(() => (window.__flow.app.settings.touch = 'off', window.__flow.app.save()));
-  await sleep(200);
-  if (await page.evaluate(() => !!document.querySelector('.tc-root.show'))) fail(`${name}: "O'chirilgan" rejimda ko'rinib qoldi`);
+  await waitFn(() => !document.querySelector('.tc-root.show'));
   await page.evaluate(() => (window.__flow.app.settings.touch = 'auto', window.__flow.app.save()));
-  await sleep(200);
+  await waitFn(() => !!document.querySelector('.tc-root.show'));
 
   // Pauza tugmasi
-  await page.locator('.tc-pause').tap();
+  await tapRow('.tc-pause');
   await waitState('paused');
   await shot('paused');
   await tapRow('.m-screen.show .m-rows .m-row', 0); // Davom etish

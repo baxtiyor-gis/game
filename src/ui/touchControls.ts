@@ -34,7 +34,8 @@ export class TouchControls {
   private shown = false;
   private visible = false;
   private weapon: WeaponId | undefined | null = null;
-  private hintUntil = 0;
+  private hintLeft: number | null = null; // ms; null — hali boshlanmagan
+  private lastFrame = performance.now();
   private open = false;
 
   constructor(ui: HTMLElement, private mode: TouchMode, private readonly hooks: TouchHooks) {
@@ -81,6 +82,10 @@ export class TouchControls {
 
   /** Har kadr: ko'rinish (rejim/qurilma/klaviatura), faqat o'yin davomida ko'rsatiladi. */
   update(playing: boolean): void {
+    // Maslahat vaqti kadr dt bilan sanaladi (uzun qotish — masalan sahna qurilishi/birinchi render — bitta kadr deb olinadi)
+    const now = performance.now();
+    const dt = Math.min(now - this.lastFrame, TOUCH_CFG.hintMaxFrameMs);
+    this.lastFrame = now;
     this.visible = touchVisible(this.mode, this.coarse, this.touched, this.kbUsed);
     rootClass().toggle('tc-on', this.visible);
     const show = this.visible && playing;
@@ -93,10 +98,9 @@ export class TouchControls {
     const w = this.hooks.weapon();
     if (w !== this.weapon) this.setWeapon(w);
     const portrait = window.innerHeight > window.innerWidth;
-    const now = performance.now();
-    if (!portrait) this.hintUntil = 0;
-    else if (this.hintUntil === 0) this.hintUntil = now + TOUCH_CFG.rotateHintSeconds * 1000;
-    this.hint.classList.toggle('show', portrait && now < this.hintUntil);
+    if (!portrait) this.hintLeft = null;
+    else this.hintLeft = this.hintLeft === null ? TOUCH_CFG.rotateHintSeconds * 1000 : this.hintLeft - dt;
+    this.hint.classList.toggle('show', portrait && (this.hintLeft ?? 0) > 0);
   }
 
   private release(): void {

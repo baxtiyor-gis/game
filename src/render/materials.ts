@@ -78,6 +78,20 @@ function toStandard(m: THREE.MeshLambertMaterial): THREE.MeshStandardMaterial {
   return s;
 }
 
+/**
+ * Juda silliq (roughness ~0.1) xrom/lak yuzalarda quyosh specular cho'qqisi HDR da yuzlab marta yorqin bo'ladi
+ * va bloom uni katta oq dog'ga aylantiradi (masalan orqa bamper ostida). Cho'qqini yumshatamiz;
+ * bloom faqat emissive (toneMapped:false) materiallar uchun qoladi.
+ */
+function softenSpecular(m: THREE.Material): void {
+  if (!(m instanceof THREE.MeshStandardMaterial) || !m.toneMapped) return;
+  const floor = m.metalness >= mc.metalThreshold ? mc.metalRoughnessMin : mc.roughnessMin;
+  if (m.roughness < floor) m.roughness = floor;
+  if (m instanceof THREE.MeshPhysicalMaterial && m.clearcoat > 0 && m.clearcoatRoughness < mc.clearcoatRoughnessMin) {
+    m.clearcoatRoughness = mc.clearcoatRoughnessMin;
+  }
+}
+
 /** Sahnadagi MeshLambertMaterial -> MeshStandardMaterial (vaqtinchalik) va soya bayroqlari. */
 export function upgradeMaterials(scene: THREE.Object3D): void {
   const cache = new Map<THREE.Material, THREE.Material>();
@@ -94,6 +108,8 @@ export function upgradeMaterials(scene: THREE.Object3D): void {
   scene.traverse((o) => {
     if (!(o instanceof THREE.Mesh)) return;
     o.material = Array.isArray(o.material) ? o.material.map(up) : up(o.material);
+    if (Array.isArray(o.material)) o.material.forEach(softenSpecular);
+    else softenSpecular(o.material);
     if (!o.userData.fxShadow) {
       o.userData.fxShadow = true;
       o.castShadow = true;
