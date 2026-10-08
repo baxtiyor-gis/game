@@ -40,6 +40,8 @@ export interface TerrainDef {
   flats: FlatDef[];
   /** Yer teksturasi ustiga ko'paytiriladigan rang (#rrggbb): arenaga o'z tusini beradi */
   tint?: string;
+  /** true bo'lsa `tint` yer teksturasi (qum) rangiga bo'linadi: natijaviy rang aynan tint (qor, oq yer uchun) */
+  tintAbsolute?: boolean;
 }
 
 export interface BoundaryDef {
@@ -55,7 +57,8 @@ export type PropType =
   | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek'
   | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence'
   | 'bunker' | 'guardTower' | 'militaryTruck' | 'ufoWreck' | 'lampPost'
-  | 'damWall' | 'powerHouse' | 'powerPylon' | 'intakeTower' | 'cliff';
+  | 'damWall' | 'powerHouse' | 'powerPylon' | 'intakeTower' | 'cliff'
+  | 'pineTree' | 'lodge' | 'cabin' | 'skiJump' | 'snowBank';
 
 export interface PropDef {
   type: PropType;
@@ -152,6 +155,23 @@ export interface EnvironmentDef {
   hemi?: { sky?: string; ground?: string; intensity?: number };
 }
 
+/** Sirt zonasi (g'ildirak ishqalanishi): doira (`pos`+`radius`), `rect` [x0,z0,x1,z1] yoki `path`+`width` lentasi. Ko'paytirgich data/levels/ski.json -> grip. */
+export interface SurfaceDef {
+  type: 'ice' | 'snow';
+  pos?: Vec2;
+  radius?: number;
+  rect?: [number, number, number, number];
+  path?: Vec2[];
+  width?: number;
+}
+
+/** Kanat yo'li: pastki/yuqori stansiya markazlari; ustunlar — destructibles dagi 'liftPylon' lar (shu chiziqda); arqonlar orasi — data/levels/ski.json -> lift.gap. */
+export interface SkiLiftDef {
+  bottom: Vec2;
+  top: Vec2;
+  cabins: number;
+}
+
 export interface ArenaDef {
   id: string;
   /** Maydon tomoni, m (kvadrat, markaz 0,0) */
@@ -170,6 +190,11 @@ export interface ArenaDef {
   planes?: PlaneRouteDef[];
   /** Suv yuzalari (daryo, ko'l): WaterSystem */
   water?: WaterDef[];
+  /** Muz/qor zonalari: mashina ishqalanishini o'zgartiradi */
+  surfaces?: SurfaceDef[];
+  skiLift?: SkiLiftDef;
+  /** Yengil qor yog'ishi (Points, kameraga ergashadi) */
+  snowfall?: boolean;
 }
 
 /** data/levels/destructibles.json: tur parametrlari */

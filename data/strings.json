@@ -79,6 +79,8 @@
  "tip.secret_base.bunker": "Secret Base: yer osti bunkeri pandusdan tushadi — ichida qurol sandiqlari bor, lekin chiqish faqat bitta.",
  "tip.hoover_dam.water": "Hoover Dam: suvga tushsangiz mashina sekinlashadi va zarar oladi — sayoz brod va ko'prikdan foydalaning; chuqurda qirg'oqqa qaytariladi.",
  "tip.hoover_dam.grid": "Hoover Dam: transformatorni otsangiz portlaydi va yaqindagi mashinalarning dvigateli 1.5 soniyaga o'chadi — raqibni shu yerda tuzoqqa tushiring; to'g'on yo'lining chetidan pastga yiqilish mumkin.",
+ "tip.ski_resort.ice": "Ski Resort: ko'l muzida g'ildiraklar deyarli ushlamaydi — oldindan tormozlang, raqibni muzga haydab, sirpantiring; qorli yo'llarda ham ishqalanish pastroq.",
+ "tip.ski_resort.lift": "Ski Resort: kanat yo'li kabinasini yoki ustunini otsangiz, kabina yiqilib, tagidagi mashinaga zarar yetkazadi — raqibni kabina tagiga undang; tramplindan sakrash mumkin.",
  "tip.valley_farms.creek": "Valley Farms: ariq ustidagi ko'prik — eng tez o'tish yo'li, lekin u yerda pistirma bo'lishi mumkin.",
  "menu.hint.nav": "↑↓ tanlash   Enter tasdiqlash   Esc orqaga",
  "menu.hint.adjust": "←→ o'zgartirish",

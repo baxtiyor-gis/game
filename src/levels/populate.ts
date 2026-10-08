@@ -17,8 +17,11 @@ import { FARM_TYPES, populateFarmProps, populateWindmills } from './populateFarm
 import { AIR_TYPES, populateAirProps } from './populateAir';
 import { BASE_TYPES, populateBaseProps } from './populateBase';
 import { DAM_TYPES, populateDamProps } from './populateDam';
+import { SKI_TYPES, populateSkiProps } from './populateSki';
 import { createTransformerVisual } from './props/transformer';
 import { createFuelTankVisual } from './props/fuelTank';
+import { createPropaneVisual } from './props/propaneTank';
+import { createLiftPylonVisual } from './props/liftPylon';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
 
@@ -51,8 +54,9 @@ export function populateProps(ctx: BuildContext): void {
   const airDefs = ctx.def.props.filter((d) => AIR_TYPES.has(d.type));
   const baseDefs = ctx.def.props.filter((d) => BASE_TYPES.has(d.type));
   const damDefs = ctx.def.props.filter((d) => DAM_TYPES.has(d.type));
+  const skiDefs = ctx.def.props.filter((d) => SKI_TYPES.has(d.type));
   for (const def of ctx.def.props) {
-    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type) || DAM_TYPES.has(def.type)) continue;
+    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type) || DAM_TYPES.has(def.type) || SKI_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -73,6 +77,7 @@ export function populateProps(ctx: BuildContext): void {
   if (airDefs.length > 0) populateAirProps(ctx, airDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (baseDefs.length > 0) populateBaseProps(ctx, baseDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (damDefs.length > 0) populateDamProps(ctx, damDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+  if (skiDefs.length > 0) populateSkiProps(ctx, skiDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {
@@ -107,6 +112,8 @@ export function populateInteractives(ctx: BuildContext): System | null {
 function visualFactory(type: string): typeof createTankVisual {
   if (type === 'fuelTank') return createFuelTankVisual;
   if (type === 'transformer') return createTransformerVisual;
+  if (type === 'propaneTank') return createPropaneVisual;
+  if (type === 'liftPylon') return createLiftPylonVisual;
   return createTankVisual;
 }
 

@@ -28,6 +28,7 @@ class Vehicle implements VehicleHandle, System {
   inventory: Inventory = { slots: [], selected: 0, specialAmmo: 0 };
   stalled = 0;
   status: VehicleStatus = { blind: 0, smoke: 0, armorMul: 1 };
+  surfaceGrip = 1;
 
   private readonly tuning: Tuning;
   private readonly model: VehicleModel;
@@ -151,7 +152,7 @@ class Vehicle implements VehicleHandle, System {
       const rearLock = drift && !front;
       this.rc.setWheelSteering(i, front ? this.steer : 0);
       this.rc.setWheelEngineForce(i, rearLock ? 0 : engine / driven);
-      this.rc.setWheelFrictionSlip(i, handling.wheels.frictionSlip * (rearLock ? br.handbrakeRearGrip : 1));
+      this.rc.setWheelFrictionSlip(i, handling.wheels.frictionSlip * this.surfaceGrip * (rearLock ? br.handbrakeRearGrip : 1));
       this.rc.setWheelBrake(i, (rearLock ? (br.handbrakeWeightFactor * weight) / 2 : brake / WHEELS) * dt); // Rapier: tormoz = impuls (N*s)
     }
   }

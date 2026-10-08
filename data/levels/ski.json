@@ -1,0 +1,34 @@
+{
+  "colors": {
+    "snow": "#f6f9fc", "ice": "#8cc6e6", "road": "#dbe5ee",
+    "trunk": "#5a4030", "log": "#9a6a3e", "logDark": "#6b4528", "roofWood": "#5b3d28", "stone": "#8d8f93", "window": "#ffd98a", "windowGlow": "#ffb347",
+    "concrete": "#b9bec4", "steel": "#9aa4ae", "steelDark": "#4c555e", "gondola": "#c8352c", "gondolaTrim": "#f1ede4", "glass": "#9fc7dc", "cable": "#2a2d31",
+    "propane": "#eceff2", "propaneBand": "#c0392b", "cradle": "#4b4f55", "burnt": "#1b1815",
+    "ramp": "#f1f6fa", "rampRail": "#c0392b", "rampWood": "#7a5a3a"
+  },
+  "grip": {"ice": 0.25, "snow": 0.7},
+  "pine": {
+    "trunkR": 0.3, "trunkH": 1.8, "colliderR": 0.45, "colliderH": 4, "capScale": 0.58,
+    "tiers": [[2.4, 2.8, 2.0], [1.9, 2.7, 3.6], [1.3, 2.5, 5.2]],
+    "colors": ["#2e5d3b", "#264f35", "#35683f", "#2a5538"]
+  },
+  "chalet": {
+    "lodgeSize": [26, 6, 13], "cabinSize": [6.5, 3.2, 5.2], "foundation": 0.5, "courseGap": 0.6, "roofPitch": 0.42, "roofMax": 4.5, "eave": 1.4,
+    "windowGap": 4, "windowW": 1.5, "windowH": 1.1, "windowGlow": 0.8, "porchH": 3.2, "porchD": 3
+  },
+  "ramp": {"size": [8, 4.5, 18], "thick": 0.6, "sink": 0.06, "rail": 0.5, "posts": 4, "wallCut": 0.3},
+  "bank": {"length": 10, "height": 1.4, "widthFactor": 1.8, "colliderFit": 0.8, "colliderH": 0.5, "sink": 0.2},
+  "propane": {"legH": 0.35, "radius": 0.75, "length": 3.2},
+  "surface": {"circleSegments": 40, "iceLift": 0.06, "roadLift": 0.08, "step": 6, "roadWidth": 10, "iceRough": 0.06, "iceMetal": 0.15, "iceGlow": "#1d5a86", "iceGlowK": 0.4},
+  "lift": {
+    "gap": 5, "speed": 3.8, "turnRate": 4, "cableR": 0.07, "pylonReach": 45, "wreckTime": 14, "respawnGap": 12,
+    "cabin": {"w": 1.8, "h": 1.7, "d": 2.4, "hanger": 1.3, "hp": 14, "mgScale": 0.3},
+    "pylon": {"topR": 0.3, "baseR": 0.5, "armOver": 1.6, "footing": 1.6, "cableOver": 0.35},
+    "station": {"cableY": 6.5, "margin": 3.5, "depth": 8, "roofGap": 1.8},
+    "fall": {"gravity": 14, "spin": 1.2, "radius": 2.6, "landRadius": 4.5, "carTop": 1.6, "damage": 30, "lift": 0.6, "impulseSpeed": 4, "wreckRoll": 0.35, "shakeRadius": 35}
+  },
+  "snowfall": {
+    "count": 1200, "maxCount": 1500, "box": [80, 45, 80], "fall": 2.2, "wind": 0.9, "sway": 0.7, "swayAmp": 0.5,
+    "size": 0.1, "pxScale": 900, "maxPx": 7, "color": "#f4f8ff", "opacity": 0.85, "seed": 99
+  }
+}

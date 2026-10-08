@@ -95,6 +95,8 @@ export interface VehicleHandle {
   stalled: number;
   /** Maxsus qurol holatlari (ko'rlik, tutun, zirh). Soxta handle larda bo'lmasligi mumkin. */
   status?: VehicleStatus;
+  /** G'ildirak ishqalanishi ko'paytirgichi (1 = oddiy; muz < 1). Arena sirt zonalari (levels/surfaces.ts) har tick yozadi. */
+  surfaceGrip?: number;
   speed(): number; // m/s
   forward(out: THREE.Vector3): THREE.Vector3;
   position(out: THREE.Vector3): THREE.Vector3;

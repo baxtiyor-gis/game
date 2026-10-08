@@ -28,6 +28,24 @@
       "fuse": 0.25,
       "mgScale": 0.4
     },
+    "propaneTank": {
+      "hp": 10,
+      "radius": 1.7,
+      "height": 2.3,
+      "centerHeight": 1.2,
+      "explosion": { "radius": 14, "damage": 48 },
+      "fuse": 0.25,
+      "mgScale": 0.35
+    },
+    "liftPylon": {
+      "hp": 18,
+      "radius": 0.9,
+      "height": 11,
+      "centerHeight": 4,
+      "explosion": { "radius": 7, "damage": 10 },
+      "fuse": 0.3,
+      "mgScale": 0.25
+    },
     "barrel": {
       "hp": 6,
       "radius": 0.5,

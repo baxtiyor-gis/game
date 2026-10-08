@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { GameWorld } from '../core/types';
 import type { FlatDef, TerrainDef } from './types';
 import { makeGroundMaterial } from '../render/materials';
+import renderCfg from '../../data/render.json';
 import { WORLD_GROUPS } from './props/common';
 
 export interface Terrain {
@@ -107,6 +108,10 @@ export function buildTerrain(world: GameWorld, def: TerrainDef, size: number): T
   geo.computeVertexNormals();
   const mat = makeGroundMaterial(size);
   if (def.tint) mat.color.set(def.tint);
+  if (def.tint && def.tintAbsolute) {
+    const base = new THREE.Color(renderCfg.ground.base); // tekstura rangi (chiziqli) — bo'lib, aynan tint chiqadi
+    mat.color.setRGB(mat.color.r / base.r, mat.color.g / base.g, mat.color.b / base.b);
+  }
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.name = 'terrain';
