@@ -1,0 +1,41 @@
+{
+ "colors": {
+  "concrete": "#8a8d92", "concreteDark": "#5a5d63", "olive": "#4c5538", "oliveDark": "#343b27", "metal": "#7b828a", "metalDark": "#383d44",
+  "hazard": "#d6a41c", "black": "#15161a", "white": "#d6d8d4", "red": "#a8352b", "canvas": "#5a6043", "glass": "#23303b", "crate": "#665638",
+  "tire": "#1b1a19", "ufo": "#98a4ac", "ufoDark": "#4b555e", "rocket": "#e4e2da", "rocketRed": "#b0372b"
+ },
+ "glow": {
+  "lamp": {"color": "#fff0c4", "intensity": 2.6},
+  "cyan": {"color": "#5cf4ff", "intensity": 2.8},
+  "ufo": {"color": "#78ffb4", "intensity": 3.2},
+  "red": {"color": "#ff3322", "intensity": 3.4},
+  "amber": {"color": "#ffb23a", "intensity": 2.6},
+  "flame": {"color": "#ffb04a", "intensity": 4.0}
+ },
+ "radar": {"baseW": 9, "baseH": 4.2, "mastR": 1.2, "mastH": 8, "barW": 15, "barH": 5.2, "barT": 0.5, "dishR": 5.5, "dishTilt": 0.75, "speed": 0.9, "dishSpeed": 0.55},
+ "bunker": {
+  "pitHalfW": 10.2, "pitBack": -17, "pitFront": 10, "rampHalfW": 6.3, "rampEnd": 36, "lip": 1.4, "wall": 1,
+  "portalX": 33, "portalH": 7.2, "pillar": 1.6, "lampEvery": 6,
+  "crates": [[-12.5, -7.5, 2.4], [-12.5, 7.5, 2.8], [-6, 8.6, 1.8]]
+ },
+ "tower": {"legSpan": 3.2, "legH": 9, "leg": 0.45, "cabH": 2.8, "roofOver": 0.5},
+ "truck": {"length": 8.6, "width": 2.8, "chassisH": 1.0, "cargoH": 2.6, "cabL": 2.6, "wheelR": 0.62},
+ "ufo": {"radius": 5.6, "tilt": 0.14, "height": 1.8, "domeR": 2.2, "legs": 3},
+ "lamp": {"height": 8.5, "arm": 1.6},
+ "launch": {
+  "padRadius": 9, "mastH": 26, "mastOffset": 5.2,
+  "rocket": {"length": 16, "radius": 1.15, "noseLen": 4.5, "fins": 4, "finSpan": 2.4, "finLen": 4.2, "flameLen": 7},
+  "terminal": {"w": 1.6, "h": 1.3, "d": 0.9, "plateOffset": 3.8, "plateHalf": 2.6, "hitRadius": 1.6},
+  "warn": 1.5, "flightTime": 3.0, "ease": 1.35, "apex": 150, "cooldown": 25,
+  "target": {"maxRange": 170, "minPadDist": 30, "margin": 70},
+  "explosion": {"radius": 24, "damage": 85, "shake": 90},
+  "mark": {"ringWidth": 0.12, "pulse": 5, "opacity": 0.8},
+  "trail": {"count": 22, "life": 0.8, "size": 1.3, "interval": 0.035},
+  "beacon": {"blink": 6, "idle": 0.35}
+ },
+ "searchlight": {
+  "color": "#d4e6ff", "intensity": 380, "distance": 170, "decay": 1.1, "angle": 0.3, "penumbra": 0.65,
+  "sweepMin": 20, "sweepMax": 62, "speed": 0.32, "radialSpeed": 0.17,
+  "beam": {"radius": 7, "opacity": 0.055, "color": "#9fc4ff"}
+ }
+}

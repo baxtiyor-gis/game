@@ -41,7 +41,8 @@ export interface BoundaryDef {
 export type PropType =
   | 'building' | 'pipe' | 'rock' | 'station'
   | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek'
-  | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence';
+  | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence'
+  | 'bunker' | 'guardTower' | 'militaryTruck' | 'ufoWreck' | 'lampPost';
 
 export interface PropDef {
   type: PropType;
@@ -63,6 +64,8 @@ export interface PropDef {
   damage?: string;
   /** airplane: bo'yoq sxemasi indeksi (tur ranglari ro'yxatidan) */
   scheme?: number;
+  /** guardTower: chiroq turi — 'spot' (haqiqiy SpotLight + nur) yoki 'beam' (faqat ko'rinadigan nur); bo'sh = chiroqsiz */
+  light?: 'spot' | 'beam';
 }
 
 export interface DestructibleInstance {
@@ -75,11 +78,13 @@ export interface DestructibleInstance {
 }
 
 export interface InteractiveDef {
-  type: 'pumpjack' | 'windmill' | 'crane';
+  type: 'pumpjack' | 'windmill' | 'crane' | 'radar' | 'launchSite';
   pos: Vec2;
   yaw?: number;
-  /** crane: yuk turi ('container' | 'engine') */
+  /** crane: yuk turi ('container' | 'engine'); radar: 'bar' | 'dish' */
   variant?: string;
+  /** launchSite: pos — terminal; pad — raketa maydonchasi markazi */
+  pad?: Vec2;
   /** Aylanish tezligi, rad/s (default data/levels/props.json) */
   speed?: number;
 }

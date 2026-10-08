@@ -9,6 +9,9 @@ import { DestructibleSystem } from './destructible';
 import { createTrain } from './train';
 import { createCranes } from './crane';
 import { createPlanes } from './planes';
+import { createRadars } from './radar';
+import { createLaunchSites } from './launchSite';
+import { createSearchlights } from './searchlights';
 import { disposePropCaches } from './props/common';
 import { mergeStatic } from './mergeStatic';
 import { timed, yieldFrame } from '../core/perf';
@@ -26,6 +29,9 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   timed('boundary', () => buildBoundary(ctx));
   timed('props', () => populateProps(ctx));
   const cranes = timed('cranes', () => createCranes(ctx, opts.onDrop)); // statik karkas merge dan oldin qo'shilishi kerak
+  const radars = timed('radars', () => createRadars(ctx));
+  const launch = timed('launch', () => createLaunchSites(ctx));
+  const lights = timed('searchlights', () => createSearchlights(ctx));
   ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root)));
   progress(0.65);
   await yieldFrame();
@@ -36,6 +42,7 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   if (windmills) systems.push(windmills);
   if (def.train) systems.push(timed('train', () => createTrain(ctx, def.train!, opts.onDrop)));
   if (cranes) systems.push(cranes);
+  for (const s of [radars, launch, lights]) if (s) systems.push(s);
   if (def.planes?.length) systems.push(timed('planes', () => createPlanes(ctx, def.planes!)));
   const destructibles = new DestructibleSystem(world, timed('destructibles', () => populateDestructibles(ctx)), opts.onDrop);
   systems.push(destructibles);

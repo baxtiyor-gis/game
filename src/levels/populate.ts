@@ -15,6 +15,7 @@ import { propCfg, WORLD_GROUPS } from './props/common';
 import type { Origin, PropBuild } from './props/common';
 import { FARM_TYPES, populateFarmProps, populateWindmills } from './populateFarm';
 import { AIR_TYPES, populateAirProps } from './populateAir';
+import { BASE_TYPES, populateBaseProps } from './populateBase';
 import { createFuelTankVisual } from './props/fuelTank';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
@@ -46,8 +47,9 @@ export function populateProps(ctx: BuildContext): void {
   const rocks: RockItem[] = [];
   const farmDefs = ctx.def.props.filter((d) => FARM_TYPES.has(d.type));
   const airDefs = ctx.def.props.filter((d) => AIR_TYPES.has(d.type));
+  const baseDefs = ctx.def.props.filter((d) => BASE_TYPES.has(d.type));
   for (const def of ctx.def.props) {
-    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type)) continue;
+    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -66,6 +68,7 @@ export function populateProps(ctx: BuildContext): void {
   }
   if (farmDefs.length > 0) populateFarmProps(ctx, farmDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (airDefs.length > 0) populateAirProps(ctx, airDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+  if (baseDefs.length > 0) populateBaseProps(ctx, baseDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {

@@ -213,9 +213,9 @@ describe('valley_farms arenasi va poyezd', () => {
   const loadVf = (onDrop?: (p: THREE.Vector3, k: PickupKind) => void) => load(onDrop, vf);
   const trainOf = (w: FakeWorld) => w.systems.find((s) => s.name === 'train') as TrainSystem;
 
-  it('registry: Oil Fields, Valley Farms va Aircraft Graveyard mavjud, qolganlari tez kunda', () => {
-    expect(ARENAS.filter((a) => a.available).map((a) => a.id)).toEqual(['oil_fields', 'valley_farms', 'aircraft_graveyard']);
-    expect(ARENAS.filter((a) => !a.available && !a.def)).toHaveLength(5);
+  it('registry: Oil Fields, Valley Farms, Aircraft Graveyard va Secret Base mavjud, qolganlari tez kunda', () => {
+    expect(ARENAS.filter((a) => a.available).map((a) => a.id)).toEqual(['oil_fields', 'valley_farms', 'aircraft_graveyard', 'secret_base']);
+    expect(ARENAS.filter((a) => !a.available && !a.def)).toHaveLength(4);
     expect(arenaDef('valley_farms').id).toBe('valley_farms');
     expect(() => arenaDef('casino_city')).toThrow();
   });

@@ -75,6 +75,8 @@
  "tip.valley_farms.train": "Valley Farms: poyezd to'xtamaydi — yo'lidan qoching; vagonni portlatsangiz, sandiq tushadi.",
  "tip.aircraft_graveyard.crane": "Aircraft Graveyard: kran yuki tagida to'xtamang — tebranishini ko'rsangiz, darhol chiqib keting; yukni otib uzsangiz, sandiq tushadi.",
  "tip.aircraft_graveyard.planes": "Aircraft Graveyard: yo'lak bo'ylab samolyotlar o'tadi — yo'lakni tez kesib o'ting; yoqilg'i tanklari zanjir bo'lib portlaydi.",
+ "tip.secret_base.launch": "Secret Base: uchirish terminalini otsangiz yoki plitasi ustidan o'tsangiz, raketa uchadi — yerdagi qizil belgidan tezroq chiqib keting; raqibni ham shu bilan tuzoqqa tushirish mumkin.",
+ "tip.secret_base.bunker": "Secret Base: yer osti bunkeri pandusdan tushadi — ichida qurol sandiqlari bor, lekin chiqish faqat bitta.",
  "tip.valley_farms.creek": "Valley Farms: ariq ustidagi ko'prik — eng tez o'tish yo'li, lekin u yerda pistirma bo'lishi mumkin.",
  "menu.hint.nav": "↑↓ tanlash   Enter tasdiqlash   Esc orqaga",
  "menu.hint.adjust": "←→ o'zgartirish",

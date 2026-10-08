@@ -5,7 +5,7 @@ Stek: TypeScript, Vite, Three.js, Rapier3D (WASM), Vitest, Playwright.
 
 ## Buyruqlar
 - `npm run dev` — dev server
-- `npm run check` — lint + typecheck + unit testlar (commitdan oldin o'tishi shart)
+- `npm run check` — typecheck (tsc) + unit testlar (vitest); commitdan oldin o'tishi shart. Lint (eslint) hozircha sozlanmagan
 - `npm run e2e` — Playwright smoke (brauzer, skrinshot test-results/smoke.png)
 
 ## Qoidalar
