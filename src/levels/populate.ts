@@ -14,6 +14,8 @@ import type { DestructibleVisual } from './props/tank';
 import { propCfg, WORLD_GROUPS } from './props/common';
 import type { Origin, PropBuild } from './props/common';
 import { FARM_TYPES, populateFarmProps, populateWindmills } from './populateFarm';
+import { AIR_TYPES, populateAirProps } from './populateAir';
+import { createFuelTankVisual } from './props/fuelTank';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
 
@@ -43,8 +45,9 @@ export function populateProps(ctx: BuildContext): void {
   const R = ctx.world.rapier;
   const rocks: RockItem[] = [];
   const farmDefs = ctx.def.props.filter((d) => FARM_TYPES.has(d.type));
+  const airDefs = ctx.def.props.filter((d) => AIR_TYPES.has(d.type));
   for (const def of ctx.def.props) {
-    if (FARM_TYPES.has(def.type)) continue;
+    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -62,6 +65,7 @@ export function populateProps(ctx: BuildContext): void {
     ctx.onDispose(() => m.dispose());
   }
   if (farmDefs.length > 0) populateFarmProps(ctx, farmDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+  if (airDefs.length > 0) populateAirProps(ctx, airDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {
@@ -116,7 +120,7 @@ export function populateDestructibles(ctx: BuildContext): DestructibleItem[] {
     let visual: DestructibleVisual;
     if (d.type === 'barrel') visual = field.visual(n - 1);
     else {
-      visual = createTankVisual(cfg, ctx.root, x, y, z, d.yaw ?? 0);
+      visual = (d.type === 'fuelTank' ? createFuelTankVisual : createTankVisual)(cfg, ctx.root, x, y, z, d.yaw ?? 0);
       ctx.onDispose(() => visual.dispose());
     }
     const desc = R.ColliderDesc.cylinder(cfg.height / 2, cfg.radius).setTranslation(x, y + cfg.height / 2, z).setCollisionGroups(WORLD_GROUPS);

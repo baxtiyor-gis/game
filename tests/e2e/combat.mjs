@@ -16,8 +16,8 @@ await page.waitForFunction(() => window.__game && window.__flow.state === 'playi
 await page.evaluate(() => {
   window.__fires = {};
   window.__game.world.events.on('fire', (e) => (window.__fires[e.sourceId + ':' + e.weapon] = (window.__fires[e.sourceId + ':' + e.weapon] ?? 0) + 1));
-  window.__dmg = 0;
-  window.__game.world.events.on('damage', (e) => e.targetId === window.__game.player.id && (window.__dmg += e.amount));
+  window.__dmg = 0; window.__dmgBy = {};
+  window.__game.world.events.on('damage', (e) => e.targetId === window.__game.player.id && (window.__dmg += e.amount, window.__dmgBy[(e.sourceId ?? '-') + ':' + e.weapon] = Math.round(((window.__dmgBy[(e.sourceId ?? '-') + ':' + e.weapon] ?? 0) + e.amount) * 10) / 10));
 });
 const trace = [];
 const SIM = Number(process.env.COMBAT_SIM ?? 30); // o'yin ichidagi soniyalar
@@ -26,7 +26,7 @@ for (let i = 0; i < 120 && (await page.evaluate(() => window.__game.world.time))
   if (process.env.TRACE) trace.push(await page.evaluate(() => window.__game.world.vehicles.filter((v) => v.id !== window.__game.player.id).map((v) => { const p = v.body.translation(); const f = v.forward(new v.object.position.constructor()); return [v.id, Math.round(p.x), Math.round(p.z), +f.x.toFixed(2), +f.z.toFixed(2), +v.input.throttle.toFixed(1), +v.input.steer.toFixed(1), (v.controller.debugInfo?.() ?? '')].join(' '); })));
 }
 if (trace.length) console.log(trace.map((t, i) => i + 's ' + t.join(' | ')).join('\n'));
-const r = await page.evaluate(() => ({ hp: window.__game.player.hp, max: window.__game.player.maxHp, dmg: window.__dmg, fires: window.__fires,
+const r = await page.evaluate(() => ({ hp: window.__game.player.hp, max: window.__game.player.maxHp, dmg: window.__dmg, dmgBy: window.__dmgBy, fires: window.__fires,
   t: window.__game.world.time.toFixed(1), bots: window.__game.world.vehicles.filter((v) => v !== window.__game.player).map((v) => { const p = v.body.translation(); return { id: v.id, hp: Math.round(v.hp), pos: [p.x, p.y, p.z].map(Math.round), spd: v.speed().toFixed(1) }; }) }));
 await page.screenshot({ path: process.argv[2] ?? 'test-results/combat.png' });
 await browser.close();

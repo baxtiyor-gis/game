@@ -1,0 +1,23 @@
+{
+  "span": 24,
+  "height": 15,
+  "column": 1.1,
+  "braceZ": 1.9,
+  "beamHeight": 1.8,
+  "beamDepth": 2.6,
+  "hookHeight": 0.9,
+  "restClearance": 6.0,
+  "loads": {
+    "container": { "size": [2.6, 2.6, 6.1], "color": "container" },
+    "engine": { "size": [3.4, 3.4, 6.8], "color": "craneDark" }
+  },
+  "trigger": { "margin": 2.4 },
+  "warn": 0.6,
+  "sway": { "amplitude": 0.1, "frequency": 2.2 },
+  "fall": { "accel": 60 },
+  "impact": { "margin": 0.9, "damage": 50, "impulseSpeed": 8, "lift": 0.5, "cooldown": 1.5, "shakeRadius": 45 },
+  "hold": 1.4,
+  "riseSpeed": 3.0,
+  "cooldown": 2.0,
+  "cut": { "hp": 40, "mgScale": 0.2, "drops": ["health", "special", "rocket"], "dropOffset": 5 }
+}

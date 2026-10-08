@@ -40,7 +40,8 @@ export interface BoundaryDef {
 
 export type PropType =
   | 'building' | 'pipe' | 'rock' | 'station'
-  | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek';
+  | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek'
+  | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence';
 
 export interface PropDef {
   type: PropType;
@@ -58,6 +59,10 @@ export interface PropDef {
   /** creek: oqim markaz chizig'i nuqtalari; width — oqim eni (m) */
   points?: Vec2[];
   width?: number;
+  /** airplane: buzilish turi ('wingless' | 'tailless' | 'split' | 'noEngines' | 'belly'); bo'sh = butun */
+  damage?: string;
+  /** airplane: bo'yoq sxemasi indeksi (tur ranglari ro'yxatidan) */
+  scheme?: number;
 }
 
 export interface DestructibleInstance {
@@ -70,9 +75,11 @@ export interface DestructibleInstance {
 }
 
 export interface InteractiveDef {
-  type: 'pumpjack' | 'windmill';
+  type: 'pumpjack' | 'windmill' | 'crane';
   pos: Vec2;
   yaw?: number;
+  /** crane: yuk turi ('container' | 'engine') */
+  variant?: string;
   /** Aylanish tezligi, rad/s (default data/levels/props.json) */
   speed?: number;
 }
@@ -103,6 +110,21 @@ export interface TrainDef {
   respawnDelay: number;
 }
 
+/** Yo'lak bo'ylab o'tuvchi samolyot (kinematik): iz arena chetidan chetigacha, har `interval` s da takrorlanadi. */
+export interface PlaneRouteDef {
+  /** data/levels/props.json air.planes dagi tur */
+  kind: string;
+  path: Vec2[];
+  /** m/s */
+  speed: number;
+  /** Birinchi paydo bo'lguncha, s */
+  delay: number;
+  /** Chiqib ketgandan keyin qayta paydo bo'lguncha, s */
+  interval: number;
+  /** Izning shu ulushidan keyin ko'tarilib ketadi (0..1); 1 = yerda qoladi */
+  liftAt: number;
+}
+
 /** Arena osmoni/tumani/quyoshi (hammasi ixtiyoriy; yo'q bo'lsa data/render.json default). */
 export interface EnvironmentDef {
   sky?: { top?: string; horizon?: string; ground?: string; sunColor?: string };
@@ -126,6 +148,7 @@ export interface ArenaDef {
   pickupSpawns: PickupSpawnDef[];
   environment?: EnvironmentDef;
   train?: TrainDef;
+  planes?: PlaneRouteDef[];
 }
 
 /** data/levels/destructibles.json: tur parametrlari */

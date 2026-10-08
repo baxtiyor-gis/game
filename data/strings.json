@@ -73,6 +73,8 @@
  "tip.oil_fields.barrels": "Oil Fields: yoqilg'i bochkalari portlaydi — raqibni ularning yoniga olib boring.",
  "tip.oil_fields.pumps": "Oil Fields: neft nasoslari va quvurlar orasida panoh toping, raketalardan qoching.",
  "tip.valley_farms.train": "Valley Farms: poyezd to'xtamaydi — yo'lidan qoching; vagonni portlatsangiz, sandiq tushadi.",
+ "tip.aircraft_graveyard.crane": "Aircraft Graveyard: kran yuki tagida to'xtamang — tebranishini ko'rsangiz, darhol chiqib keting; yukni otib uzsangiz, sandiq tushadi.",
+ "tip.aircraft_graveyard.planes": "Aircraft Graveyard: yo'lak bo'ylab samolyotlar o'tadi — yo'lakni tez kesib o'ting; yoqilg'i tanklari zanjir bo'lib portlaydi.",
  "tip.valley_farms.creek": "Valley Farms: ariq ustidagi ko'prik — eng tez o'tish yo'li, lekin u yerda pistirma bo'lishi mumkin.",
  "menu.hint.nav": "↑↓ tanlash   Enter tasdiqlash   Esc orqaga",
  "menu.hint.adjust": "←→ o'zgartirish",

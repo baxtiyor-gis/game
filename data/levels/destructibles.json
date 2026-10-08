@@ -10,6 +10,15 @@
       "fuse": 0.25,
       "mgScale": 0.32
     },
+    "fuelTank": {
+      "hp": 20,
+      "radius": 3.4,
+      "height": 7.5,
+      "centerHeight": 3.8,
+      "explosion": { "radius": 16, "damage": 60 },
+      "fuse": 0.3,
+      "mgScale": 0.3
+    },
     "barrel": {
       "hp": 6,
       "radius": 0.5,

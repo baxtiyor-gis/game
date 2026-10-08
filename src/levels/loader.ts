@@ -7,6 +7,8 @@ import { buildBoundary } from './boundary';
 import { populateDestructibles, populateInteractives, populateProps, populateWindmillRigs } from './populate';
 import { DestructibleSystem } from './destructible';
 import { createTrain } from './train';
+import { createCranes } from './crane';
+import { createPlanes } from './planes';
 import { disposePropCaches } from './props/common';
 import { mergeStatic } from './mergeStatic';
 import { timed, yieldFrame } from '../core/perf';
@@ -23,6 +25,7 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   const ctx = new BuildContext(world, def, terrain.heightAt);
   timed('boundary', () => buildBoundary(ctx));
   timed('props', () => populateProps(ctx));
+  const cranes = timed('cranes', () => createCranes(ctx, opts.onDrop)); // statik karkas merge dan oldin qo'shilishi kerak
   ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root)));
   progress(0.65);
   await yieldFrame();
@@ -32,6 +35,8 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   const windmills = timed('windmills', () => populateWindmillRigs(ctx));
   if (windmills) systems.push(windmills);
   if (def.train) systems.push(timed('train', () => createTrain(ctx, def.train!, opts.onDrop)));
+  if (cranes) systems.push(cranes);
+  if (def.planes?.length) systems.push(timed('planes', () => createPlanes(ctx, def.planes!)));
   const destructibles = new DestructibleSystem(world, timed('destructibles', () => populateDestructibles(ctx)), opts.onDrop);
   systems.push(destructibles);
   progress(1);

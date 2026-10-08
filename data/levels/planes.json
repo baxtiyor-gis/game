@@ -1,0 +1,8 @@
+{
+  "lift": 0.06,
+  "startSpeedShare": 0.45,
+  "accelDistance": 0.5,
+  "climbAngle": 0.16,
+  "spinSpeed": 55,
+  "hit": { "damage": 45, "impulseSpeed": 10, "forwardShare": 0.4, "lift": 0.3, "cooldown": 1.5, "margin": 0.8, "height": 2.0 }
+}
