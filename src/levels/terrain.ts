@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { GameWorld } from '../core/types';
-import type { TerrainDef } from './types';
+import type { FlatDef, TerrainDef } from './types';
 import { makeGroundMaterial } from '../render/materials';
 import { WORLD_GROUPS } from './props/common';
 
@@ -46,12 +46,22 @@ export function makeHeightFn(def: TerrainDef): (x: number, z: number) => number 
       if (t > 0) h += hill.height * fade(t);
     }
     for (const f of flats) {
-      const d = Math.hypot(x - f.pos[0], z - f.pos[1]);
+      const [d, target] = flatReach(f, x, z);
       const w = d <= f.radius ? 1 : 1 - fade(Math.min(1, (d - f.radius) / f.blend));
-      if (w > 0) h += ((f.height ?? 0) - h) * w;
+      if (w > 0) h += (target - h) * w;
     }
     return h;
   };
+}
+
+/** Nuqtadan tekislik markazigacha (yoki `to` bo'lsa kesmagacha) masofa va shu joydagi maqsad balandlik (kesmada chiziqli). */
+function flatReach(f: FlatDef, x: number, z: number): [number, number] {
+  const h0 = f.height ?? 0;
+  if (!f.to) return [Math.hypot(x - f.pos[0], z - f.pos[1]), h0];
+  const dx = f.to[0] - f.pos[0];
+  const dz = f.to[1] - f.pos[1];
+  const t = Math.min(1, Math.max(0, ((x - f.pos[0]) * dx + (z - f.pos[1]) * dz) / (dx * dx + dz * dz || 1)));
+  return [Math.hypot(x - f.pos[0] - dx * t, z - f.pos[1] - dz * t), h0 + ((f.toHeight ?? h0) - h0) * t];
 }
 
 /** Heightfield kollayder + mos mesh. heightAt — to'rning bilinear interpolyatsiyasi (mesh bilan bir xil). */

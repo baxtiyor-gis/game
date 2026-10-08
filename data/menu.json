@@ -50,7 +50,8 @@
       "tip.combo", "tip.comboCost", "tip.special", "tip.specialAmmo", "tip.whammy", "tip.rear",
       "tip.handbrake", "tip.crates", "tip.oil_fields.barrels", "tip.oil_fields.pumps", "tip.valley_farms.train", "tip.valley_farms.creek",
       "tip.aircraft_graveyard.crane", "tip.aircraft_graveyard.planes",
-      "tip.secret_base.launch", "tip.secret_base.bunker"
+      "tip.secret_base.launch", "tip.secret_base.bunker",
+      "tip.hoover_dam.water", "tip.hoover_dam.grid"
     ]
   },
   "preview": {

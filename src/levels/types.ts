@@ -17,6 +17,18 @@ export interface FlatDef {
   radius: number;
   blend: number;
   height?: number;
+  /** Kesma oxiri: bo'lsa tekislik (pos -> to) kapsula (yo'l/daryo/to'g'on); balandlik `height` dan `toHeight` ga chiziqli o'zgaradi */
+  to?: Vec2;
+  toHeight?: number;
+}
+
+/** Suv yuzasi: `rect` [x0,z0,x1,z1] yoki `path` (+ `width`) lentasi; `y` — suv sathi. Chuqurlik = y - yer balandligi. */
+export interface WaterDef {
+  id: string;
+  y: number;
+  rect?: [number, number, number, number];
+  path?: Vec2[];
+  width?: number;
 }
 
 export interface TerrainDef {
@@ -42,7 +54,8 @@ export type PropType =
   | 'building' | 'pipe' | 'rock' | 'station'
   | 'barn' | 'silo' | 'farmhouse' | 'waterTower' | 'tree' | 'fence' | 'crops' | 'bridge' | 'creek'
   | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence'
-  | 'bunker' | 'guardTower' | 'militaryTruck' | 'ufoWreck' | 'lampPost';
+  | 'bunker' | 'guardTower' | 'militaryTruck' | 'ufoWreck' | 'lampPost'
+  | 'damWall' | 'powerHouse' | 'powerPylon' | 'intakeTower' | 'cliff';
 
 export interface PropDef {
   type: PropType;
@@ -64,6 +77,7 @@ export interface PropDef {
   damage?: string;
   /** airplane: bo'yoq sxemasi indeksi (tur ranglari ro'yxatidan) */
   scheme?: number;
+  /** damWall: to'g'on o'qi bo'ylab uzunlik `length`, yo'l eni `width`; cliff: `size` = eni, balandligi, chuqurligi; powerPylon: `points[0]` — sim tortiladigan keyingi ustun */
   /** guardTower: chiroq turi — 'spot' (haqiqiy SpotLight + nur) yoki 'beam' (faqat ko'rinadigan nur); bo'sh = chiroqsiz */
   light?: 'spot' | 'beam';
 }
@@ -154,6 +168,8 @@ export interface ArenaDef {
   environment?: EnvironmentDef;
   train?: TrainDef;
   planes?: PlaneRouteDef[];
+  /** Suv yuzalari (daryo, ko'l): WaterSystem */
+  water?: WaterDef[];
 }
 
 /** data/levels/destructibles.json: tur parametrlari */

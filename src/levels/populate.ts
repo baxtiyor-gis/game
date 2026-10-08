@@ -16,6 +16,8 @@ import type { Origin, PropBuild } from './props/common';
 import { FARM_TYPES, populateFarmProps, populateWindmills } from './populateFarm';
 import { AIR_TYPES, populateAirProps } from './populateAir';
 import { BASE_TYPES, populateBaseProps } from './populateBase';
+import { DAM_TYPES, populateDamProps } from './populateDam';
+import { createTransformerVisual } from './props/transformer';
 import { createFuelTankVisual } from './props/fuelTank';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
@@ -48,8 +50,9 @@ export function populateProps(ctx: BuildContext): void {
   const farmDefs = ctx.def.props.filter((d) => FARM_TYPES.has(d.type));
   const airDefs = ctx.def.props.filter((d) => AIR_TYPES.has(d.type));
   const baseDefs = ctx.def.props.filter((d) => BASE_TYPES.has(d.type));
+  const damDefs = ctx.def.props.filter((d) => DAM_TYPES.has(d.type));
   for (const def of ctx.def.props) {
-    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type)) continue;
+    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type) || DAM_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -69,6 +72,7 @@ export function populateProps(ctx: BuildContext): void {
   if (farmDefs.length > 0) populateFarmProps(ctx, farmDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (airDefs.length > 0) populateAirProps(ctx, airDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (baseDefs.length > 0) populateBaseProps(ctx, baseDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+  if (damDefs.length > 0) populateDamProps(ctx, damDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {
@@ -99,6 +103,13 @@ export function populateInteractives(ctx: BuildContext): System | null {
   return rigs.length > 0 ? new PumpjackSystem(rigs) : null;
 }
 
+/** Destructible turi -> vizual yaratuvchi (sferik tank — standart). */
+function visualFactory(type: string): typeof createTankVisual {
+  if (type === 'fuelTank') return createFuelTankVisual;
+  if (type === 'transformer') return createTransformerVisual;
+  return createTankVisual;
+}
+
 /** Destructible obyektlar: kollayder + vizual (tank — alohida, bochka — InstancedMesh). */
 export function populateWindmillRigs(ctx: BuildContext): System | null {
   return populateWindmills(ctx, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
@@ -123,7 +134,7 @@ export function populateDestructibles(ctx: BuildContext): DestructibleItem[] {
     let visual: DestructibleVisual;
     if (d.type === 'barrel') visual = field.visual(n - 1);
     else {
-      visual = (d.type === 'fuelTank' ? createFuelTankVisual : createTankVisual)(cfg, ctx.root, x, y, z, d.yaw ?? 0);
+      visual = visualFactory(d.type)(cfg, ctx.root, x, y, z, d.yaw ?? 0);
       ctx.onDispose(() => visual.dispose());
     }
     const desc = R.ColliderDesc.cylinder(cfg.height / 2, cfg.radius).setTranslation(x, y + cfg.height / 2, z).setCollisionGroups(WORLD_GROUPS);

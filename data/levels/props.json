@@ -61,6 +61,8 @@
       "glass": "#2a3a46",
       "wood": "#7b5a3a",
       "woodDark": "#4e3825",
+      "deckSteel": "#6f7378",
+      "railSteel": "#c9c4b6",
       "towerTank": "#8e9aa3",
       "towerLeg": "#5a4a3a",
       "trunk": "#5b4330",

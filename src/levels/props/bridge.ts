@@ -13,8 +13,10 @@ export function createBridge(R: Rapier, o: Origin, def: PropDef): PropBuild {
   const { deckThickness: dt, railHeight: rh, railThickness: rt } = farm.bridge;
   const len = def.length ?? 18;
   const w = def.width ?? 6;
-  const plank = mat('plank', fc.plank, 0.9, 0.03);
-  const dark = mat('woodDark', fc.woodDark, 0.9, 0.03);
+  // variant 'steel': po'lat-beton ko'prik (kanyon/to'g'on arenalari), aks holda yog'och
+  const steel = def.variant === 'steel';
+  const plank = steel ? mat('deckSteel', fc.deckSteel, 0.7, 0.35) : mat('plank', fc.plank, 0.9, 0.03);
+  const dark = steel ? mat('railSteel', fc.railSteel, 0.6, 0.5) : mat('woodDark', fc.woodDark, 0.9, 0.03);
   const g = new THREE.Group();
   put(g, unitBox(), plank, [0, -dt / 2 + 0.04, 0], [w, dt, len]);
   const n = Math.floor(len / 0.9);

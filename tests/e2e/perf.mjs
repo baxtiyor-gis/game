@@ -1,6 +1,6 @@
-// Yuklanish/kadr profili: menyu orqa foni, BOSHLASH -> match, `#play`, `#play-valley_farms`, `#play-aircraft_graveyard`, `#play-secret_base`.
+// Yuklanish/kadr profili: menyu orqa foni, BOSHLASH -> match, `#play`, `#play-valley_farms`, `#play-aircraft_graveyard`, `#play-secret_base`, `#play-hoover_dam`.
 // Natija: test-results/perf.json (+ test-results/loading.png). Ishga tushirish: node tests/e2e/perf.mjs
-// Muhit: FRAMES=300, MAX_LONGTASK=3000, SCENARIOS=menu,play,play-valley_farms,play-aircraft_graveyard,play-secret_base
+// Muhit: FRAMES=300, MAX_LONGTASK=3000, SCENARIOS=menu,play,play-valley_farms,play-aircraft_graveyard,play-secret_base,play-hoover_dam
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -8,7 +8,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 const exe = existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined;
 const FRAMES = Number(process.env.FRAMES ?? 300);
 const MAX_LONGTASK = Number(process.env.MAX_LONGTASK ?? 3000); // eng uzun bloklovchi vazifa chegarasi (ms); 0 — tekshirilmaydi
-const ONLY = (process.env.SCENARIOS ?? 'menu,play,play-valley_farms,play-aircraft_graveyard,play-secret_base').split(',');
+const ONLY = (process.env.SCENARIOS ?? 'menu,play,play-valley_farms,play-aircraft_graveyard,play-secret_base,play-hoover_dam').split(',');
 const server = await createServer({ server: { port: 5195, hmr: false, watch: null }, logLevel: 'error' });
 await server.listen();
 const browser = await chromium.launch({ executablePath: exe, args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader'] });
@@ -106,8 +106,8 @@ if (ONLY.includes('menu')) {
   await page.close();
 }
 
-// 2) #play, #play-valley_farms, #play-aircraft_graveyard va #play-secret_base (menyu o'tkazib yuboriladi)
-for (const hash of ['play', 'play-valley_farms', 'play-aircraft_graveyard', 'play-secret_base'].filter((h) => ONLY.includes(h))) {
+// 2) #play, #play-valley_farms, #play-aircraft_graveyard, #play-secret_base va #play-hoover_dam (menyu o'tkazib yuboriladi)
+for (const hash of ['play', 'play-valley_farms', 'play-aircraft_graveyard', 'play-secret_base', 'play-hoover_dam'].filter((h) => ONLY.includes(h))) {
   await open(base + '#' + hash);
   const r = await matchReport();
   const all = await measures('match:firstFrame');

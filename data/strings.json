@@ -77,6 +77,8 @@
  "tip.aircraft_graveyard.planes": "Aircraft Graveyard: yo'lak bo'ylab samolyotlar o'tadi — yo'lakni tez kesib o'ting; yoqilg'i tanklari zanjir bo'lib portlaydi.",
  "tip.secret_base.launch": "Secret Base: uchirish terminalini otsangiz yoki plitasi ustidan o'tsangiz, raketa uchadi — yerdagi qizil belgidan tezroq chiqib keting; raqibni ham shu bilan tuzoqqa tushirish mumkin.",
  "tip.secret_base.bunker": "Secret Base: yer osti bunkeri pandusdan tushadi — ichida qurol sandiqlari bor, lekin chiqish faqat bitta.",
+ "tip.hoover_dam.water": "Hoover Dam: suvga tushsangiz mashina sekinlashadi va zarar oladi — sayoz brod va ko'prikdan foydalaning; chuqurda qirg'oqqa qaytariladi.",
+ "tip.hoover_dam.grid": "Hoover Dam: transformatorni otsangiz portlaydi va yaqindagi mashinalarning dvigateli 1.5 soniyaga o'chadi — raqibni shu yerda tuzoqqa tushiring; to'g'on yo'lining chetidan pastga yiqilish mumkin.",
  "tip.valley_farms.creek": "Valley Farms: ariq ustidagi ko'prik — eng tez o'tish yo'li, lekin u yerda pistirma bo'lishi mumkin.",
  "menu.hint.nav": "↑↓ tanlash   Enter tasdiqlash   Esc orqaga",
  "menu.hint.adjust": "←→ o'zgartirish",

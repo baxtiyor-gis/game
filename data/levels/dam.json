@@ -1,0 +1,25 @@
+{
+ "colors": {
+  "concrete": "#cfcabc", "concreteDark": "#a39e91", "concreteShade": "#b9b4a6", "asphalt": "#3a3c40", "line": "#e8e4d0", "yellow": "#d8b232",
+  "steel": "#7d848c", "steelDark": "#454a52", "glass": "#2c4258", "roof": "#6e7176", "red": "#b0382a", "hazard": "#d6a41c",
+  "rock1": "#a9532f", "rock2": "#c46c3c", "rock3": "#8c4528", "rock4": "#d58d57", "porcelain": "#b99468", "scorch": "#1a1613", "wire": "#2a2c30", "tank": "#6f8a74"
+ },
+ "wall": {
+  "half": 6.1, "parapetH": 1.3, "parapetT": 0.8, "lineEvery": 6, "lineW": 0.25, "lineLen": 2.6, "post": 1.1,
+  "faceOffset": 0.1, "bandEvery": 4, "jointEvery": 15, "jointShade": 0.78, "downReach": 40, "upReach": 24, "minFaceY": 0.35, "yMin": 16,
+  "gaps": {"up": [[-8, 8]], "down": [[-100, -88], [-40, -28], [28, 40], [88, 100]]}
+ },
+ "house": {"windowW": 2.4, "windowH": 2.8, "windowGap": 4, "pipeR": 1.8, "pipeLen": 14, "pipeCount": 2, "stackR": 1.2, "stackH": 9, "crane": 4.5},
+ "pylon": {"height": 24, "base": 5.2, "top": 1.2, "arms": [17, 21], "armHalf": 4.2, "insulator": 1.2, "wireSegs": 8, "sag": 2.4, "wireR": 0.07, "collider": 1.4, "colliderH": 12},
+ "tower": {"radius": 5, "height": 34, "cabin": 6.4, "cabinH": 4.4, "bands": 5},
+ "cliff": {"sink": 3, "tiers": [[1, 0.5], [0.8, 0.3], [0.56, 0.2]]},
+ "transformer": {"w": 2.6, "h": 2.2, "d": 3, "fins": 5, "insulators": 3},
+ "grid": {"stall": 1.5, "pool": 96, "sparksPerBurst": 28, "arcs": 6, "arcSegs": 5, "arcLife": 0.35, "arcReach": 6, "sparkLife": 0.9, "sparkSpeed": 11, "gravity": 14, "sparkSize": 0.4, "color": "#aee6ff"},
+ "water": {
+  "color": "#2b78b0", "opacity": 0.9, "segment": 8, "cross": 4,
+  "wave": {"amp": [0.16, 0.09], "freq": [[0.16, 0.1], [-0.11, 0.2]], "speed": [1.1, 1.7]},
+  "clearance": 0.6, "wade": 0.25, "shallow": 0.9, "deep": 2.4, "dragWade": 1.3, "dragDeep": 3.2,
+  "damagePerSec": 4, "damageEvery": 0.5, "dwell": 2, "respawnDamage": 8, "dryMargin": 0.6,
+  "search": {"step": 6, "max": 140, "angles": 24, "flat": 4.5, "flatMax": 1.2, "lift": 1.2}
+ }
+}

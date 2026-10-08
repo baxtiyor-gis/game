@@ -3,6 +3,7 @@ import oilFields from '../../data/levels/oil_fields.json';
 import valleyFarms from '../../data/levels/valley_farms.json';
 import aircraftGraveyard from '../../data/levels/aircraft_graveyard.json';
 import secretBase from '../../data/levels/secret_base.json';
+import hooverDam from '../../data/levels/hoover_dam.json';
 import type { ArenaDef } from './types';
 
 export interface ArenaEntry {
@@ -25,7 +26,7 @@ export const ARENAS: ArenaEntry[] = [
   { id: 'valley_farms', nameKey: 'arena.valley_farms', def: valleyFarms as unknown as ArenaDef, preview: { color: '#7fae4f', icon: 'train' }, available: true },
   { id: 'aircraft_graveyard', nameKey: 'arena.aircraft_graveyard', def: aircraftGraveyard as unknown as ArenaDef, preview: { color: '#9aa3ab', icon: 'plane' }, available: true },
   { id: 'secret_base', nameKey: 'arena.secret_base', def: secretBase as unknown as ArenaDef, preview: { color: '#4a5560', icon: 'bunker' }, available: true },
-  soon('hoover_dam', '#b8b2a3', 'dam'),
+  { id: 'hoover_dam', nameKey: 'arena.hoover_dam', def: hooverDam as unknown as ArenaDef, preview: { color: '#b8b2a3', icon: 'dam' }, available: true },
   soon('ski_resort', '#dfe9f2', 'snow'),
   soon('casino_city', '#c0398a', 'dice'),
   soon('canyonlands', '#c8764a', 'canyon'),

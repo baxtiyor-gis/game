@@ -19,6 +19,15 @@
       "fuse": 0.3,
       "mgScale": 0.3
     },
+    "transformer": {
+      "hp": 14,
+      "radius": 1.9,
+      "height": 3.6,
+      "centerHeight": 1.8,
+      "explosion": { "radius": 13, "damage": 26 },
+      "fuse": 0.25,
+      "mgScale": 0.4
+    },
     "barrel": {
       "hp": 6,
       "radius": 0.5,

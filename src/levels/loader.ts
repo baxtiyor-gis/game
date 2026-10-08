@@ -12,6 +12,8 @@ import { createPlanes } from './planes';
 import { createRadars } from './radar';
 import { createLaunchSites } from './launchSite';
 import { createSearchlights } from './searchlights';
+import { createWater } from './water';
+import { createPowerGrid } from './powerGrid';
 import { disposePropCaches } from './props/common';
 import { mergeStatic } from './mergeStatic';
 import { timed, yieldFrame } from '../core/perf';
@@ -32,6 +34,8 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   const radars = timed('radars', () => createRadars(ctx));
   const launch = timed('launch', () => createLaunchSites(ctx));
   const lights = timed('searchlights', () => createSearchlights(ctx));
+  const water = timed('water', () => createWater(ctx));
+  const grid = timed('powerGrid', () => createPowerGrid(ctx));
   ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root)));
   progress(0.65);
   await yieldFrame();
@@ -42,7 +46,7 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   if (windmills) systems.push(windmills);
   if (def.train) systems.push(timed('train', () => createTrain(ctx, def.train!, opts.onDrop)));
   if (cranes) systems.push(cranes);
-  for (const s of [radars, launch, lights]) if (s) systems.push(s);
+  for (const s of [radars, launch, lights, water, grid]) if (s) systems.push(s);
   if (def.planes?.length) systems.push(timed('planes', () => createPlanes(ctx, def.planes!)));
   const destructibles = new DestructibleSystem(world, timed('destructibles', () => populateDestructibles(ctx)), opts.onDrop);
   systems.push(destructibles);
