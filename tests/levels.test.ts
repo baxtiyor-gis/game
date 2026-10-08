@@ -213,11 +213,11 @@ describe('valley_farms arenasi va poyezd', () => {
   const loadVf = (onDrop?: (p: THREE.Vector3, k: PickupKind) => void) => load(onDrop, vf);
   const trainOf = (w: FakeWorld) => w.systems.find((s) => s.name === 'train') as TrainSystem;
 
-  it('registry: Oil Fields, Valley Farms, Aircraft Graveyard, Secret Base, Hoover Dam va Ski Resort mavjud, qolganlari tez kunda', () => {
-    expect(ARENAS.filter((a) => a.available).map((a) => a.id)).toEqual(['oil_fields', 'valley_farms', 'aircraft_graveyard', 'secret_base', 'hoover_dam', 'ski_resort']);
-    expect(ARENAS.filter((a) => !a.available && !a.def)).toHaveLength(2);
+  it('registry: Oil Fields, Valley Farms, Aircraft Graveyard, Secret Base, Hoover Dam, Ski Resort va Casino City mavjud, qolganlari tez kunda', () => {
+    expect(ARENAS.filter((a) => a.available).map((a) => a.id)).toEqual(['oil_fields', 'valley_farms', 'aircraft_graveyard', 'secret_base', 'hoover_dam', 'ski_resort', 'casino_city']);
+    expect(ARENAS.filter((a) => !a.available && !a.def)).toHaveLength(1);
     expect(arenaDef('valley_farms').id).toBe('valley_farms');
-    expect(() => arenaDef('casino_city')).toThrow();
+    expect(() => arenaDef('canyonlands')).toThrow();
   });
 
   it('yuklanadi: spawnlar terrain ustida, proplardan uzoq, relslardan chetda', async () => {

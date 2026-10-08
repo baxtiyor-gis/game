@@ -1,0 +1,60 @@
+{
+  "colors": {
+    "asphalt": "#2a2b33", "asphaltLot": "#33343c", "plaza": "#b9a493", "plazaDark": "#8d7b73", "curb": "#cfc7bd", "median": "#9c8776",
+    "lineWhite": "#e7e2d4", "lineYellow": "#e8b93a",
+    "concrete": "#a9a7a6", "concreteDark": "#6e6c70", "steel": "#8d939c", "steelDark": "#3b3f48", "gold": "#d8a93a", "chrome": "#c9ced6",
+    "trunk": "#6a4a32", "frond": "#2f7a46", "frondB": "#3a8f4e",
+    "tires": "#17171a", "glass": "#1b2430", "paintBack": "#e8e4da", "dark": "#101014", "burnt": "#18140f", "scorch": "#0f0d0b",
+    "motelWall": "#e9c9a6", "motelRoof": "#5c3a4e", "doorA": "#2fb3a8", "doorB": "#f0894a", "chapelWall": "#f4efe7", "chapelRoof": "#8b5a7a",
+    "waterEdge": "#b4d6e6", "spray": "#cfeaff", "lamp": "#1f2026", "reelFrame": "#2a1020", "cabinet": "#b21f3a", "cabinetTrim": "#f2c14e",
+    "diceBody": "#f4f0e8", "neonOff": "#26222b",
+    "cars": ["#c0392b", "#e0b030", "#2f8f9d", "#f2efe6", "#2a2a30", "#6d3fa0", "#38a169", "#ff7aa8", "#e5762f"]
+  },
+  "glow": {
+    "pink": {"color": "#ff2a9d", "intensity": 2.8},
+    "cyan": {"color": "#27e6ff", "intensity": 2.6},
+    "amber": {"color": "#ffb02e", "intensity": 2.6},
+    "green": {"color": "#3dff8a", "intensity": 2.4},
+    "violet": {"color": "#a05bff", "intensity": 2.6},
+    "red": {"color": "#ff3030", "intensity": 2.6},
+    "white": {"color": "#fff4dc", "intensity": 2.4},
+    "blue": {"color": "#3a8cff", "intensity": 2.4},
+    "warm": {"color": "#ffcc77", "intensity": 1.6},
+    "pinkDim": {"color": "#ff2a9d", "intensity": 1.5},
+    "cyanDim": {"color": "#27e6ff", "intensity": 1.4},
+    "whiteDim": {"color": "#fff4dc", "intensity": 1.3}
+  },
+  "facade": {
+    "tileW": 12.8, "tileH": 14.4, "tex": 64, "grid": 4, "litChance": 0.55, "seed": 11,
+    "wall": "#e6e2da", "window": "#1c2438", "lit": "#ffc979", "litIntensity": 1.05,
+    "tints": ["#e8d7bd", "#e2a9bd", "#a6cdd4", "#c7b6e6", "#e9c27d"],
+    "neonPairs": [["pink", "cyan"], ["amber", "violet"], ["green", "pink"], ["cyan", "amber"], ["violet", "green"]]
+  },
+  "tower": {
+    "podiumH": 9, "podiumPad": 4, "canopyD": 6, "canopyH": 0.7, "canopyY": 6.2, "stripe": 0.55, "corner": 0.5,
+    "signH": 5.2, "signLift": 1.6, "signInset": 0.82, "bands": [0.34, 0.68], "stepped": [0.55, 0.3, 0.15, 0.78, 0.5], "twinGap": 0.42
+  },
+  "sign": {"texW": 512, "texH": 128, "font": "bold 76px 'Arial Black', Impact, sans-serif", "bg": "#14061f", "boost": 2.2, "border": 10},
+  "neonSign": {
+    "poleW": 0.9, "headW": 6.2, "headH": 3.8, "headD": 0.7, "headLift": 2.4, "bulbs": 7, "bulbSize": 0.34,
+    "texts": ["casino.sign.lucky", "casino.sign.nova", "casino.sign.atlas", "casino.sign.scarab", "casino.sign.palms", "casino.sign.royal"],
+    "colors": ["pink", "cyan", "amber", "green", "violet"]
+  },
+  "fountain": {"basinR": 3.6, "basinH": 1.3, "depth": 1.2, "colR": 0.7, "colH": 4.2, "bowlR": 2.0, "jets": 10, "jetLen": 4.6, "jetR": 0.1, "lights": 14, "colliderR": 3.6, "colliderH": 3.5},
+  "garage": {
+    "size": [40, 6, 28], "rampLen": 36, "rampW": 8, "slab": 0.7, "thick": 1.0, "sink": 0.05, "col": 1.0, "colsX": 5,
+    "parapet": 1.1, "rail": 0.9, "lampEvery": 10, "lampH": 3.6, "signH": 5, "stair": [5, 3.2, 5]
+  },
+  "car": {"size": [4.0, 1.5, 1.8], "bodyH": 0.7, "bodyY": 0.5, "cabin": [2.0, 0.6, 1.55], "cabinX": -0.2, "wheelR": 0.36, "fin": 0.32, "colliderHalf": [2.0, 0.75, 0.9]},
+  "palm": {"trunkH": 7, "trunkR": 0.32, "bend": 0.9, "segments": 5, "fronds": 9, "frondLen": 3.4, "frondW": 0.9, "droop": 0.7, "colliderR": 0.4},
+  "motel": {"rooms": 8, "roomW": 4.6, "depth": 8, "height": 3.4, "wing": 3, "signH": 12, "signW": 5.5, "balcony": 1.6},
+  "chapel": {"size": [8, 5, 12], "roof": 3, "tower": 3, "spire": 4.5, "heart": 1.6},
+  "roulette": {"wheelR": 5, "wheelH": 12, "slices": 24, "speed": 0.6, "diceSize": 6, "diceH": 11, "diceSpeed": 0.5, "pylonW": 1.2, "pulse": 0.14, "pulseSpeed": 2.2},
+  "strip": {"lift": 0.03, "lineLift": 0.075, "dashEvery": 8, "dashLen": 3.6, "laneX": 8, "medianHalf": 3, "lampEvery": 26, "lampH": 7, "lampX": 18.5, "stall": 3.2, "lineW": 0.12, "neonW": 0.3},
+  "jackpot": {
+    "size": [5.6, 10.2, 3.4], "spin": 3, "cooldown": 30, "winChance": 0.7, "crates": [3, 4], "dropRadius": 7.5, "dropLift": 0.5,
+    "kinds": ["rocket", "missile", "mortar", "cannon", "mine", "special"],
+    "blast": {"radius": 13, "damage": 22, "height": 1.8}, "triggerRadius": 4,
+    "reelSpeed": 16, "stopAt": [0.55, 0.75, 0.95], "symbols": 8, "win": 3, "bomb": 7, "bulbSpeed": [3, 12], "dim": 0.25, "lever": 1.1
+  }
+}

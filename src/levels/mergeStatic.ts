@@ -39,11 +39,11 @@ const mergeable = (o: THREE.Object3D): boolean =>
 
 /**
  * `roots` (sahnaga hali qo'shilmagan, dunyo koordinatalaridagi prop daraxtlari) ni `into` ga birlashtirib qo'shadi.
- * Birlashmaydigan obyekt bo'lsa, butun daraxt o'zgarishsiz qo'shiladi. Qaytadi: yangi geometriyalarni bo'shatuvchi.
+ * `cell` — fazoviy katak o'lchami (m): kichikroq = yaxshiroq kesish, ko'proq draw call; `centered` — katak markazi (0,0) da (cell >= maydon bo'lsa — butun arena bitta katak). Birlashmaydigan obyekt bo'lsa, butun daraxt o'zgarishsiz qo'shiladi. Qaytadi: yangi geometriyalarni bo'shatuvchi.
  */
-export function mergeStatic(roots: THREE.Object3D[], into: THREE.Object3D): () => void {
+export function mergeStatic(roots: THREE.Object3D[], into: THREE.Object3D, cell: number = propCfg.merge.cell, centered = false): () => void {
   const buckets = new Map<string, Bucket>();
-  const cell = propCfg.merge.cell;
+  const shift = cell * Math.ceil(1000 / cell) + (centered ? cell / 2 : 0);
   for (const root of roots) {
     root.updateMatrixWorld(true);
     let ok = true;
@@ -67,13 +67,14 @@ export function mergeStatic(roots: THREE.Object3D[], into: THREE.Object3D): () =
       continue;
     }
     const p = new THREE.Vector3().setFromMatrixPosition(root.matrixWorld);
-    const cx = Math.floor(p.x / cell);
-    const cz = Math.floor(p.z / cell);
+    const cx = Math.floor((p.x + shift) / cell); // shift: manfiy koordinatalar ham bir katakka tushishi uchun (cell ga karrali)
+    const cz = Math.floor((p.z + shift) / cell);
     for (const [m, g] of meshes) {
       const mat = m.material as THREE.Material;
-      const key = `${mat.uuid}:${m.castShadow}:${m.receiveShadow}:${cx}:${cz}`;
+      const cast = m.castShadow && mat.toneMapped !== false; // porlovchi (neon) materiallar soya tashlamaydi
+      const key = `${mat.uuid}:${cast}:${m.receiveShadow}:${cx}:${cz}`;
       let b = buckets.get(key);
-      if (!b) buckets.set(key, (b = { mat, cast: m.castShadow, recv: m.receiveShadow, geos: [] }));
+      if (!b) buckets.set(key, (b = { mat, cast, recv: m.receiveShadow, geos: [] }));
       b.geos.push(g);
       if (m.userData.ownGeo) m.geometry.dispose();
     }
@@ -88,6 +89,7 @@ export function mergeStatic(roots: THREE.Object3D[], into: THREE.Object3D): () =
       made.push(geo);
       const mesh = new THREE.Mesh(geo, b.mat);
       mesh.castShadow = b.cast;
+      if (!b.cast) mesh.userData.fxShadow = true; // render/materials.upgradeMaterials soya bayrog'ini qayta yoqmasin
       mesh.receiveShadow = b.recv;
       mesh.name = 'static';
       into.add(mesh);

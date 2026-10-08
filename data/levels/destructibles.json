@@ -46,6 +46,24 @@
       "fuse": 0.3,
       "mgScale": 0.25
     },
+    "neonSign": {
+      "hp": 12,
+      "radius": 0.9,
+      "height": 14,
+      "centerHeight": 11,
+      "explosion": { "radius": 6, "damage": 5 },
+      "fuse": 0.15,
+      "mgScale": 0.5
+    },
+    "explosiveCar": {
+      "hp": 12,
+      "radius": 1.7,
+      "height": 1.6,
+      "centerHeight": 0.8,
+      "explosion": { "radius": 11, "damage": 38 },
+      "fuse": 0.3,
+      "mgScale": 0.3
+    },
     "barrel": {
       "hp": 6,
       "radius": 0.5,

@@ -52,7 +52,8 @@
       "tip.aircraft_graveyard.crane", "tip.aircraft_graveyard.planes",
       "tip.secret_base.launch", "tip.secret_base.bunker",
       "tip.hoover_dam.water", "tip.hoover_dam.grid",
-      "tip.ski_resort.ice", "tip.ski_resort.lift"
+      "tip.ski_resort.ice", "tip.ski_resort.lift",
+      "tip.casino_city.jackpot", "tip.casino_city.neon"
     ]
   },
   "preview": {

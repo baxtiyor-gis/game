@@ -38,8 +38,16 @@ export function stdMat(key: string, color: string, roughness = 0.75, metalness =
   return m as THREE.MeshStandardMaterial;
 }
 
+const extraDisposers: Array<() => void> = [];
+
+/** Kesh bilan birga tozalanadigan qo'shimcha resurs (tekstura va h.k.) */
+export const onCacheDispose = (fn: () => void): void => {
+  extraDisposers.push(fn);
+};
+
 /** Geometriya/material keshini tozalaydi (arena dispose da). */
 export function disposePropCaches(): void {
+  for (const fn of extraDisposers.splice(0)) fn();
   for (const g of geos.values()) g.dispose();
   for (const m of mats.values()) m.dispose();
   geos.clear();

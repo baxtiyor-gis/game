@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { Rapier, System } from '../core/types';
+import type { PickupKind, Rapier, System } from '../core/types';
 import type { BuildContext } from './context';
 import type { PropDef } from './types';
 import { createPumpjack, PumpjackSystem } from './props/pumpjack';
@@ -18,10 +18,13 @@ import { AIR_TYPES, populateAirProps } from './populateAir';
 import { BASE_TYPES, populateBaseProps } from './populateBase';
 import { DAM_TYPES, populateDamProps } from './populateDam';
 import { SKI_TYPES, populateSkiProps } from './populateSki';
+import { CASINO_TYPES, createCasinoSystems, populateCasinoProps } from './populateCasino';
 import { createTransformerVisual } from './props/transformer';
 import { createFuelTankVisual } from './props/fuelTank';
 import { createPropaneVisual } from './props/propaneTank';
 import { createLiftPylonVisual } from './props/liftPylon';
+import { createNeonSignVisual } from './props/neonSign';
+import { createExplosiveCarVisual } from './props/parkedCar';
 import { destructibleTypes } from './destructible';
 import type { DestructibleItem } from './destructible';
 
@@ -55,8 +58,9 @@ export function populateProps(ctx: BuildContext): void {
   const baseDefs = ctx.def.props.filter((d) => BASE_TYPES.has(d.type));
   const damDefs = ctx.def.props.filter((d) => DAM_TYPES.has(d.type));
   const skiDefs = ctx.def.props.filter((d) => SKI_TYPES.has(d.type));
+  const casinoDefs = ctx.def.props.filter((d) => CASINO_TYPES.has(d.type));
   for (const def of ctx.def.props) {
-    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type) || DAM_TYPES.has(def.type) || SKI_TYPES.has(def.type)) continue;
+    if (FARM_TYPES.has(def.type) || AIR_TYPES.has(def.type) || BASE_TYPES.has(def.type) || DAM_TYPES.has(def.type) || SKI_TYPES.has(def.type) || CASINO_TYPES.has(def.type)) continue;
     const yaw = def.yaw ?? 0;
     const s = def.scale ?? 1;
     if (def.type === 'rock') {
@@ -78,6 +82,12 @@ export function populateProps(ctx: BuildContext): void {
   if (baseDefs.length > 0) populateBaseProps(ctx, baseDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (damDefs.length > 0) populateDamProps(ctx, damDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
   if (skiDefs.length > 0) populateSkiProps(ctx, skiDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+  if (casinoDefs.length > 0) populateCasinoProps(ctx, casinoDefs, (p, yaw, w, d) => origin(ctx, p, yaw, w, d));
+}
+
+/** Casino City tizimlari (ruletka/zar, Jackpot): statik karkaslar merge dan oldin qo'shiladi. */
+export function populateCasinoSystems(ctx: BuildContext, onDrop?: (pos: THREE.Vector3, kind: PickupKind) => void): System[] {
+  return createCasinoSystems(ctx, (p, yaw, w, d) => origin(ctx, p, yaw, w, d), onDrop);
 }
 
 function buildStatic(R: Rapier, ctx: BuildContext, def: PropDef, yaw: number): PropBuild {
@@ -114,6 +124,8 @@ function visualFactory(type: string): typeof createTankVisual {
   if (type === 'transformer') return createTransformerVisual;
   if (type === 'propaneTank') return createPropaneVisual;
   if (type === 'liftPylon') return createLiftPylonVisual;
+  if (type === 'neonSign') return createNeonSignVisual;
+  if (type === 'explosiveCar') return createExplosiveCarVisual;
   return createTankVisual;
 }
 

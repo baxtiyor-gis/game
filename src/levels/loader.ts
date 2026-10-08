@@ -4,7 +4,7 @@ import type { Arena, ArenaDef, LoadOptions } from './types';
 import { buildTerrain } from './terrain';
 import { BuildContext } from './context';
 import { buildBoundary } from './boundary';
-import { populateDestructibles, populateInteractives, populateProps, populateWindmillRigs } from './populate';
+import { populateCasinoSystems, populateDestructibles, populateInteractives, populateProps, populateWindmillRigs } from './populate';
 import { DestructibleSystem } from './destructible';
 import { createTrain } from './train';
 import { createCranes } from './crane';
@@ -38,7 +38,8 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   const water = timed('water', () => createWater(ctx));
   const grid = timed('powerGrid', () => createPowerGrid(ctx));
   const skiSystems = timed('ski', () => createSkiSystems(ctx));
-  ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root)));
+  const casinoSystems = timed('casino', () => populateCasinoSystems(ctx, opts.onDrop));
+  ctx.onDispose(timed('merge', () => mergeStatic(ctx.statics, ctx.root, def.mergeCell, def.mergeCell !== undefined)));
   progress(0.65);
   await yieldFrame();
   const systems: System[] = [];
@@ -49,7 +50,7 @@ export async function loadArena(world: GameWorld, def: ArenaDef, opts: LoadOptio
   if (def.train) systems.push(timed('train', () => createTrain(ctx, def.train!, opts.onDrop)));
   if (cranes) systems.push(cranes);
   for (const s of [radars, launch, lights, water, grid]) if (s) systems.push(s);
-  systems.push(...skiSystems);
+  systems.push(...skiSystems, ...casinoSystems);
   if (def.planes?.length) systems.push(timed('planes', () => createPlanes(ctx, def.planes!)));
   const destructibles = new DestructibleSystem(world, timed('destructibles', () => populateDestructibles(ctx)), opts.onDrop);
   systems.push(destructibles);

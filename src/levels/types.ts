@@ -58,7 +58,8 @@ export type PropType =
   | 'airplane' | 'hangar' | 'controlTower' | 'runway' | 'barbedFence'
   | 'bunker' | 'guardTower' | 'militaryTruck' | 'ufoWreck' | 'lampPost'
   | 'damWall' | 'powerHouse' | 'powerPylon' | 'intakeTower' | 'cliff'
-  | 'pineTree' | 'lodge' | 'cabin' | 'skiJump' | 'snowBank';
+  | 'pineTree' | 'lodge' | 'cabin' | 'skiJump' | 'snowBank'
+  | 'casinoTower' | 'garage' | 'parkedCar' | 'palmTree' | 'motel' | 'chapel' | 'fountain' | 'rouletteSign' | 'strip';
 
 export interface PropDef {
   type: PropType;
@@ -83,6 +84,8 @@ export interface PropDef {
   /** damWall: to'g'on o'qi bo'ylab uzunlik `length`, yo'l eni `width`; cliff: `size` = eni, balandligi, chuqurligi; powerPylon: `points[0]` — sim tortiladigan keyingi ustun */
   /** guardTower: chiroq turi — 'spot' (haqiqiy SpotLight + nur) yoki 'beam' (faqat ko'rinadigan nur); bo'sh = chiroqsiz */
   light?: 'spot' | 'beam';
+  /** casinoTower/motel/chapel: neon yozuv matni (strings.json kaliti); rouletteSign: 'wheel' | 'dice' (variant); garage: pandus uzunligi (length); parkedCar: poydevor balandligi (lift) */
+  sign?: string;
 }
 
 export interface DestructibleInstance {
@@ -95,7 +98,7 @@ export interface DestructibleInstance {
 }
 
 export interface InteractiveDef {
-  type: 'pumpjack' | 'windmill' | 'crane' | 'radar' | 'launchSite';
+  type: 'pumpjack' | 'windmill' | 'crane' | 'radar' | 'launchSite' | 'jackpot';
   pos: Vec2;
   yaw?: number;
   /** crane: yuk turi ('container' | 'engine'); radar: 'bar' | 'dish' */
@@ -176,6 +179,8 @@ export interface ArenaDef {
   id: string;
   /** Maydon tomoni, m (kvadrat, markaz 0,0) */
   size: number;
+  /** Statik proplarni birlashtirish katagi, m (default data/levels/props.json merge.cell); butun sahna ko'rinadigan arenalarda katta qiymat — kam draw call */
+  mergeCell?: number;
   /** O'yinchi spawn nuqtasi yerdan necha metr yuqorida */
   spawnLift: number;
   terrain: TerrainDef;

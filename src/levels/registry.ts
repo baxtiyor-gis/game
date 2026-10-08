@@ -5,6 +5,7 @@ import aircraftGraveyard from '../../data/levels/aircraft_graveyard.json';
 import secretBase from '../../data/levels/secret_base.json';
 import hooverDam from '../../data/levels/hoover_dam.json';
 import skiResort from '../../data/levels/ski_resort.json';
+import casinoCity from '../../data/levels/casino_city.json';
 import type { ArenaDef } from './types';
 
 export interface ArenaEntry {
@@ -29,7 +30,7 @@ export const ARENAS: ArenaEntry[] = [
   { id: 'secret_base', nameKey: 'arena.secret_base', def: secretBase as unknown as ArenaDef, preview: { color: '#4a5560', icon: 'bunker' }, available: true },
   { id: 'hoover_dam', nameKey: 'arena.hoover_dam', def: hooverDam as unknown as ArenaDef, preview: { color: '#b8b2a3', icon: 'dam' }, available: true },
   { id: 'ski_resort', nameKey: 'arena.ski_resort', def: skiResort as unknown as ArenaDef, preview: { color: '#dfe9f2', icon: 'snow' }, available: true },
-  soon('casino_city', '#c0398a', 'dice'),
+  { id: 'casino_city', nameKey: 'arena.casino_city', def: casinoCity as unknown as ArenaDef, preview: { color: '#c0398a', icon: 'dice' }, available: true },
   soon('canyonlands', '#c8764a', 'canyon'),
 ];
 
